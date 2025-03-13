@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+#custom-label {
+  color: #4e4b66;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+#complete-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4e4b66;
+}
+
+.no-scrollbar {
+  overflow: auto; /* or scroll */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge, IE */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
