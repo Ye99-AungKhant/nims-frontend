@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   AppShell,
   Box,
   Burger,
@@ -13,7 +14,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Sidebar } from "./frames/Sidebar";
 
 const RootLayout = () => {
-  const [isOpenedNavbar, { toggle }] = useDisclosure(true);
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+
   const username = "Ye";
   const navigate = useNavigate();
   return (
@@ -27,20 +30,21 @@ const RootLayout = () => {
         },
       }}
       navbar={{
-        width: "250",
+        width: 250,
         breakpoint: "sm",
-        collapsed: { mobile: !isOpenedNavbar, desktop: !isOpenedNavbar },
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
     >
       <AppShell.Header h={70}>
         <Box p="md">
           <Flex w="100%" justify="space-between" align="center">
-            <Burger onClick={toggle} />
-            <IconPlus
-              color="black"
-              size={24}
-              onClick={() => navigate("create")}
-            />
+            <Box>
+              <Burger onClick={toggleDesktop} visibleFrom="sm" />
+              <Burger onClick={toggleMobile} hiddenFrom="sm" />
+              <ActionIcon onClick={() => navigate("create")} size={24} ml={12}>
+                <IconPlus />
+              </ActionIcon>
+            </Box>
             {username && (
               <Flex px="md" gap="sm" align="center">
                 <Popover width={250} trapFocus position="bottom" shadow="md">

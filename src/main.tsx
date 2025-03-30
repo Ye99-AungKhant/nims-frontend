@@ -5,9 +5,13 @@ import "./assets/styles/index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import { MantineConfig } from "./components/core/MantineConfig";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./utils/react-query/queryClient";
 
 createRoot(document.getElementById("root")!).render(
-  <MantineConfig>
-    <RouterProvider router={router} />
-  </MantineConfig>
+  <QueryClientProvider client={queryClient}>
+    <MantineConfig>
+      <RouterProvider router={router} />
+    </MantineConfig>
+  </QueryClientProvider>
 );

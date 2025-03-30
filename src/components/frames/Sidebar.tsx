@@ -21,7 +21,7 @@ const MenuItem: FC<MenuItemType> = ({ title, url, icon, children }) => {
         textDecoration: "none",
         color: "#f1f1f1",
         fontSize: "16px",
-        backgroundColor: active ? theme.colors.blue[6] : "transparent",
+        backgroundColor: active ? theme.colors.primary[3] : "transparent",
         borderRadius: "8px",
       }}
     >

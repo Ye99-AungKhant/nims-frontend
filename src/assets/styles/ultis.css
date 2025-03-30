@@ -1,0 +1,13 @@
+.menu-item {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+.menu-item.active {
+  background-color: #ebe8fc;
+  color: purple;
+}
+
+.menu-item.active .text {
+  color: purple !important; /* Ensure the text color updates */
+}
