@@ -34,6 +34,8 @@ import { useDeleteContact } from "./hooks/useDeleteContact";
 import { DataTable } from "../../components/datatable/DataTable";
 import { clientPageColumns } from "./clientPageColumns";
 import { useNavigate } from "react-router-dom";
+import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
+import { SearchInput } from "../../components/common/SearchInput";
 
 interface ContactPerson {
   id: number;
@@ -145,7 +147,7 @@ export const ClientPage = () => {
                 Export
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => navigate("create")}
                 leftSection={<IconPlus size={18} />}
                 variant="outline"
                 radius={"lg"}
@@ -223,15 +225,17 @@ export const ClientPage = () => {
             </Table.Tbody>
           </Table>
         </Modal>
-        <Flex justify="space-between" align="center" mb={20} p="lg">
-          <Select
-            placeholder="Show entries"
-            data={["React", "Angular", "Vue", "Svelte"]}
-            size="xs"
-          />
-          <Flex align="center" gap="sm" justify="flex-start">
-            <TextInput w={150} placeholder="Search" size="xs" />
-          </Flex>
+        <Flex justify="space-between" align="center" mb={0} px="md" pt={"md"}>
+          <Group gap={"xs"}>
+            <Text color="greyscale.6" fz="12px">
+              Show
+            </Text>
+            <PageSizeSelect />
+            <Text color="greyscale.6" fz="12px">
+              entries
+            </Text>
+          </Group>
+          <SearchInput size="sm" />
         </Flex>
         <Box p={"md"}>
           <DataTable

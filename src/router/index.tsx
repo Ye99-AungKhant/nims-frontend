@@ -2,12 +2,12 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../components/RootLayout";
 import CreateForm from "../page/form/CreateForm";
 import { ClientPage } from "../page/client/ClientPage";
-import { ClientCreate } from "../page/client/components/ClientCreate";
 import { VehicleCreatePage } from "../page/vehicle/VehicleCreatePage";
 import { VehiclePage } from "../page/vehicle/VehiclePage";
 import { InstalledPage } from "../page/installed/InstalledPage";
 import { DashboardPage } from "../page/dashboard";
 import ClientDetailPage from "../page/client/ClientDetailPage";
+import ClientCreatePage from "../page/client/ClientCreatePage";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
       { path: "/installed/create", element: <CreateForm /> },
       { path: "client", element: <ClientPage /> },
       { path: "/client/detail", element: <ClientDetailPage /> },
-      { path: "/client/create", element: <ClientCreate /> },
+      { path: "/client/create", element: <ClientCreatePage /> },
       { path: "/vehicle", element: <VehiclePage /> },
       { path: "/vehicle/create", element: <VehicleCreatePage /> },
     ],
