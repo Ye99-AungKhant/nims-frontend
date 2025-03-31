@@ -12,6 +12,7 @@ import {
 } from "@tabler/icons-react";
 Card;
 import { Tabs, TabsList } from "@mantine/core";
+import EditableForm from "./components/EditableForm";
 
 const ClientCreatePage = () => {
   const [formData, setFormData] = useState({
@@ -102,6 +103,11 @@ const ClientCreatePage = () => {
                   </Flex>
                 </Grid.Col>
               </Grid>
+              <Group mt="md" justify="center">
+                <Button onClick={handleSubmit} radius={"lg"} size="sm">
+                  Continue
+                </Button>
+              </Group>
             </Tabs.Panel>
 
             <Tabs.Panel value="address">
@@ -157,15 +163,16 @@ const ClientCreatePage = () => {
                   </Flex>
                 </Grid.Col>
               </Grid>
+              <Group mt="md" justify="center">
+                <Button onClick={handleSubmit} radius={"lg"} size="sm">
+                  Save
+                </Button>
+              </Group>
             </Tabs.Panel>
             <Tabs.Panel value="contactPersons">
-              <Text>Contact Persons information will go here.</Text>
+              <EditableForm />
             </Tabs.Panel>
           </Tabs>
-
-          <Group mt="md">
-            <Button onClick={handleSubmit}>Save</Button>
-          </Group>
         </Box>
       </Paper>
     </Box>
