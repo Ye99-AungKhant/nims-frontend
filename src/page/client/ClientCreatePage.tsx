@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Box, Flex, Grid, Paper, SimpleGrid, TextInput } from "@mantine/core";
+import {
+  Box,
+  Flex,
+  Grid,
+  Paper,
+  Select,
+  SimpleGrid,
+  TextInput,
+} from "@mantine/core";
 import { Button } from "@mantine/core";
 import { Group } from "@mantine/core";
 import { Card } from "@mantine/core";
@@ -13,25 +21,53 @@ import {
 Card;
 import { Tabs, TabsList } from "@mantine/core";
 import EditableForm from "./components/EditableForm";
+import {
+  ClientContactPersonPayloadType,
+  ClientPayloadType,
+} from "../../utils/types";
+import { useGetRoles } from "./hooks/useGetRoles";
+import { useCreateClient } from "./hooks/useCreateClient";
 
 const ClientCreatePage = () => {
-  const [formData, setFormData] = useState({
-    companyName: "Super Light Logistics & Distribution", // Default Value
-    primaryContact: "Ko Aung Nyein Chan", // Default Value
-    designation: "Fleet Manager", // Default Value
-    email: "aungnyeinchan@superlightsc.com", // Default Value
-    phone: "09443006446", // Default Value
+  const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
+  const [formData, setFormData] = useState<ClientPayloadType>({
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    postal: "",
   });
+  const [contactFormData, setContactFormData] =
+    useState<ClientContactPersonPayloadType>({
+      contactName: "",
+      role_id: 1,
+      phone: "",
+      email: "",
+    });
+
+  const { data: roleData } = useGetRoles();
+  const { mutateAsync } = useCreateClient();
+  // console.log(roleData);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    // In a real application, you would send this data to a server
-    console.log(formData);
-    alert(JSON.stringify(formData, null, 2)); // simple feedback
+  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setContactFormData({ ...contactFormData, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    const res = await mutateAsync(formData);
+    console.log(res);
+    console.log(contactFormData);
+  };
+
+  const handleContinue = () => {
+    setActiveTab("address");
   };
 
   return (
@@ -44,7 +80,7 @@ const ClientCreatePage = () => {
         </Box>
 
         <Box p={"md"}>
-          <Tabs defaultValue="basicInfo">
+          <Tabs value={activeTab} onChange={setActiveTab}>
             <TabsList>
               <Tabs.Tab value="basicInfo">Basic Info</Tabs.Tab>
               <Tabs.Tab value="address">Address</Tabs.Tab>
@@ -65,38 +101,53 @@ const ClientCreatePage = () => {
                 <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
                   <Flex gap={"md"} direction={"column"} mt={10}>
                     <TextInput
-                      name="companyName"
-                      value={formData.companyName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
                       leftSection={<IconBuilding size={16} />}
                       required
                     />
                     <TextInput
-                      name="primaryContact"
-                      value={formData.primaryContact}
-                      onChange={handleChange}
+                      name="contactName"
+                      value={contactFormData.contactName}
+                      onChange={handleContactChange}
                       leftSection={<IconUser size={16} />}
                       required
                     />
-                    <TextInput
+                    {/* <TextInput
                       name="designation"
-                      value={formData.designation}
+                      value={contactFormData.role_id}
                       onChange={handleChange}
-                      leftSection={<IconUser size={16} />}
                       required
+                    /> */}
+                    <Select
+                      searchable
+                      comboboxProps={{
+                        offset: 0,
+                      }}
+                      data={
+                        roleData?.data?.map((data: any) => ({
+                          value: String(data.id),
+                          label: data.name,
+                        })) || []
+                      }
+                      name="designation"
+                      value={String(contactFormData.role_id)}
+                      leftSection={<IconUser size={16} />}
+                      // onChange={handleChange}
                     />
                     <TextInput
                       name="email"
                       type="email"
-                      value={formData.email}
-                      onChange={handleChange}
+                      value={contactFormData.email}
+                      onChange={handleContactChange}
                       leftSection={<IconMail size={16} />}
                       required
                     />
                     <TextInput
                       name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
+                      value={contactFormData.phone}
+                      onChange={handleContactChange}
                       leftSection={<IconPhone size={16} />}
                       required
                     />
@@ -104,7 +155,7 @@ const ClientCreatePage = () => {
                 </Grid.Col>
               </Grid>
               <Group mt="md" justify="center">
-                <Button onClick={handleSubmit} radius={"lg"} size="sm">
+                <Button onClick={handleContinue} radius={"lg"} size="sm">
                   Continue
                 </Button>
               </Group>
@@ -125,37 +176,36 @@ const ClientCreatePage = () => {
                 <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
                   <Flex gap={"md"} direction={"column"} mt={10}>
                     <TextInput
-                      name="companyName"
-                      value={formData.companyName}
+                      name="address"
+                      value={formData?.address}
                       onChange={handleChange}
                       leftSection={<IconBuilding size={16} />}
                       required
                     />
                     <TextInput
-                      name="primaryContact"
-                      value={formData.primaryContact}
+                      name="city"
+                      value={formData?.city}
                       onChange={handleChange}
                       leftSection={<IconUser size={16} />}
                       required
                     />
                     <TextInput
-                      name="designation"
-                      value={formData.designation}
+                      name="state"
+                      value={formData?.state}
                       onChange={handleChange}
                       leftSection={<IconUser size={16} />}
                       required
                     />
                     <TextInput
-                      name="email"
-                      type="email"
-                      value={formData.email}
+                      name="country"
+                      value={formData?.country}
                       onChange={handleChange}
                       leftSection={<IconMail size={16} />}
                       required
                     />
                     <TextInput
-                      name="phone"
-                      value={formData.phone}
+                      name="postal"
+                      value={formData?.postal}
                       onChange={handleChange}
                       leftSection={<IconPhone size={16} />}
                       required
