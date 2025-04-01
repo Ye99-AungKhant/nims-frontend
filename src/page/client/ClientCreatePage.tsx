@@ -26,7 +26,7 @@ import {
   ClientPayloadType,
 } from "../../utils/types";
 import { useGetRoles } from "./hooks/useGetRoles";
-import { useCreateClient } from "./hooks/useCreateClient";
+import { useCreateClientWithContact } from "./hooks/useCreateClient";
 
 const ClientCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
@@ -38,16 +38,19 @@ const ClientCreatePage = () => {
     country: "",
     postal: "",
   });
-  const [contactFormData, setContactFormData] =
-    useState<ClientContactPersonPayloadType>({
+  const [contactFormData, setContactFormData] = useState<
+    ClientContactPersonPayloadType[]
+  >([
+    {
       contactName: "",
       role_id: 1,
       phone: "",
       email: "",
-    });
+    },
+  ]);
 
   const { data: roleData } = useGetRoles();
-  const { mutateAsync } = useCreateClient();
+  const { mutateAsync } = useCreateClientWithContact();
   // console.log(roleData);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,19 +58,26 @@ const ClientCreatePage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setContactFormData({ ...contactFormData, [name]: value });
+  const handleContactChange = (
+    index: number,
+    field: keyof ClientContactPersonPayloadType,
+    value: string | number
+  ) => {
+    const updatedPersons = [...contactFormData];
+    updatedPersons[index] = { ...updatedPersons[index], [field]: value };
+    setContactFormData(updatedPersons);
   };
 
   const handleSubmit = async () => {
-    const res = await mutateAsync(formData);
-    console.log(res);
+    const data = { clientData: formData, contactPerson: contactFormData };
+    await mutateAsync(data);
+
+    console.log(formData);
     console.log(contactFormData);
   };
 
-  const handleContinue = () => {
-    setActiveTab("address");
+  const handleContinue = (tab: string) => {
+    setActiveTab(tab);
   };
 
   return (
@@ -108,11 +118,12 @@ const ClientCreatePage = () => {
                       required
                     />
                     <TextInput
-                      name="contactName"
-                      value={contactFormData.contactName}
-                      onChange={handleContactChange}
+                      value={contactFormData[0].contactName}
                       leftSection={<IconUser size={16} />}
                       required
+                      onChange={(e) =>
+                        handleContactChange(0, "contactName", e.target.value)
+                      }
                     />
                     {/* <TextInput
                       name="designation"
@@ -132,30 +143,39 @@ const ClientCreatePage = () => {
                         })) || []
                       }
                       name="designation"
-                      value={String(contactFormData.role_id)}
+                      value={String(contactFormData[0].role_id)}
                       leftSection={<IconUser size={16} />}
-                      // onChange={handleChange}
+                      onChange={(value) =>
+                        handleContactChange(0, "role_id", Number(value))
+                      }
                     />
                     <TextInput
-                      name="email"
                       type="email"
-                      value={contactFormData.email}
-                      onChange={handleContactChange}
+                      value={contactFormData[0].email}
                       leftSection={<IconMail size={16} />}
                       required
+                      onChange={(e) =>
+                        handleContactChange(0, "email", e.target.value)
+                      }
                     />
+
                     <TextInput
-                      name="phone"
-                      value={contactFormData.phone}
-                      onChange={handleContactChange}
+                      value={contactFormData[0].phone}
                       leftSection={<IconPhone size={16} />}
                       required
+                      onChange={(e) =>
+                        handleContactChange(0, "phone", e.target.value)
+                      }
                     />
                   </Flex>
                 </Grid.Col>
               </Grid>
               <Group mt="md" justify="center">
-                <Button onClick={handleContinue} radius={"lg"} size="sm">
+                <Button
+                  onClick={() => handleContinue("address")}
+                  radius={"lg"}
+                  size="sm"
+                >
                   Continue
                 </Button>
               </Group>
@@ -214,13 +234,23 @@ const ClientCreatePage = () => {
                 </Grid.Col>
               </Grid>
               <Group mt="md" justify="center">
-                <Button onClick={handleSubmit} radius={"lg"} size="sm">
-                  Save
+                <Button
+                  onClick={() => handleContinue("contactPersons")}
+                  radius={"lg"}
+                  size="sm"
+                >
+                  Continue
                 </Button>
               </Group>
             </Tabs.Panel>
             <Tabs.Panel value="contactPersons">
-              <EditableForm />
+              <EditableForm
+                handleSubmit={handleSubmit}
+                contactFormData={contactFormData}
+                setContactFormData={setContactFormData}
+                handleContactChange={handleContactChange}
+                role={roleData?.data}
+              />
             </Tabs.Panel>
           </Tabs>
         </Box>

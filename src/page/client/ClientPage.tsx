@@ -63,7 +63,7 @@ export const ClientPage = () => {
     setOpen(true);
   };
 
-  console.log(clientData?.items);
+  console.log("clientData", clientData);
 
   // const rows = clientData?.data?.data?.map((element: any, index: number) => (
   //   <Table.Tr

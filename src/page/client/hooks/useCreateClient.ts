@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { createClient } from "../../../services/client.service";
+import { createClientWithContact } from "../../../services/client.service";
 
-export const useCreateClient = () => {
+export const useCreateClientWithContact = () => {
   return useMutation({
     mutationFn: async (params: any) => {
       try {
-        return await createClient(params);
+        return await createClientWithContact(params);
       } catch (error) {
         console.log("create client error", error);
       }

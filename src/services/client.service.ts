@@ -1,7 +1,11 @@
 import { apiClient } from "../utils/axios/apiClient";
 
 export const createClient = async (params: any) => {
-  return await apiClient.post("/client", { params });
+  return await apiClient.post("/client", { ...params });
+};
+
+export const createClientWithContact = async (params: any) => {
+  return await apiClient.post("/client/createClientWithContact", { ...params });
 };
 
 export const getClient = async () => {

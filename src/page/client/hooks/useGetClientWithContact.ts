@@ -15,9 +15,9 @@ export const useGetClientsWithContact = () => {
   });
 };
 
-export const useGetClientWithContact = (param: any) => {
+export const useGetClientDetailWithContact = (param: any) => {
   return useQuery({
-    queryKey: ["clientwithcontact"],
+    queryKey: ["clientDetailwithcontact"],
     queryFn: async () => {
       return await getClientWithContact(param);
     },

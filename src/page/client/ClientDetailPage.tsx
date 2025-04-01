@@ -11,7 +11,7 @@ import {
 import { IconUser, IconUsers, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useGetClientWithContact } from "./hooks/useGetClientWithContact";
+import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
 import "../../assets/styles/ultis.css";
 
 export function ViewClient({ data }: any) {
@@ -115,7 +115,7 @@ export function ContactPerson({ data }: any) {
 export default function ClientDetailPage() {
   const [menuBtn, setMenuBtn] = useState<string>("client");
   const param = useLocation();
-  const { data: clientData, isLoading } = useGetClientWithContact(
+  const { data: clientData, isLoading } = useGetClientDetailWithContact(
     param.state.data.id
   );
   console.log(clientData?.items);

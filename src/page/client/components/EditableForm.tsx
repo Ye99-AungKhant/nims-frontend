@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { ActionIcon, Button, Input, Table, Text } from "@mantine/core";
-import { TextInput } from "@mantine/core";
-import { Paper } from "@mantine/core";
+import React from "react";
+import { ActionIcon, Button, Input, Select, Table } from "@mantine/core";
 import { Box, Stack, Group } from "@mantine/core";
-import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconPlus, IconTrash, IconUser } from "@tabler/icons-react";
+import { ClientContactPersonPayloadType } from "../../../utils/types";
 
 interface Person {
   name: string;
@@ -12,37 +11,37 @@ interface Person {
   designation: string;
 }
 
-const EditableForm = () => {
-  const [persons, setPersons] = useState<Person[]>([
-    { name: "", mobileNumber: "", emailAddress: "", designation: "" },
-  ]);
+interface Props {
+  handleSubmit: () => void;
+  contactFormData: ClientContactPersonPayloadType[];
+  setContactFormData: React.Dispatch<
+    React.SetStateAction<ClientContactPersonPayloadType[]>
+  >;
+  handleContactChange: (
+    index: number,
+    field: keyof ClientContactPersonPayloadType,
+    value: string | number
+  ) => void;
+  role: [];
+}
 
+const EditableForm = ({
+  handleSubmit,
+  contactFormData,
+  setContactFormData,
+  handleContactChange,
+  role,
+}: Props) => {
   const handleAddPerson = () => {
-    setPersons([
-      ...persons,
-      { name: "", mobileNumber: "", emailAddress: "", designation: "" },
+    setContactFormData([
+      ...contactFormData,
+      { contactName: "", phone: "", email: "", role_id: 0 },
     ]);
   };
 
-  const handleInputChange = (
-    index: number,
-    field: keyof Person,
-    value: string
-  ) => {
-    const updatedPersons = [...persons];
-    updatedPersons[index] = { ...updatedPersons[index], [field]: value };
-    setPersons(updatedPersons);
-  };
-
   const handleDeletePerson = (index: number) => {
-    const updatedPersons = persons.filter((_, i) => i !== index);
-    setPersons(updatedPersons);
-  };
-
-  const handleSave = () => {
-    // In a real application, you would send this data to a server.
-    console.log("Saving data:", persons);
-    alert("Data Saved! (Check console for output)");
+    const updatedPersons = contactFormData.filter((_, i) => i !== index);
+    setContactFormData(updatedPersons);
   };
 
   return (
@@ -59,41 +58,51 @@ const EditableForm = () => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {persons.map((person, index) => (
+            {contactFormData.map((person, index) => (
               <Table.Tr key={index}>
                 <Table.Td>
                   <Input
                     variant="filled"
-                    value={person.name}
+                    value={person.contactName}
                     onChange={(e) =>
-                      handleInputChange(index, "name", e.target.value)
+                      handleContactChange(index, "contactName", e.target.value)
                     }
                   />
                 </Table.Td>
                 <Table.Td>
                   <Input
                     variant="filled"
-                    value={person.mobileNumber}
+                    value={person.phone}
                     onChange={(e) =>
-                      handleInputChange(index, "mobileNumber", e.target.value)
+                      handleContactChange(index, "phone", e.target.value)
                     }
                   />
                 </Table.Td>
                 <Table.Td>
                   <Input
                     variant="filled"
-                    value={person.emailAddress}
+                    value={person.email}
                     onChange={(e) =>
-                      handleInputChange(index, "emailAddress", e.target.value)
+                      handleContactChange(index, "email", e.target.value)
                     }
                   />
                 </Table.Td>
                 <Table.Td>
-                  <Input
-                    variant="filled"
-                    value={person.designation}
-                    onChange={(e) =>
-                      handleInputChange(index, "designation", e.target.value)
+                  <Select
+                    searchable
+                    comboboxProps={{
+                      offset: 0,
+                    }}
+                    data={
+                      role.map((data: any) => ({
+                        value: String(data.id),
+                        label: data.name,
+                      })) || []
+                    }
+                    value={String(person.role_id)}
+                    leftSection={<IconUser size={16} />}
+                    onChange={(value) =>
+                      handleContactChange(index, "role_id", Number(value))
                     }
                   />
                 </Table.Td>
@@ -117,10 +126,9 @@ const EditableForm = () => {
           <IconPlus size={18} />
           Add Person
         </Button>
-        {/* <Button onClick={handleSave}>
-          <IconCheck />
+        <Button onClick={handleSubmit} radius={"lg"} size="sm">
           Save
-        </Button> */}
+        </Button>
       </Group>
     </Box>
   );
