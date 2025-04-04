@@ -69,22 +69,9 @@ export const MainMenus: MenuItemType[] = [
   },
   {
     id: "1",
-    title: "Client",
+    title: "Clients",
+    url: Routes.CLIENT.FULL_PATH,
     icon: <IconUsersGroup width={20} height={20} />,
-    children: [
-      {
-        id: "1.1",
-        title: "List All Clients",
-        url: Routes.CLIENT.FULL_PATH,
-        icon: <IconUsersGroup width={20} height={20} />,
-      },
-      {
-        id: "1.2",
-        title: "Create New Client",
-        url: `${Routes.CLIENT.FULL_PATH}/create`,
-        icon: <IconUserPlus width={20} height={20} />,
-      },
-    ],
   },
   {
     id: "2",

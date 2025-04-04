@@ -7,12 +7,18 @@ import {
   Box,
   Paper,
   Table,
+  ActionIcon,
+  Modal,
+  Center,
+  Button,
 } from "@mantine/core";
-import { IconUser, IconUsers, IconEdit } from "@tabler/icons-react";
+import { IconUser, IconUsers, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
 import "../../assets/styles/ultis.css";
+import { useDeleteContact } from "./hooks/useDeleteContact";
+import { useDisclosure } from "@mantine/hooks";
 
 export function ViewClient({ data }: any) {
   console.log("data", data);
@@ -37,28 +43,28 @@ export function ViewClient({ data }: any) {
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Primary Contact</Table.Th>
             <Table.Td style={{ fontSize: 17 }}>
-              {data.contact_person[0].name}
+              {data.contact_person[0]?.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Designation</Table.Th>
             <Table.Td style={{ fontSize: 17 }}>
-              {data.contact_person[0].role.name}
+              {data.contact_person[0]?.role.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Email</Table.Th>
             <Table.Td style={{ fontSize: 17 }}>
-              {data.contact_person[0].email}
+              {data.contact_person[0]?.email}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Phone</Table.Th>
             <Table.Td style={{ fontSize: 17 }}>
-              {data.contact_person[0].phone}
+              {data.contact_person[0]?.phone}
             </Table.Td>
           </Table.Tr>
 
@@ -74,6 +80,24 @@ export function ViewClient({ data }: any) {
 
 export function ContactPerson({ data }: any) {
   console.log("con", data);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [deleteClient, setDeleteClient] = useState<number>();
+  const { mutate: deleteMutate } = useDeleteContact();
+  const [contacts, setContacts] = useState<any[]>(data);
+
+  const deleteClientSelect = (id: any) => {
+    setDeleteClient(id);
+    open();
+  };
+
+  const deleteContact = () => {
+    close();
+    deleteMutate(deleteClient, {
+      onSuccess: () => {
+        setContacts((prev) => prev?.filter((data) => data.id != deleteClient));
+      },
+    });
+  };
 
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
@@ -89,16 +113,27 @@ export function ContactPerson({ data }: any) {
             <Table.Th>Phone</Table.Th>
             <Table.Th>Email</Table.Th>
             <Table.Th>Designation</Table.Th>
+            <Table.Th></Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {data ? (
-            data.map((person: any) => (
+          {contacts ? (
+            contacts.map((person: any) => (
               <Table.Tr>
                 <Table.Td style={{ fontSize: 17 }}>{person.name}</Table.Td>
                 <Table.Td style={{ fontSize: 17 }}>{person.phone}</Table.Td>
                 <Table.Td style={{ fontSize: 17 }}>{person.email}</Table.Td>
                 <Table.Td style={{ fontSize: 17 }}>{person.role.name}</Table.Td>
+                <Table.Td>
+                  <ActionIcon
+                    color="red"
+                    radius="lg"
+                    variant="outline"
+                    onClick={() => deleteClientSelect(person.id)}
+                  >
+                    <IconTrash size={18} />
+                  </ActionIcon>
+                </Table.Td>
               </Table.Tr>
             ))
           ) : (
@@ -108,6 +143,26 @@ export function ContactPerson({ data }: any) {
           )}
         </Table.Tbody>
       </Table>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={
+          <Text size="xl" fw={700} c={"dark"}>
+            Confirm Delete Contact Person
+          </Text>
+        }
+        centered={false}
+      >
+        <Center>Are you sure you want to delete?</Center>
+        <Group mt="md" gap="md" justify="right">
+          <Button radius={"lg"} size="sm" onClick={deleteContact}>
+            Delete
+          </Button>
+          <Button radius={"lg"} size="sm" onClick={close} color="gray">
+            Cancel
+          </Button>
+        </Group>
+      </Modal>
     </Paper>
   );
 }
@@ -118,6 +173,7 @@ export default function ClientDetailPage() {
   const { data: clientData, isLoading } = useGetClientDetailWithContact(
     param.state.data.id
   );
+  const navigate = useNavigate();
   console.log(clientData?.items);
 
   const handleMenuBtn = (name: string) => {
@@ -153,7 +209,9 @@ export default function ClientDetailPage() {
             <Text className="text">Contact Persons</Text>
           </Group>
           <Group
-            onClick={() => handleMenuBtn("edit")}
+            onClick={() =>
+              navigate("/client/create", { state: { id: param.state.data.id } })
+            }
             p={"xs"}
             className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
           >

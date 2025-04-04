@@ -14,6 +14,7 @@ export interface ClientPayloadType {
 }
 
 export interface ClientContactPersonPayloadType {
+  id?: string;
   contactName: string;
   role_id: number;
   phone: string;

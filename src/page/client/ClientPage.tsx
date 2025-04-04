@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Box,
   Button,
+  Center,
   Collapse,
   Divider,
   Flex,
@@ -36,6 +37,8 @@ import { clientPageColumns } from "./clientPageColumns";
 import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
+import { useParamsHelper } from "../../hooks/useParamsHelper";
+import { useDeleteClientWithContact } from "./hooks/useDeleteClientWithContact";
 
 interface ContactPerson {
   id: number;
@@ -46,66 +49,28 @@ interface ContactPerson {
 }
 
 export const ClientPage = () => {
-  const [open, setOpen] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const { data: clientData, isLoading } = useGetClientsWithContact();
+  const [searchFilter, SetSearchFilter] = useState<any[]>();
   const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
   const [selectedClient, setSelectedClient] = useState<number>();
+  const [deleteClient, setDeleteClient] = useState<number>();
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [editValues, setEditValues] = useState<ContactPerson | null>(null);
   const { mutate: createMutate } = useCreateContact();
   const { mutate: deleteMutate } = useDeleteContact();
+  const { mutate: deleteClientWithContactMutate } =
+    useDeleteClientWithContact();
+  const { getParam } = useParamsHelper();
   const navigate = useNavigate();
 
-  const openModal = (client: any) => {
-    setSelectedContacts(client.contact_person);
-    setSelectedClient(client.id);
-    setOpen(true);
-  };
-
-  console.log("clientData", clientData);
-
-  // const rows = clientData?.data?.data?.map((element: any, index: number) => (
-  //   <Table.Tr
-  //     key={index}
-  //     onClick={() => openModal(element)}
-  //     style={{ cursor: "pointer" }}
-  //   >
-  //     <Table.Td style={{ fontSize: 17 }}>{element.name}</Table.Td>
-  //     <Table.Td style={{ fontSize: 17, width: 300 }}>
-  //       {element.address}
-  //     </Table.Td>
-  //     <Table.Td style={{ fontSize: 17 }}>
-  //       {element.contact_person[0].name}
-  //     </Table.Td>
-  //     <Table.Td style={{ fontSize: 17 }}>
-  //       {element.contact_person[0].role.name}
-  //     </Table.Td>
-  //     <Table.Td style={{ fontSize: 17 }}>
-  //       {element.contact_person[0].email}
-  //     </Table.Td>
-  //     <Table.Td style={{ fontSize: 17 }}>
-  //       {element.contact_person[0].phone}
-  //     </Table.Td>
-  //     <Table.Td>
-  //       <Group gap={0}>
-  //         <ActionIcon color="yellow" size={30} radius="lg" variant="outline">
-  //           <IconEdit size={18} />
-  //         </ActionIcon>
-  //         <ActionIcon color="red" radius="lg" variant="outline">
-  //           <IconTrash size={18} />
-  //         </ActionIcon>
-  //       </Group>
-  //     </Table.Td>
-  //   </Table.Tr>
-  // ));
+  // console.log(searchFilter);
 
   const handleEditClick = (row: ContactPerson) => {
     setEditValues(row);
     setOpenEditModal(true);
   };
-
-  const updateContact = () => {};
 
   const createContact = (params: any) => {
     console.log("create:", { ...params, client_id: selectedClient });
@@ -127,6 +92,37 @@ export const ClientPage = () => {
       },
     });
   };
+
+  const deleteClientSelect = (id: any) => {
+    setDeleteClient(id);
+    open();
+  };
+
+  const deleteClientWithContact = () => {
+    console.log(deleteClient);
+
+    deleteClientWithContactMutate(deleteClient);
+    close();
+  };
+
+  useEffect(() => {
+    SetSearchFilter(clientData?.items);
+  }, [clientData]);
+
+  useEffect(() => {
+    if (getParam("criteria")) {
+      const filtered = searchFilter?.filter((client: any) =>
+        client.client_name
+          .toLowerCase()
+          .includes(getParam("criteria")?.toLowerCase())
+      );
+      console.log(filtered);
+
+      SetSearchFilter(filtered);
+    } else {
+      SetSearchFilter(clientData?.items);
+    }
+  }, [getParam("criteria")]);
 
   return (
     <Box px="md">
@@ -158,73 +154,6 @@ export const ClientPage = () => {
             </Group>
           </Flex>
         </Box>
-        <Modal
-          opened={open}
-          onClose={() => setOpen(false)}
-          title="Contact Person"
-          size={"70%"}
-          centered
-        >
-          <Group>
-            <ActionIcon size={20} onClick={() => setOpenCreateModal(true)}>
-              <IconPlus size={16} />
-            </ActionIcon>
-            <Text size="lg" c={"black"}>
-              New Contact
-            </Text>
-          </Group>
-          <Table striped highlightOnHover>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th style={{ fontSize: 18 }}>Name</Table.Th>
-                <Table.Th style={{ fontSize: 18 }}>Role</Table.Th>
-                <Table.Th style={{ fontSize: 18 }}>Phone No.</Table.Th>
-                <Table.Th style={{ fontSize: 18 }}>Email</Table.Th>
-                <Table.Th style={{ fontSize: 18 }}></Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {selectedContacts.map((contact) => (
-                <Table.Tr>
-                  <Table.Td style={{ fontSize: 17 }}>{contact.name}</Table.Td>
-                  <Table.Td style={{ fontSize: 17 }}>
-                    {contact.role.name}
-                  </Table.Td>
-                  <Table.Td style={{ fontSize: 17 }}>{contact.phone}</Table.Td>
-                  <Table.Td style={{ fontSize: 17 }}>{contact.email}</Table.Td>
-                  <Table.Td>
-                    <Group gap={0}>
-                      <ActionIcon
-                        color="yellow"
-                        size={30}
-                        radius={0}
-                        style={{
-                          borderTopLeftRadius: 6,
-                          borderBottomLeftRadius: 6,
-                        }}
-                        onClick={() => handleEditClick(contact)}
-                      >
-                        <IconEdit size={18} />
-                      </ActionIcon>
-                      <ActionIcon
-                        color="red"
-                        radius={0}
-                        size={30}
-                        style={{
-                          borderTopRightRadius: 6,
-                          borderBottomRightRadius: 6,
-                        }}
-                        onClick={() => deleteContact(contact.id)}
-                      >
-                        <IconTrash size={18} />
-                      </ActionIcon>
-                    </Group>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Modal>
         <Flex justify="space-between" align="center" mb={0} px="md" pt={"md"}>
           <Group gap={"xs"}>
             <Text color="greyscale.6" fz="12px">
@@ -240,7 +169,7 @@ export const ClientPage = () => {
         <Box p={"md"}>
           <DataTable
             columns={clientPageColumns}
-            data={clientData?.items}
+            data={searchFilter || []}
             total={10}
             enableRowOrdering={false}
             isLoading={isLoading}
@@ -268,10 +197,18 @@ export const ClientPage = () => {
                     size={30}
                     radius="lg"
                     variant="outline"
+                    onClick={() =>
+                      navigate("create", { state: { id: row.original.id } })
+                    }
                   >
                     <IconEdit size={18} />
                   </ActionIcon>
-                  <ActionIcon color="red" radius="lg" variant="outline">
+                  <ActionIcon
+                    color="red"
+                    radius="lg"
+                    variant="outline"
+                    onClick={() => deleteClientSelect(row.original.id)}
+                  >
                     <IconTrash size={18} />
                   </ActionIcon>
                 </Group>
@@ -280,37 +217,25 @@ export const ClientPage = () => {
           />
         </Box>
       </Paper>
-
       <Modal
-        opened={openEditModal}
-        onClose={() => setOpenEditModal(false)}
-        title="Edit"
+        opened={opened}
+        onClose={close}
+        title={
+          <Text size="xl" fw={700} c={"dark"}>
+            Confirm Delete Client
+          </Text>
+        }
+        centered={false}
       >
-        <ContactPersonForm
-          initialValues={{
-            name: editValues?.name || "",
-            role_id: String(editValues?.role.id) || "",
-            phone: editValues?.phone || "",
-            email: editValues?.email || "",
-          }}
-          handleSubmit={(values) => {
-            console.log("Updating:", values);
-            setOpenEditModal(false);
-          }}
-        />
-      </Modal>
-
-      <Modal
-        opened={openCreateModal}
-        onClose={() => setOpenCreateModal(false)}
-        title="New Contact"
-      >
-        <ContactPersonForm
-          handleSubmit={(values) => {
-            createContact(values);
-            setOpenEditModal(false);
-          }}
-        />
+        <Center>Are you sure you want to delete?</Center>
+        <Group mt="md" gap="md" justify="right">
+          <Button radius={"lg"} size="sm" onClick={deleteClientWithContact}>
+            Delete
+          </Button>
+          <Button radius={"lg"} size="sm" onClick={close} color="gray">
+            Cancel
+          </Button>
+        </Group>
       </Modal>
     </Box>
   );

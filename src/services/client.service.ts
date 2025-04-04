@@ -18,3 +18,11 @@ export const getClientWithContact = async (param?: any) => {
   }
   return await apiClient.get(`/client/contact-person`);
 };
+
+export const updateClientWithContact = async (params: any) => {
+  return await apiClient.post("/client/update", { ...params });
+};
+
+export const deleteClientWithContact = async (params: any) => {
+  return await apiClient.delete(`/client/delete/${params}`);
+};

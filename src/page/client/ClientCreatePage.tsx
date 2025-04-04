@@ -1,34 +1,39 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Flex,
-  Grid,
-  Paper,
-  Select,
-  SimpleGrid,
-  TextInput,
-} from "@mantine/core";
+import React, { useState, useEffect } from "react";
+import { Box, Flex, Grid, Paper, Select, TextInput } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { Group } from "@mantine/core";
-import { Card } from "@mantine/core";
 import { Text } from "@mantine/core";
 import {
   IconUser,
   IconBuilding,
   IconMail,
   IconPhone,
+  IconMapPin,
+  IconZip,
+  IconMap,
+  IconRoadSign,
 } from "@tabler/icons-react";
-Card;
-import { Tabs, TabsList } from "@mantine/core";
-import EditableForm from "./components/EditableForm";
+import { Tabs, TabsList, TabsPanel } from "@mantine/core";
+import EditableForm from "./components/EditableForm"; // Assuming this is in the same directory
 import {
   ClientContactPersonPayloadType,
   ClientPayloadType,
-} from "../../utils/types";
-import { useGetRoles } from "./hooks/useGetRoles";
-import { useCreateClientWithContact } from "./hooks/useCreateClient";
+} from "../../utils/types"; // Adjust the path if necessary
+import { useGetRoles } from "./hooks/useGetRoles"; // Adjust the path if necessary
+import { useCreateClientWithContact } from "./hooks/useCreateClient"; // Adjust the path if necessary
+
+// import { useUpdateClientWithContact } from "./hooks/useUpdateClient"; // Import hook for updating
+import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useUpdateClientWithContact } from "./hooks/useUpdateClientWithContact";
+
+interface ClientCreatePageProps {
+  id?: string; // Optional ID for edit mode
+}
 
 const ClientCreatePage = () => {
+  const param = useLocation();
+  const id = param?.state?.id as ClientCreatePageProps;
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
   const [formData, setFormData] = useState<ClientPayloadType>({
     name: "",
@@ -48,10 +53,51 @@ const ClientCreatePage = () => {
       email: "",
     },
   ]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const navigate = useNavigate();
 
-  const { data: roleData } = useGetRoles();
-  const { mutateAsync } = useCreateClientWithContact();
-  // console.log(roleData);
+  const { data: roleData, isLoading: isRoleLoading } = useGetRoles();
+  const {
+    data: clientData,
+    isLoading: isClientLoading,
+    isSuccess: isClientSuccess,
+  } = useGetClientDetailWithContact(id); // Use the new hook
+  const { mutateAsync: createClient } = useCreateClientWithContact();
+  const { mutateAsync: updateClient } = useUpdateClientWithContact(); // Use update mutation
+
+  // Set edit mode if ID is provided
+  useEffect(() => {
+    if (id) {
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [id]);
+
+  // Populate form data when in edit mode and client data is available
+  useEffect(() => {
+    if (isEditMode && isClientSuccess && clientData?.items) {
+      const client = clientData.items;
+      const contacts = clientData.items.contact_person;
+      setFormData({
+        name: client.name,
+        address: client.address,
+        city: client.city,
+        state: client.state,
+        country: client.country,
+        postal: client.postal,
+      });
+      setContactFormData(
+        contacts.map((contact: any) => ({
+          id: contact.id,
+          contactName: contact.name,
+          role_id: contact.role_id,
+          phone: contact.phone,
+          email: contact.email,
+        }))
+      );
+    }
+  }, [isEditMode, clientData, isClientSuccess]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -70,7 +116,20 @@ const ClientCreatePage = () => {
 
   const handleSubmit = async () => {
     const data = { clientData: formData, contactPerson: contactFormData };
-    await mutateAsync(data);
+    if (isEditMode && id) {
+      // Update existing client
+      await updateClient(
+        { id, data },
+        {
+          onSuccess: () => navigate("/client"),
+        }
+      );
+    } else {
+      // Create new client
+      await createClient(data, {
+        onSuccess: () => navigate("/client"),
+      });
+    }
 
     console.log(formData);
     console.log(contactFormData);
@@ -80,12 +139,19 @@ const ClientCreatePage = () => {
     setActiveTab(tab);
   };
 
+  const title = isEditMode ? "Edit Client" : "New Client";
+
+  // Show loading state
+  if (isClientLoading || isRoleLoading) {
+    return <Box p="md">Loading...</Box>; // Replace with a proper loading indicator
+  }
+
   return (
     <Box px="md">
       <Paper shadow="sm" radius="md">
         <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
           <Text size="lg" fw={500}>
-            New Client
+            {title}
           </Text>
         </Box>
 
@@ -96,7 +162,7 @@ const ClientCreatePage = () => {
               <Tabs.Tab value="address">Address</Tabs.Tab>
               <Tabs.Tab value="contactPersons">Contact Persons</Tabs.Tab>
             </TabsList>
-            <Tabs.Panel value="basicInfo">
+            <TabsPanel value="basicInfo">
               <Grid>
                 <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
                   <Flex gap={"xl"} direction={"column"} mt={30}>
@@ -118,19 +184,13 @@ const ClientCreatePage = () => {
                       required
                     />
                     <TextInput
-                      value={contactFormData[0].contactName}
+                      value={contactFormData[0]?.contactName}
                       leftSection={<IconUser size={16} />}
                       required
                       onChange={(e) =>
                         handleContactChange(0, "contactName", e.target.value)
                       }
                     />
-                    {/* <TextInput
-                      name="designation"
-                      value={contactFormData.role_id}
-                      onChange={handleChange}
-                      required
-                    /> */}
                     <Select
                       searchable
                       comboboxProps={{
@@ -142,8 +202,7 @@ const ClientCreatePage = () => {
                           label: data.name,
                         })) || []
                       }
-                      name="designation"
-                      value={String(contactFormData[0].role_id)}
+                      value={String(contactFormData[0]?.role_id)}
                       leftSection={<IconUser size={16} />}
                       onChange={(value) =>
                         handleContactChange(0, "role_id", Number(value))
@@ -151,7 +210,7 @@ const ClientCreatePage = () => {
                     />
                     <TextInput
                       type="email"
-                      value={contactFormData[0].email}
+                      value={contactFormData[0]?.email}
                       leftSection={<IconMail size={16} />}
                       required
                       onChange={(e) =>
@@ -160,7 +219,7 @@ const ClientCreatePage = () => {
                     />
 
                     <TextInput
-                      value={contactFormData[0].phone}
+                      value={contactFormData[0]?.phone}
                       leftSection={<IconPhone size={16} />}
                       required
                       onChange={(e) =>
@@ -179,9 +238,9 @@ const ClientCreatePage = () => {
                   Continue
                 </Button>
               </Group>
-            </Tabs.Panel>
+            </TabsPanel>
 
-            <Tabs.Panel value="address">
+            <TabsPanel value="address">
               <Grid>
                 <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
                   <Flex gap={"xl"} direction={"column"} mt={30}>
@@ -199,35 +258,35 @@ const ClientCreatePage = () => {
                       name="address"
                       value={formData?.address}
                       onChange={handleChange}
-                      leftSection={<IconBuilding size={16} />}
+                      leftSection={<IconMapPin size={16} />}
                       required
                     />
                     <TextInput
                       name="city"
                       value={formData?.city}
                       onChange={handleChange}
-                      leftSection={<IconUser size={16} />}
+                      leftSection={<IconBuilding size={16} />}
                       required
                     />
                     <TextInput
                       name="state"
                       value={formData?.state}
                       onChange={handleChange}
-                      leftSection={<IconUser size={16} />}
+                      leftSection={<IconMapPin size={16} />}
                       required
                     />
                     <TextInput
                       name="country"
                       value={formData?.country}
                       onChange={handleChange}
-                      leftSection={<IconMail size={16} />}
+                      leftSection={<IconMap size={16} />}
                       required
                     />
                     <TextInput
                       name="postal"
                       value={formData?.postal}
                       onChange={handleChange}
-                      leftSection={<IconPhone size={16} />}
+                      leftSection={<IconZip size={16} />}
                       required
                     />
                   </Flex>
@@ -242,16 +301,18 @@ const ClientCreatePage = () => {
                   Continue
                 </Button>
               </Group>
-            </Tabs.Panel>
-            <Tabs.Panel value="contactPersons">
-              <EditableForm
-                handleSubmit={handleSubmit}
-                contactFormData={contactFormData}
-                setContactFormData={setContactFormData}
-                handleContactChange={handleContactChange}
-                role={roleData?.data}
-              />
-            </Tabs.Panel>
+            </TabsPanel>
+            <TabsPanel value="contactPersons">
+              {!isRoleLoading && (
+                <EditableForm
+                  handleSubmit={handleSubmit}
+                  contactFormData={contactFormData}
+                  setContactFormData={setContactFormData}
+                  handleContactChange={handleContactChange}
+                  role={roleData?.data}
+                />
+              )}
+            </TabsPanel>
           </Tabs>
         </Box>
       </Paper>

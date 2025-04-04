@@ -5,6 +5,8 @@ import { MainMenus, MenuItemType } from "../../config/menu-items";
 
 const MenuItem: FC<MenuItemType> = ({ title, url, icon, children }) => {
   const { pathname } = useLocation();
+  console.log("pathname", pathname);
+
   const active = pathname === url;
   const theme = useMantineTheme();
   return (
