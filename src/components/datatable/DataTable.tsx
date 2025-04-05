@@ -3,11 +3,13 @@ import {
   useMantineReactTable,
   MantineReactTable,
   MRT_TableOptions,
+  MRT_PaginationState,
 } from "mantine-react-table";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { useViewPort } from "../../hooks/ui/useViewPort";
 import { useMantineTheme } from "@mantine/core";
+import { useGetRouteParams } from "../../hooks/useGetRouteParams";
 // import './DataTable.module.css'
 
 interface TableProps<T extends Record<string, any>> {
@@ -26,10 +28,11 @@ export function DataTable<T extends Record<string, any> = object>({
 }: TableProps<T> & MRT_TableOptions<T>) {
   const { isMobile } = useViewPort();
   const theme = useMantineTheme();
-  const totalPage = useMemo(
-    () => total / 10 + (total % 10 === 0 ? 0 : 1),
-    [total]
-  );
+  const { pageIndex, pageSize } = useGetRouteParams();
+  // const [pagination, setPagination] = useState<MRT_PaginationState>({
+  //   pageIndex: pageIndex ? parseInt(pageIndex) : 0,
+  //   pageSize: pageSize ? parseInt(pageSize) : 10,
+  // });
 
   const table = useMantineReactTable({
     columns,
@@ -40,7 +43,7 @@ export function DataTable<T extends Record<string, any> = object>({
     enableBottomToolbar: false,
     enableColumnActions: false,
     enableColumnFilters: false,
-    enablePagination: true,
+    manualPagination: true,
     enableSorting: false,
     enableStickyHeader: false,
     enablePinning: true,
@@ -82,8 +85,14 @@ export function DataTable<T extends Record<string, any> = object>({
       withEdges: false,
     },
     // table state
-    state: { isLoading },
-    enableRowNumbers: true,
+    state: {
+      isLoading,
+      pagination: {
+        pageIndex: pageIndex ? parseInt(pageIndex) : 1,
+        pageSize: pageSize ? parseInt(pageSize) : 10,
+      },
+    },
+    enableRowNumbers: false,
     // row actions
     positionActionsColumn: "last",
     enableColumnPinning: true,
@@ -109,7 +118,7 @@ export function DataTable<T extends Record<string, any> = object>({
   return (
     <>
       <MantineReactTable table={table} />
-      <Pagination total={totalPage} />
+      <Pagination total={total} />
     </>
   );
 }

@@ -172,7 +172,7 @@ export const ClientPage = () => {
           <DataTable
             columns={clientPageColumns}
             data={searchFilter || []}
-            total={100}
+            total={clientData?.totalCount}
             enableRowOrdering={false}
             isLoading={isLoading}
             enableRowActions

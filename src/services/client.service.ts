@@ -12,11 +12,13 @@ export const getClient = async () => {
   return await apiClient.get("/client");
 };
 
-export const getClientWithContact = async (param?: any) => {
-  if (param) {
-    return await apiClient.get(`/client/contact-person?id=${param}`);
+export const getClientWithContact = async (params: any) => {
+  if (params.id) {
+    return await apiClient.get(`/client/contact-person?id=${params.id}`);
   }
-  return await apiClient.get(`/client/contact-person`);
+  return await apiClient.get(`/client/contact-person`, {
+    params: { pageIndex: params.pageIndex, pageSize: params.pageSize },
+  });
 };
 
 export const updateClientWithContact = async (params: any) => {
