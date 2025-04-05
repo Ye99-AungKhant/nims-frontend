@@ -1,5 +1,12 @@
 import React from "react";
-import { ActionIcon, Button, Input, Select, Table } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Input,
+  Select,
+  Table,
+  useMantineTheme,
+} from "@mantine/core";
 import { Box, Stack, Group } from "@mantine/core";
 import { IconPlus, IconTrash, IconUser } from "@tabler/icons-react";
 import { ClientContactPersonPayloadType } from "../../../utils/types";
@@ -36,6 +43,7 @@ const EditableForm = ({
     const updatedPersons = contactFormData.filter((_, i) => i !== index);
     setContactFormData(updatedPersons);
   };
+  const theme = useMantineTheme();
 
   return (
     <Box p={"md"}>
@@ -119,12 +127,23 @@ const EditableForm = ({
         </Table>
       </Stack>
 
-      <Button size="xs" onClick={handleAddPerson} mt="xs">
+      <Button
+        size="xs"
+        onClick={handleAddPerson}
+        mt="xs"
+        bg={theme.colors.success[5]}
+        radius={"lg"}
+      >
         <IconPlus size={18} />
         Add Person
       </Button>
       <Group mt="md" justify="center">
-        <Button onClick={handleSubmit} radius={"lg"} size="sm">
+        <Button
+          onClick={handleSubmit}
+          radius={"lg"}
+          size="sm"
+          bg={theme.colors.purple[1]}
+        >
           Save
         </Button>
       </Group>

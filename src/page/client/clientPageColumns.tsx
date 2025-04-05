@@ -5,6 +5,15 @@ export const clientPageColumns: MRT_ColumnDef<any>[] = [
     header: "Company",
     accessorKey: "client_name",
     size: 200,
+    Cell: ({ cell }) => (
+      <span
+        style={{
+          color: "#684498",
+        }}
+      >
+        {cell.getValue<string>()}
+      </span>
+    ),
   },
   // {
   //   header: "Address",

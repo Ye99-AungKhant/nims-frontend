@@ -14,6 +14,7 @@ import {
   Text,
   TextInput,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
 import { ListTable } from "./components/ListTable";
 import React, { useEffect, useState } from "react";
@@ -33,12 +34,12 @@ import { ContactPersonForm } from "./components/ContactPersonForm";
 import { useCreateContact } from "./hooks/useCreateContact";
 import { useDeleteContact } from "./hooks/useDeleteContact";
 import { DataTable } from "../../components/datatable/DataTable";
-import { clientPageColumns } from "./clientPageColumns";
 import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
 import { useParamsHelper } from "../../hooks/useParamsHelper";
 import { useDeleteClientWithContact } from "./hooks/useDeleteClientWithContact";
+import { clientPageColumns } from "./clientPageColumns";
 
 interface ContactPerson {
   id: number;
@@ -49,6 +50,7 @@ interface ContactPerson {
 }
 
 export const ClientPage = () => {
+  const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: clientData, isLoading } = useGetClientsWithContact();
   const [searchFilter, SetSearchFilter] = useState<any[]>();
@@ -156,21 +158,21 @@ export const ClientPage = () => {
         </Box>
         <Flex justify="space-between" align="center" mb={0} px="md" pt={"md"}>
           <Group gap={"xs"}>
-            <Text color="greyscale.6" fz="12px">
+            <Text color={theme.colors.purple[0]} fz="md">
               Show
             </Text>
             <PageSizeSelect />
-            <Text color="greyscale.6" fz="12px">
+            <Text color={theme.colors.purple[0]} fz="md">
               entries
             </Text>
           </Group>
-          <SearchInput size="sm" />
+          <SearchInput size="sm" leftSection />
         </Flex>
         <Box p={"md"}>
           <DataTable
             columns={clientPageColumns}
             data={searchFilter || []}
-            total={10}
+            total={100}
             enableRowOrdering={false}
             isLoading={isLoading}
             enableRowActions
@@ -178,7 +180,7 @@ export const ClientPage = () => {
               return (
                 <Group gap={"xs"}>
                   <ActionIcon
-                    // color="yellow"
+                    color={theme.colors.chocolate[1]}
                     size={30}
                     radius="lg"
                     variant="outline"
@@ -193,7 +195,7 @@ export const ClientPage = () => {
                     <IconEye size={18} />
                   </ActionIcon>
                   <ActionIcon
-                    color="yellow"
+                    color={theme.colors.purple[1]}
                     size={30}
                     radius="lg"
                     variant="outline"
@@ -204,7 +206,7 @@ export const ClientPage = () => {
                     <IconEdit size={18} />
                   </ActionIcon>
                   <ActionIcon
-                    color="red"
+                    color={theme.colors.chocolate[1]}
                     radius="lg"
                     variant="outline"
                     onClick={() => deleteClientSelect(row.original.id)}

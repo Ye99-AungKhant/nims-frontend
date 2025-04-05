@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, Grid, Paper, Select, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Flex,
+  Grid,
+  Paper,
+  Select,
+  TextInput,
+  useMantineTheme,
+} from "@mantine/core";
 import { Button } from "@mantine/core";
 import { Group } from "@mantine/core";
 import { Text } from "@mantine/core";
@@ -12,6 +21,8 @@ import {
   IconZip,
   IconMap,
   IconRoadSign,
+  IconAddressBook,
+  IconUserPlus,
 } from "@tabler/icons-react";
 import { Tabs, TabsList, TabsPanel } from "@mantine/core";
 import EditableForm from "./components/EditableForm"; // Assuming this is in the same directory
@@ -26,14 +37,18 @@ import { useCreateClientWithContact } from "./hooks/useCreateClient"; // Adjust 
 import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUpdateClientWithContact } from "./hooks/useUpdateClientWithContact";
+import { AddItemModal } from "../../components/common/AddItemModal";
+import { useDisclosure } from "@mantine/hooks";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
 }
 
 const ClientCreatePage = () => {
+  const theme = useMantineTheme();
   const param = useLocation();
   const id = param?.state?.id as ClientCreatePageProps;
+  const [opened, { open, close }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
   const [formData, setFormData] = useState<ClientPayloadType>({
     name: "",
@@ -158,19 +173,49 @@ const ClientCreatePage = () => {
         <Box p={"md"}>
           <Tabs value={activeTab} onChange={setActiveTab}>
             <TabsList>
-              <Tabs.Tab value="basicInfo">Basic Info</Tabs.Tab>
-              <Tabs.Tab value="address">Address</Tabs.Tab>
-              <Tabs.Tab value="contactPersons">Contact Persons</Tabs.Tab>
+              <Tabs.Tab
+                value="basicInfo"
+                leftSection={<IconAddressBook size={20} />}
+                style={
+                  activeTab === "basicInfo"
+                    ? { color: theme.colors.purple[0] }
+                    : { color: "" }
+                }
+              >
+                Basic Info
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="address"
+                leftSection={<IconMap size={20} />}
+                style={
+                  activeTab === "address"
+                    ? { color: theme.colors.purple[0] }
+                    : { color: "" }
+                }
+              >
+                Address
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="contactPersons"
+                leftSection={<IconUserPlus size={20} />}
+                style={
+                  activeTab === "contactPersons"
+                    ? { color: theme.colors.purple[0] }
+                    : { color: "" }
+                }
+              >
+                Contact Persons
+              </Tabs.Tab>
             </TabsList>
             <TabsPanel value="basicInfo">
               <Grid>
                 <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
                   <Flex gap={"xl"} direction={"column"} mt={30}>
-                    <Text>Company Name</Text>
-                    <Text>Primary Contact</Text>
-                    <Text>Designation</Text>
-                    <Text>Email</Text>
-                    <Text>Phone</Text>
+                    <Text>Company Name *</Text>
+                    <Text>Primary Contact *</Text>
+                    <Text>Designation *</Text>
+                    <Text>Email *</Text>
+                    <Text>Phone *</Text>
                   </Flex>
                 </Grid.Col>
 
@@ -207,6 +252,23 @@ const ClientCreatePage = () => {
                       onChange={(value) =>
                         handleContactChange(0, "role_id", Number(value))
                       }
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <ActionIcon
+                          size={42}
+                          color={theme.colors.purple[1]}
+                          style={{
+                            margin: 0,
+                            width: 70,
+                            borderTopLeftRadius: 0,
+                            borderBottomLeftRadius: 0,
+                            fontSize: 12,
+                          }}
+                          onClick={open}
+                        >
+                          Add
+                        </ActionIcon>
+                      }
                     />
                     <TextInput
                       type="email"
@@ -234,6 +296,7 @@ const ClientCreatePage = () => {
                   onClick={() => handleContinue("address")}
                   radius={"lg"}
                   size="sm"
+                  bg={theme.colors.purple[1]}
                 >
                   Continue
                 </Button>
@@ -244,11 +307,11 @@ const ClientCreatePage = () => {
               <Grid>
                 <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
                   <Flex gap={"xl"} direction={"column"} mt={30}>
-                    <Text>Address</Text>
-                    <Text>City</Text>
-                    <Text>State</Text>
-                    <Text>Country</Text>
-                    <Text>Postal/ZIP Code</Text>
+                    <Text>Address *</Text>
+                    <Text>City *</Text>
+                    <Text>State *</Text>
+                    <Text>Country *</Text>
+                    <Text>Postal/ZIP Code *</Text>
                   </Flex>
                 </Grid.Col>
 
@@ -297,6 +360,7 @@ const ClientCreatePage = () => {
                   onClick={() => handleContinue("contactPersons")}
                   radius={"lg"}
                   size="sm"
+                  bg={theme.colors.purple[1]}
                 >
                   Continue
                 </Button>
@@ -316,6 +380,7 @@ const ClientCreatePage = () => {
           </Tabs>
         </Box>
       </Paper>
+      <AddItemModal opened={opened} close={close} />
     </Box>
   );
 };

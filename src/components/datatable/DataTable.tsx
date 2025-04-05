@@ -7,6 +7,7 @@ import {
 import { useMemo } from "react";
 import { Pagination } from "./Pagination";
 import { useViewPort } from "../../hooks/ui/useViewPort";
+import { useMantineTheme } from "@mantine/core";
 // import './DataTable.module.css'
 
 interface TableProps<T extends Record<string, any>> {
@@ -24,6 +25,7 @@ export function DataTable<T extends Record<string, any> = object>({
   ...props
 }: TableProps<T> & MRT_TableOptions<T>) {
   const { isMobile } = useViewPort();
+  const theme = useMantineTheme();
   const totalPage = useMemo(
     () => total / 10 + (total % 10 === 0 ? 0 : 1),
     [total]
@@ -56,13 +58,14 @@ export function DataTable<T extends Record<string, any> = object>({
     },
     mantineTableBodyCellProps: {
       style: {
-        fontWeight: 500,
         height: 60,
+        color: theme.colors.chocolate[0],
       },
     },
     mantineTableHeadCellProps: {
       style: {
         whiteSpace: "nowrap",
+        color: theme.colors.chocolate[0],
       },
     },
     // pagination

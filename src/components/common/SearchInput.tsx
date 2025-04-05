@@ -9,11 +9,13 @@ type SearchInputProps = Omit<
   "onChange" | "icon" | "placeholder" | "rightSection" | "value"
 > & {
   delay?: number;
+  placeholder?: string;
 };
 
 export function SearchInput({
   name = "criteria",
   delay = 500,
+  placeholder = "Search here...",
   ...props
 }: SearchInputProps) {
   const { setParam, getParam, setParams } = useParamsHelper();
@@ -42,8 +44,8 @@ export function SearchInput({
         },
       }}
       value={value}
-      placeholder="Search here..."
-      leftSection={<IconSearch size={20} />}
+      placeholder={placeholder}
+      leftSection={props.leftSection && <IconSearch size={20} />}
       onChange={(e) => setValue(e.currentTarget.value)}
       rightSection={value && <CloseButton onClick={handleClear} />}
     />

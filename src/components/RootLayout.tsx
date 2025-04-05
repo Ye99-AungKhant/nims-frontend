@@ -2,23 +2,23 @@ import {
   ActionIcon,
   AppShell,
   Box,
-  Burger,
   Button,
   Flex,
+  Group,
   Popover,
   Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconLogout, IconPlus } from "@tabler/icons-react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { IconArrowLeft, IconArrowRight, IconLogout } from "@tabler/icons-react";
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "./frames/Sidebar";
+import { SearchInput } from "./common/SearchInput";
 
 const RootLayout = () => {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const username = "Ye";
-  const navigate = useNavigate();
   return (
     <AppShell
       layout="alt"
@@ -38,13 +38,26 @@ const RootLayout = () => {
       <AppShell.Header h={70}>
         <Box p="md">
           <Flex w="100%" justify="space-between" align="center">
-            <Box>
-              <Burger onClick={toggleDesktop} visibleFrom="sm" />
-              <Burger onClick={toggleMobile} hiddenFrom="sm" />
-              <ActionIcon onClick={() => navigate("create")} size={24} ml={12}>
-                <IconPlus />
+            <Group>
+              <ActionIcon
+                radius={50}
+                variant="outline"
+                onClick={toggleDesktop}
+                size={"lg"}
+                style={{ borderColor: "gray" }}
+                color="#707070"
+              >
+                {desktopOpened ? <IconArrowLeft /> : <IconArrowRight />}
               </ActionIcon>
-            </Box>
+              {/* <Burger onClick={toggleMobile} hiddenFrom="sm" /> */}
+              <SearchInput
+                size="sm"
+                radius={"xl"}
+                placeholder="Search client name or company..."
+                w={210}
+              />
+            </Group>
+
             {username && (
               <Flex px="md" gap="sm" align="center">
                 <Popover width={250} trapFocus position="bottom" shadow="md">

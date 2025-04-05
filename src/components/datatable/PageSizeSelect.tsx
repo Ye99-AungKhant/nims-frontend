@@ -16,12 +16,11 @@ export function PageSizeSelect(props: Omit<SelectProps, "data">) {
   return (
     <Select
       defaultValue={getParam("pageSize") ?? "10"}
-      variant="filled"
-      //   styles={{ rightSection: { pointerEvents: "none" } }}
-      rightSection={<IconCaretDown size="16px" />}
+      variant="default"
       size="xs"
-      miw="70px"
-      w="70px"
+      miw="60px"
+      w="60px"
+      radius={"sm"}
       data={pageSize}
       onChange={(value) => {
         setParams({

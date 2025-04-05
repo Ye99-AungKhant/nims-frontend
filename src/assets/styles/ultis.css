@@ -4,10 +4,17 @@
   transition: background-color 0.3s ease;
 }
 .menu-item.active {
-  background-color: #ebe8fc;
-  color: purple;
+  background-color: #f0f0f0;
+  color: #684498;
 }
-
-.menu-item.active .text {
-  color: purple !important; /* Ensure the text color updates */
+.textIcon {
+  color: #707070;
+}
+.text {
+  margin-left: 8px;
+  color: #707070;
+}
+.menu-item.active .text,
+.menu-item.active .textIcon {
+  color: #684498 !important;
 }

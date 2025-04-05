@@ -11,8 +11,17 @@ import {
   Modal,
   Center,
   Button,
+  useMantineTheme,
+  Flex,
 } from "@mantine/core";
-import { IconUser, IconUsers, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconUsers,
+  IconEdit,
+  IconTrash,
+  IconAddressBook,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
@@ -25,52 +34,57 @@ export function ViewClient({ data }: any) {
 
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
-      <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
-        <Text size="lg" fw={700}>
+      <Group style={{ borderBottom: "1px solid #dddddd" }} p="sm" gap={0}>
+        <IconAddressBook size={24} />
+        <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
           View Client
         </Text>
-      </Box>
+      </Group>
 
       <Table variant="vertical" layout="fixed" withTableBorder highlightOnHover>
         <Table.Tbody>
-          <Table.Tr h={50}>
-            <Table.Th w={160} style={{ color: "purple" }}>
+          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
+            <Table.Th w={300} style={{ color: "#684498" }}>
               Company
             </Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>{data.name}</Table.Td>
-          </Table.Tr>
-
-          <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple" }}>Primary Contact</Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>
-              {data.contact_person[0]?.name}
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+              {data.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple" }}>Designation</Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>
+            <Table.Th style={{ color: "#684498" }}>Primary Contact</Table.Th>
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+              {data.contact_person[0]?.name}
+            </Table.Td>
+          </Table.Tr>
+
+          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
+            <Table.Th style={{ color: "#684498" }}>Designation</Table.Th>
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.contact_person[0]?.role.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Email</Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.contact_person[0]?.email}
             </Table.Td>
           </Table.Tr>
 
-          <Table.Tr h={50}>
+          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
             <Table.Th style={{ color: "purple" }}>Phone</Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.contact_person[0]?.phone}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
             <Table.Th style={{ color: "purple" }}>Address</Table.Th>
-            <Table.Td style={{ fontSize: 17 }}>{data.address}</Table.Td>
+            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+              {data.address}
+            </Table.Td>
           </Table.Tr>
         </Table.Tbody>
       </Table>
@@ -101,18 +115,19 @@ export function ContactPerson({ data }: any) {
 
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
-      <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
-        <Text size="lg" fw={700}>
-          Contact Person
+      <Group style={{ borderBottom: "1px solid #dddddd" }} p="sm" gap={0}>
+        <IconUsersGroup size={24} />
+        <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
+          Contact Persons
         </Text>
-      </Box>
+      </Group>
       <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Phone</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Designation</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
             <Table.Th></Table.Th>
           </Table.Tr>
         </Table.Thead>
@@ -120,10 +135,12 @@ export function ContactPerson({ data }: any) {
           {contacts ? (
             contacts.map((person: any) => (
               <Table.Tr>
-                <Table.Td style={{ fontSize: 17 }}>{person.name}</Table.Td>
-                <Table.Td style={{ fontSize: 17 }}>{person.phone}</Table.Td>
-                <Table.Td style={{ fontSize: 17 }}>{person.email}</Table.Td>
-                <Table.Td style={{ fontSize: 17 }}>{person.role.name}</Table.Td>
+                <Table.Td style={{ color: "#474747" }}>{person.name}</Table.Td>
+                <Table.Td style={{ color: "#474747" }}>{person.phone}</Table.Td>
+                <Table.Td style={{ color: "#474747" }}>{person.email}</Table.Td>
+                <Table.Td style={{ color: "#474747" }}>
+                  {person.role.name}
+                </Table.Td>
                 <Table.Td>
                   <ActionIcon
                     color="red"
@@ -168,6 +185,7 @@ export function ContactPerson({ data }: any) {
 }
 
 export default function ClientDetailPage() {
+  const theme = useMantineTheme();
   const [menuBtn, setMenuBtn] = useState<string>("client");
   const param = useLocation();
   const { data: clientData, isLoading } = useGetClientDetailWithContact(
@@ -184,28 +202,34 @@ export default function ClientDetailPage() {
     <Box style={{ display: "flex", gap: "20px" }} px="md">
       {/* Left Card */}
       <Paper shadow="sm" radius="md" style={{ width: 300 }}>
-        <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
-          <Text size="lg" fw={500} color="purple">
+        <Flex
+          style={{ borderBottom: "1px solid #dddddd" }}
+          p="sm"
+          justify={"center"}
+        >
+          <Text size="lg" fw={500} color={theme.colors.purple[0]}>
             {clientData?.items.name}
           </Text>
-        </Box>
+        </Flex>
         <Stack p="md">
           <Group
             onClick={() => handleMenuBtn("client")}
             p={"xs"}
+            gap={0}
             className={`menu-item ${menuBtn === "client" ? "active" : ""}`}
           >
-            <IconUser size={16} />
+            <IconAddressBook size={20} className="textIcon" />
             <Text className="text">Client</Text>
           </Group>
           <Group
             onClick={() => handleMenuBtn("contactPaerson")}
             p={"xs"}
+            gap={0}
             className={`menu-item ${
               menuBtn === "contactPaerson" ? "active" : ""
             }`}
           >
-            <IconUsers size={16} />
+            <IconUsersGroup size={20} className="textIcon" />
             <Text className="text">Contact Persons</Text>
           </Group>
           <Group
@@ -213,9 +237,10 @@ export default function ClientDetailPage() {
               navigate("/client/create", { state: { id: param.state.data.id } })
             }
             p={"xs"}
+            gap={0}
             className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
           >
-            <IconEdit size={16} />
+            <IconEdit size={20} className="textIcon" />
             <Text className="text">Edit</Text>
           </Group>
         </Stack>
