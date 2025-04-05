@@ -40,10 +40,11 @@ export function DataTable<T extends Record<string, any> = object>({
     enableBottomToolbar: false,
     enableColumnActions: false,
     enableColumnFilters: false,
-    enablePagination: false,
+    enablePagination: true,
     enableSorting: false,
     enableStickyHeader: false,
     enablePinning: true,
+    enableColumnResizing: true,
     initialState: {
       density: "md",
       columnPinning: {
@@ -58,7 +59,6 @@ export function DataTable<T extends Record<string, any> = object>({
     },
     mantineTableBodyCellProps: {
       style: {
-        height: 60,
         color: theme.colors.chocolate[0],
       },
     },
@@ -66,6 +66,11 @@ export function DataTable<T extends Record<string, any> = object>({
       style: {
         whiteSpace: "nowrap",
         color: theme.colors.chocolate[0],
+      },
+    },
+    mantineTableBodyRowProps: {
+      style: {
+        height: 10,
       },
     },
     // pagination
@@ -85,11 +90,14 @@ export function DataTable<T extends Record<string, any> = object>({
     displayColumnDefOptions: {
       "mrt-row-actions": {
         header: "Actions", //change header text
-        size: 200,
+        size: 150,
+      },
+      "mrt-row-numbers": {
+        maxSize: 10,
       },
     },
     defaultColumn: {
-      size: 20,
+      size: 10,
     },
     mantineTableProps: {
       withColumnBorders: true,

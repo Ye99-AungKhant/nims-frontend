@@ -27,6 +27,8 @@ export const clientPageColumns: MRT_ColumnDef<any>[] = [
   {
     header: "Designation",
     accessorKey: "role",
+    size: 150,
+    minSize: 150,
   },
   {
     header: "Email",

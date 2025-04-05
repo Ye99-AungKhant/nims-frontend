@@ -77,6 +77,7 @@ const EditableForm = ({
                   </Table.Td>
                   <Table.Td>
                     <Input
+                      type="number"
                       variant="filled"
                       value={person.phone}
                       onChange={(e) =>

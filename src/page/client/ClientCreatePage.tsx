@@ -39,6 +39,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useUpdateClientWithContact } from "./hooks/useUpdateClientWithContact";
 import { AddItemModal } from "../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
+import { useCreateRole } from "./hooks/useCreateRole";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
@@ -79,6 +80,7 @@ const ClientCreatePage = () => {
   } = useGetClientDetailWithContact(id); // Use the new hook
   const { mutateAsync: createClient } = useCreateClientWithContact();
   const { mutateAsync: updateClient } = useUpdateClientWithContact(); // Use update mutation
+  const { mutate: createRole } = useCreateRole();
 
   // Set edit mode if ID is provided
   useEffect(() => {
@@ -281,6 +283,7 @@ const ClientCreatePage = () => {
                     />
 
                     <TextInput
+                      type="number"
                       value={contactFormData[0]?.phone}
                       leftSection={<IconPhone size={16} />}
                       required
@@ -380,7 +383,7 @@ const ClientCreatePage = () => {
           </Tabs>
         </Box>
       </Paper>
-      <AddItemModal opened={opened} close={close} />
+      <AddItemModal opened={opened} close={close} mutationFn={createRole} />
     </Box>
   );
 };
