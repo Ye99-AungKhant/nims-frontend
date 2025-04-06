@@ -106,7 +106,7 @@ const RootLayout = () => {
         <Sidebar />
       </AppShell.Navbar>
       <AppShell.Main
-        pt="100px"
+        pt={"80px"}
         style={{
           backgroundColor: "var(--mantine-color-gray-0)",
           overflowX: "auto",

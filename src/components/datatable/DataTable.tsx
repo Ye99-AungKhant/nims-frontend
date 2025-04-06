@@ -47,7 +47,7 @@ export function DataTable<T extends Record<string, any> = object>({
     enableColumnFilters: false,
     manualPagination: true,
     enableSorting: false,
-    enableStickyHeader: false,
+    enableStickyHeader: true,
     enablePinning: true,
     enableColumnResizing: true,
     initialState: {
@@ -57,7 +57,7 @@ export function DataTable<T extends Record<string, any> = object>({
       },
     },
     mantineTableContainerProps: {
-      style: { maxHeight: "calc(100vh - 16rem)" },
+      style: { maxHeight: "calc(100vh - 300px)" },
     },
     mantinePaperProps: {
       style: { height: "100%", width: "100%", overflowX: "auto" },
@@ -71,6 +71,7 @@ export function DataTable<T extends Record<string, any> = object>({
       style: {
         whiteSpace: "nowrap",
         color: theme.colors.chocolate[0],
+        backgroundColor: "white",
       },
     },
     mantineTableBodyRowProps: {
