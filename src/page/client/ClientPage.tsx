@@ -53,7 +53,6 @@ export const ClientPage = () => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: clientData, isLoading } = useGetClientsWithContact();
-  const [searchFilter, SetSearchFilter] = useState<any[]>();
   const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
   const [selectedClient, setSelectedClient] = useState<number>();
   const [deleteClient, setDeleteClient] = useState<number>();
@@ -64,7 +63,6 @@ export const ClientPage = () => {
   const { mutate: deleteMutate } = useDeleteContact();
   const { mutate: deleteClientWithContactMutate } =
     useDeleteClientWithContact();
-  const { getParam } = useParamsHelper();
   const navigate = useNavigate();
 
   // console.log(searchFilter);
@@ -107,24 +105,24 @@ export const ClientPage = () => {
     close();
   };
 
-  useEffect(() => {
-    SetSearchFilter(clientData?.items);
-  }, [clientData]);
+  // useEffect(() => {
+  //   SetSearchFilter(clientData?.items);
+  // }, [clientData]);
 
-  useEffect(() => {
-    if (getParam("criteria")) {
-      const filtered = searchFilter?.filter((client: any) =>
-        client.client_name
-          .toLowerCase()
-          .includes(getParam("criteria")?.toLowerCase())
-      );
-      console.log(filtered);
+  // useEffect(() => {
+  //   if (getParam("criteria")) {
+  //     const filtered = searchFilter?.filter((client: any) =>
+  //       client.client_name
+  //         .toLowerCase()
+  //         .includes(getParam("criteria")?.toLowerCase())
+  //     );
+  //     console.log(filtered);
 
-      SetSearchFilter(filtered);
-    } else {
-      SetSearchFilter(clientData?.items);
-    }
-  }, [getParam("criteria")]);
+  //     SetSearchFilter(filtered);
+  //   } else {
+  //     SetSearchFilter(clientData?.items);
+  //   }
+  // }, [getParam("criteria")]);
 
   return (
     <Box px="md">
@@ -166,13 +164,14 @@ export const ClientPage = () => {
               entries
             </Text>
           </Group>
-          <SearchInput size="sm" leftSection />
+          <SearchInput size="sm" leftSection name={"search"} />
         </Flex>
         <Box p={"md"}>
           <DataTable
             columns={clientPageColumns}
-            data={searchFilter || []}
-            total={clientData?.totalCount}
+            data={clientData?.items || []}
+            totalPage={clientData?.totalPage}
+            totalCount={clientData?.totalCount}
             enableRowOrdering={false}
             isLoading={isLoading}
             enableRowActions

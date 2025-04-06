@@ -8,15 +8,21 @@ import {
 import { useParamsHelper } from "../../hooks/useParamsHelper";
 import { useMemo } from "react";
 
-export function Pagination(props: PaginationProps) {
+interface PaginationCustomProps extends PaginationProps {
+  totalPage?: number;
+  totalCount?: number;
+  total: number;
+}
+
+export function Pagination(props: PaginationCustomProps) {
   const { getParam, setParams } = useParamsHelper();
   const value = parseInt(getParam("pageNumber") || "1", 10);
   const perPage = parseInt(getParam("pageSize") || "10", 10);
-  const totalPage = useMemo(() => Math.ceil(props.total / 10), [props.total]);
+  // const totalPage = useMemo(() => Math.ceil(props.total / 10), [props.total]);
   const theme = useMantineTheme();
 
   const from = (value - 1) * perPage + 1;
-  const to = Math.min(value * perPage, props.total);
+  const to = Math.min(value * perPage, props.totalCount || 0);
 
   const handleChange = (page: number) => {
     setParams({
@@ -29,11 +35,11 @@ export function Pagination(props: PaginationProps) {
   return (
     <Group justify="space-between" mt={20}>
       <Text color={theme.colors.purple[0]}>
-        Showing {from} to {to} of {props.total} entries
+        Showing {from} to {to} of {props.totalCount} entries
       </Text>
       <Pg.Root
         {...props}
-        total={totalPage}
+        total={props.totalPage || 0}
         onChange={handleChange}
         value={value}
         color={theme.colors.primary[3]}

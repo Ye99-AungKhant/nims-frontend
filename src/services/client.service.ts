@@ -17,7 +17,11 @@ export const getClientWithContact = async (params: any) => {
     return await apiClient.get(`/client/contact-person?id=${params.id}`);
   }
   return await apiClient.get(`/client/contact-person`, {
-    params: { pageIndex: params.pageIndex, pageSize: params.pageSize },
+    params: {
+      pageIndex: params.pageIndex,
+      pageSize: params.pageSize,
+      search: params.search,
+    },
   });
 };
 

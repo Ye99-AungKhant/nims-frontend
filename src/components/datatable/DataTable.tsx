@@ -14,7 +14,8 @@ import { useGetRouteParams } from "../../hooks/useGetRouteParams";
 
 interface TableProps<T extends Record<string, any>> {
   data: T[];
-  total?: number;
+  totalPage?: number;
+  totalCount?: number;
   isLoading?: boolean;
   columns: MRT_ColumnDef<T>[];
 }
@@ -22,7 +23,8 @@ interface TableProps<T extends Record<string, any>> {
 export function DataTable<T extends Record<string, any> = object>({
   columns,
   data = [],
-  total = 0,
+  totalPage = 0,
+  totalCount = 0,
   isLoading,
   ...props
 }: TableProps<T> & MRT_TableOptions<T>) {
@@ -77,7 +79,7 @@ export function DataTable<T extends Record<string, any> = object>({
       },
     },
     // pagination
-    rowCount: total,
+    rowCount: totalCount,
     paginationDisplayMode: isMobile ? "default" : "pages",
     mantinePaginationProps: {
       showRowsPerPage: !isMobile,
@@ -118,7 +120,7 @@ export function DataTable<T extends Record<string, any> = object>({
   return (
     <>
       <MantineReactTable table={table} />
-      <Pagination total={total} />
+      <Pagination total={0} totalPage={totalPage} totalCount={totalCount} />
     </>
   );
 }
