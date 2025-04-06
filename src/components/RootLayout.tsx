@@ -13,6 +13,7 @@ import { IconArrowLeft, IconArrowRight, IconLogout } from "@tabler/icons-react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./frames/Sidebar";
 import { SearchInput } from "./common/SearchInput";
+import { GlobalSearch } from "./common/GlobalSearch";
 
 const RootLayout = () => {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -50,12 +51,7 @@ const RootLayout = () => {
                 {desktopOpened ? <IconArrowLeft /> : <IconArrowRight />}
               </ActionIcon>
               {/* <Burger onClick={toggleMobile} hiddenFrom="sm" /> */}
-              <SearchInput
-                size="sm"
-                radius={"xl"}
-                placeholder="Search client name or company..."
-                w={210}
-              />
+              <GlobalSearch />
             </Group>
 
             {username && (
@@ -102,7 +98,7 @@ const RootLayout = () => {
           </Flex>
         </Box>
       </AppShell.Header>
-      <AppShell.Navbar bg={"#1F2937"} w={250}>
+      <AppShell.Navbar bg={"#111827"} w={250} m={0}>
         <Sidebar />
       </AppShell.Navbar>
       <AppShell.Main

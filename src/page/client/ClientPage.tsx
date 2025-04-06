@@ -3,95 +3,38 @@ import {
   Box,
   Button,
   Center,
-  Collapse,
-  Divider,
   Flex,
   Group,
   Modal,
   Paper,
-  Select,
-  Table,
   Text,
-  TextInput,
-  Title,
   useMantineTheme,
 } from "@mantine/core";
-import { ListTable } from "./components/ListTable";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useGetClientsWithContact } from "./hooks/useGetClientWithContact";
 import {
   IconCloudDown,
   IconEdit,
   IconEye,
-  IconMail,
-  IconMailFilled,
-  IconPhoto,
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
-import { ContactPersonForm } from "./components/ContactPersonForm";
-import { useCreateContact } from "./hooks/useCreateContact";
-import { useDeleteContact } from "./hooks/useDeleteContact";
 import { DataTable } from "../../components/datatable/DataTable";
 import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
-import { useParamsHelper } from "../../hooks/useParamsHelper";
 import { useDeleteClientWithContact } from "./hooks/useDeleteClientWithContact";
 import { clientPageColumns } from "./clientPageColumns";
-
-interface ContactPerson {
-  id: number;
-  name: string;
-  role: any;
-  phone: string;
-  email: string;
-}
 
 export const ClientPage = () => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: clientData, isLoading } = useGetClientsWithContact();
-  const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
-  const [selectedClient, setSelectedClient] = useState<number>();
   const [deleteClient, setDeleteClient] = useState<number>();
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [editValues, setEditValues] = useState<ContactPerson | null>(null);
-  const { mutate: createMutate } = useCreateContact();
-  const { mutate: deleteMutate } = useDeleteContact();
   const { mutate: deleteClientWithContactMutate } =
     useDeleteClientWithContact();
   const navigate = useNavigate();
-
-  // console.log(searchFilter);
-
-  const handleEditClick = (row: ContactPerson) => {
-    setEditValues(row);
-    setOpenEditModal(true);
-  };
-
-  const createContact = (params: any) => {
-    console.log("create:", { ...params, client_id: selectedClient });
-    createMutate(
-      { ...params, client_id: selectedClient },
-      {
-        onSuccess: (res) => {
-          setOpenCreateModal(false);
-          setSelectedContacts((prev) => [...(prev || []), res?.data.data]);
-        },
-      }
-    );
-  };
-
-  const deleteContact = (param: any) => {
-    deleteMutate(param, {
-      onSuccess: () => {
-        setSelectedContacts((prev) => prev.filter((data) => data.id != param));
-      },
-    });
-  };
 
   const deleteClientSelect = (id: any) => {
     setDeleteClient(id);
@@ -104,25 +47,6 @@ export const ClientPage = () => {
     deleteClientWithContactMutate(deleteClient);
     close();
   };
-
-  // useEffect(() => {
-  //   SetSearchFilter(clientData?.items);
-  // }, [clientData]);
-
-  // useEffect(() => {
-  //   if (getParam("criteria")) {
-  //     const filtered = searchFilter?.filter((client: any) =>
-  //       client.client_name
-  //         .toLowerCase()
-  //         .includes(getParam("criteria")?.toLowerCase())
-  //     );
-  //     console.log(filtered);
-
-  //     SetSearchFilter(filtered);
-  //   } else {
-  //     SetSearchFilter(clientData?.items);
-  //   }
-  // }, [getParam("criteria")]);
 
   return (
     <Box px="md">
@@ -186,7 +110,7 @@ export const ClientPage = () => {
                     onClick={() =>
                       navigate("detail", {
                         state: {
-                          data: row.original,
+                          id: row.original.id,
                         },
                       })
                     }

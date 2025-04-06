@@ -7,7 +7,7 @@ import {
 } from "@mantine/core";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface Props {
   opened: boolean;

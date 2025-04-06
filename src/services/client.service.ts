@@ -8,8 +8,8 @@ export const createClientWithContact = async (params: any) => {
   return await apiClient.post("/client/createClientWithContact", { ...params });
 };
 
-export const getClient = async () => {
-  return await apiClient.get("/client");
+export const getClient = async (params: any) => {
+  return await apiClient.get(`/client?search=${params}`);
 };
 
 export const getClientWithContact = async (params: any) => {

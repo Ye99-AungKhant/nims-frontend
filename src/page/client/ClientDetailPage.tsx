@@ -41,41 +41,70 @@ export function ViewClient({ data }: any) {
         </Text>
       </Group>
 
-      <Table variant="vertical" layout="fixed" withTableBorder highlightOnHover>
+      <Table variant="vertical" withTableBorder highlightOnHover>
         <Table.Tbody>
-          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
-            <Table.Th w={300} style={{ color: "#684498" }}>
+          <Table.Tr h={50}>
+            <Table.Th
+              w={300}
+              style={{ color: "#684498", backgroundColor: "#f0f0f0" }}
+            >
               Company
             </Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+            <Table.Td
+              style={{
+                fontSize: 17,
+                color: "#707070",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
               {data.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "#684498" }}>Primary Contact</Table.Th>
+            <Table.Th style={{ color: "#684498", backgroundColor: "#fff" }}>
+              Primary Contact
+            </Table.Th>
             <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.contact_person[0]?.name}
             </Table.Td>
           </Table.Tr>
 
-          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
-            <Table.Th style={{ color: "#684498" }}>Designation</Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+          <Table.Tr h={50}>
+            <Table.Th style={{ color: "#684498", backgroundColor: "#f0f0f0" }}>
+              Designation
+            </Table.Th>
+            <Table.Td
+              style={{
+                fontSize: 17,
+                color: "#707070",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
               {data.contact_person[0]?.role.name}
             </Table.Td>
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple" }}>Email</Table.Th>
+            <Table.Th style={{ color: "purple", backgroundColor: "#fff" }}>
+              Email
+            </Table.Th>
             <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.contact_person[0]?.email}
             </Table.Td>
           </Table.Tr>
 
-          <Table.Tr h={50} style={{ backgroundColor: "#f0f0f0" }}>
-            <Table.Th style={{ color: "purple" }}>Phone</Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+          <Table.Tr h={50}>
+            <Table.Th style={{ color: "purple", backgroundColor: "#f0f0f0" }}>
+              Phone
+            </Table.Th>
+            <Table.Td
+              style={{
+                fontSize: 17,
+                color: "#707070",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
               {data.contact_person[0]?.phone}
             </Table.Td>
           </Table.Tr>
@@ -189,7 +218,7 @@ export default function ClientDetailPage() {
   const [menuBtn, setMenuBtn] = useState<string>("client");
   const param = useLocation();
   const { data: clientData, isLoading } = useGetClientDetailWithContact(
-    param.state.data.id
+    param.state.id
   );
   const navigate = useNavigate();
   console.log(clientData?.items);
@@ -234,7 +263,7 @@ export default function ClientDetailPage() {
           </Group>
           <Group
             onClick={() =>
-              navigate("/client/create", { state: { id: param.state.data.id } })
+              navigate("/client/create", { state: { id: param.state.id } })
             }
             p={"xs"}
             gap={0}
