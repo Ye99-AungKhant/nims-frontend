@@ -8,6 +8,7 @@ import { InstalledPage } from "../page/installed/InstalledPage";
 import { DashboardPage } from "../page/dashboard";
 import ClientDetailPage from "../page/client/ClientDetailPage";
 import ClientCreatePage from "../page/client/ClientCreatePage";
+import InstallationCreatePage from "../page/installed/InstallationCreatePage";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: "/", index: true, element: <DashboardPage /> },
       { path: "installed", element: <InstalledPage /> },
       { path: "/installed/create", element: <CreateForm /> },
+      { path: "/installed/creat", element: <InstallationCreatePage /> },
       { path: "client", element: <ClientPage /> },
       { path: "/client/detail", element: <ClientDetailPage /> },
       { path: "/client/create", element: <ClientCreatePage /> },

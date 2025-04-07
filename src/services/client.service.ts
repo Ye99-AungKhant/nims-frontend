@@ -12,6 +12,10 @@ export const getClient = async (params: any) => {
   return await apiClient.get(`/client?search=${params}`);
 };
 
+export const getClientList = async () => {
+  return await apiClient.get(`/client`);
+};
+
 export const getClientWithContact = async (params: any) => {
   if (params.id) {
     return await apiClient.get(`/client/contact-person?id=${params.id}`);

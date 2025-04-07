@@ -3,17 +3,62 @@ import {
   Paper,
   Tabs,
   TabsList,
+  TabsPanel,
   Text,
   useMantineTheme,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { IconUserPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FormValues } from "../../utils/types";
+import VehicleInfo from "./components/VehicleInfo";
 
 const InstallationCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
   const navigate = useNavigate();
   const theme = useMantineTheme();
+
+  const form = useForm<FormValues>({
+    initialValues: {
+      client: "",
+      vehicleType: "",
+      vehicleBrand: "",
+      vehicleModel: "",
+      vehicleYear: "",
+      vehiclePlateNo: "",
+      gpsBrand: "",
+      gpsModel: "",
+      imei: "",
+      gpsSerial: "",
+      warranty: "",
+      operator: { operator: "", phone_no: "" },
+      operators: [{ operator: "", phone_no: "" }],
+      peripheral: [
+        {
+          sensor_type_id: "",
+          brand_id: "",
+          model_id: "",
+          serial_no: "",
+          qty: "",
+          warranty_plan_id: "",
+          warranty_expiry_date: new Date(),
+        },
+      ],
+      accessory: [{ type_id: "", qty: "" }],
+      server: {
+        type_id: "",
+        domain: "",
+        installed_date: new Date(),
+        subscription_plan_id: "",
+        expire_date: new Date(),
+        invoice_no: "",
+        object_base_fee: "",
+      },
+      installationEngineer: [{ user_id: "" }],
+    },
+  });
+
   return (
     <Box px="md">
       <Paper shadow="sm" radius="md">
@@ -34,7 +79,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Basic Info
+                Vehicle Info
               </Tabs.Tab>
               <Tabs.Tab
                 value="address"
@@ -45,7 +90,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Address
+                GPS Device
               </Tabs.Tab>
               <Tabs.Tab
                 value="contactPersons"
@@ -56,7 +101,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Contact Persons
+                SIM Card
               </Tabs.Tab>
               <Tabs.Tab
                 value="contactPersons"
@@ -67,7 +112,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Contact Persons
+                Peripheral
               </Tabs.Tab>
               <Tabs.Tab
                 value="contactPersons"
@@ -78,7 +123,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Contact Persons
+                Accessories
               </Tabs.Tab>
               <Tabs.Tab
                 value="contactPersons"
@@ -89,9 +134,12 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Contact Persons
+                Server Info
               </Tabs.Tab>
             </TabsList>
+            <TabsPanel value="basicInfo">
+              <VehicleInfo form={form} />
+            </TabsPanel>
           </Tabs>
         </Box>
       </Paper>
