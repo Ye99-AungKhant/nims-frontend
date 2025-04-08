@@ -13,9 +13,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormValues } from "../../utils/types";
 import VehicleInfoForm from "./components/VehicleInfoForm";
+import GPSInfoForm from "./components/GPSInfoForm";
+import SimCardInfoForm from "./components/SimCardInfoForm";
 
 const InstallationCreatePage = () => {
-  const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
+  const [activeTab, setActiveTab] = useState<string | null>("vehicleInfo");
   const navigate = useNavigate();
   const theme = useMantineTheme();
 
@@ -71,10 +73,10 @@ const InstallationCreatePage = () => {
           <Tabs value={activeTab} onChange={setActiveTab}>
             <TabsList>
               <Tabs.Tab
-                value="basicInfo"
+                value="vehicleInfo"
                 leftSection={<IconUserPlus size={20} />}
                 style={
-                  activeTab === "basicInfo"
+                  activeTab === "vehicleInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -82,10 +84,10 @@ const InstallationCreatePage = () => {
                 Vehicle Info
               </Tabs.Tab>
               <Tabs.Tab
-                value="address"
+                value="gpsInfo"
                 leftSection={<IconUserPlus size={20} />}
                 style={
-                  activeTab === "address"
+                  activeTab === "gpsInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -93,10 +95,10 @@ const InstallationCreatePage = () => {
                 GPS Device
               </Tabs.Tab>
               <Tabs.Tab
-                value="contactPersons"
+                value="simInfo"
                 leftSection={<IconUserPlus size={20} />}
                 style={
-                  activeTab === "contactPersons"
+                  activeTab === "simInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -137,8 +139,14 @@ const InstallationCreatePage = () => {
                 Server Info
               </Tabs.Tab>
             </TabsList>
-            <TabsPanel value="basicInfo">
+            <TabsPanel value="vehicleInfo">
               <VehicleInfoForm form={form} />
+            </TabsPanel>
+            <TabsPanel value="gpsInfo">
+              <GPSInfoForm form={form} />
+            </TabsPanel>
+            <TabsPanel value="simInfo">
+              <SimCardInfoForm form={form} />
             </TabsPanel>
           </Tabs>
         </Box>
