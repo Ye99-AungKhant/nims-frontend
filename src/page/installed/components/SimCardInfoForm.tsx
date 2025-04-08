@@ -20,27 +20,37 @@ import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../form/hooks/useGetBrands";
 import { useGetModels } from "../../form/hooks/useGetModels";
-import { DateInput } from "@mantine/dates";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+}
+
+interface Operators {
+  operator: string;
+  phone_no: string;
 }
 const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [simMode, setSimMode] = useState<string | null>("Single");
-  const [modalType, setModalType] = useState("");
-  const { data: brandData } = useGetBrands("GPS");
-  const { data: modelData } = useGetModels("GPS", Number(form.values.gpsBrand));
-  const { mutate: createModel } = useCreateModel();
+  const { data: brandData } = useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
 
-  console.log("clientData", form.values);
-  const handleModal = (name: string) => {
-    setModalType(name);
-    open();
+  const handleDualPhoneNumberChange = (
+    index: number,
+    field: keyof Operators,
+    value: any
+  ) => {
+    const updatedOperators = [...form.values.operators];
+    if (!updatedOperators[index]) {
+      updatedOperators[index] = { operator: "", phone_no: "" };
+    }
+    updatedOperators[index][field] = value;
+    form.setFieldValue("operators", updatedOperators);
   };
+
+  console.log("clientData", form.values);
 
   return (
     <>
@@ -50,6 +60,12 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
             <Text>Mode *</Text>
             <Text>First Operator *</Text>
             <Text>First Phone No. *</Text>
+            {simMode == "Dual" && (
+              <>
+                <Text>Second Operator *</Text>
+                <Text>Second Phone No. *</Text>
+              </>
+            )}
           </Flex>
         </Grid.Col>
 
@@ -75,12 +91,14 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                 offset: 0,
               }}
               data={
-                modelData?.data.data.map((data: any) => ({
-                  value: String(data.id),
+                brandData?.data.data.map((data: any) => ({
+                  value: data.name,
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("gpsModel")}
+              onChange={(value) =>
+                handleDualPhoneNumberChange(0, "operator", value)
+              }
               leftSection={<IconUser size={16} />}
               rightSectionPointerEvents="all"
               rightSection={
@@ -100,7 +118,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
-                    onClick={() => handleModal("Model")}
+                    onClick={open}
                   >
                     Add
                   </ActionIcon>
@@ -110,7 +128,9 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
             <TextInput
               type="number"
               leftSection={""}
-              {...form.getInputProps("imei")}
+              onChange={(e) =>
+                handleDualPhoneNumberChange(0, "phone_no", e.target.value)
+              }
             />
             {simMode == "Dual" && (
               <>
@@ -121,12 +141,14 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                     offset: 0,
                   }}
                   data={
-                    modelData?.data.data.map((data: any) => ({
-                      value: String(data.id),
+                    brandData?.data.data.map((data: any) => ({
+                      value: data.name,
                       label: data.name,
                     })) || []
                   }
-                  {...form.getInputProps("gpsModel")}
+                  onChange={(value) =>
+                    handleDualPhoneNumberChange(1, "operator", value)
+                  }
                   leftSection={<IconUser size={16} />}
                   rightSectionPointerEvents="all"
                   rightSection={
@@ -146,7 +168,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                           borderBottomLeftRadius: 0,
                           fontSize: 12,
                         }}
-                        onClick={() => handleModal("Model")}
+                        onClick={open}
                       >
                         Add
                       </ActionIcon>
@@ -156,7 +178,9 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                 <TextInput
                   type="number"
                   leftSection={""}
-                  {...form.getInputProps("imei")}
+                  onChange={(e) =>
+                    handleDualPhoneNumberChange(1, "phone_no", e.target.value)
+                  }
                 />
               </>
             )}
@@ -174,25 +198,13 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
         </Button>
       </Group>
 
-      {modalType == "Brand" && (
-        <AddItemModal
-          title="GPS Brand"
-          opened={opened}
-          close={close}
-          mutationFn={createBrand}
-          type_group={"GPS"}
-        />
-      )}
-      {modalType == "Model" && (
-        <AddItemModal
-          title="GPS Model"
-          opened={opened}
-          close={close}
-          mutationFn={createModel}
-          type_group={"GPS"}
-          brand_id={Number(form.values.vehicleBrand)}
-        />
-      )}
+      <AddItemModal
+        title="Operator"
+        opened={opened}
+        close={close}
+        mutationFn={createBrand}
+        type_group={"Operator"}
+      />
     </>
   );
 };
