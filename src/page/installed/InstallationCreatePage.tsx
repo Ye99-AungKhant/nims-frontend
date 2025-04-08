@@ -12,7 +12,7 @@ import { IconUserPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormValues } from "../../utils/types";
-import VehicleInfo from "./components/VehicleInfo";
+import VehicleInfoForm from "./components/VehicleInfoForm";
 
 const InstallationCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
@@ -138,7 +138,7 @@ const InstallationCreatePage = () => {
               </Tabs.Tab>
             </TabsList>
             <TabsPanel value="basicInfo">
-              <VehicleInfo form={form} />
+              <VehicleInfoForm form={form} />
             </TabsPanel>
           </Tabs>
         </Box>

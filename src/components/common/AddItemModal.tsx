@@ -9,23 +9,42 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 
+interface MutateProps {
+  name: string;
+  type_group: any;
+  brand_id?: number;
+}
 interface Props {
+  title: string;
+  type_group?: any;
+  brand_id?: number;
   opened: boolean;
   close: () => void;
   mutationFn: UseMutateFunction<
     AxiosResponse<any, any> | undefined,
     Error,
-    string,
+    MutateProps | string,
     unknown
   >;
 }
-export const AddItemModal = ({ opened, close, mutationFn }: Props) => {
+export const AddItemModal = ({
+  title,
+  type_group,
+  brand_id,
+  opened,
+  close,
+  mutationFn,
+}: Props) => {
   const theme = useMantineTheme();
-  const [data, setData] = useState<string>();
+  const [name, setName] = useState<string>();
 
   const handleAddDesignation = () => {
-    if (!data) return;
-    mutationFn(data);
+    if (!name) return;
+    if (type_group) {
+      mutationFn({ name, type_group, brand_id });
+    } else {
+      mutationFn(name);
+    }
     close();
   };
   return (
@@ -33,12 +52,12 @@ export const AddItemModal = ({ opened, close, mutationFn }: Props) => {
       opened={opened}
       onClose={close}
       centered={false}
-      title="Add New Designation"
+      title={`Add New ${title}`}
     >
       <TextInput
-        label="Designation"
+        label={title}
         withAsterisk
-        onChange={(e) => setData(e.target.value)}
+        onChange={(e) => setName(e.target.value)}
       />
       <Group mt="md" gap="md" justify="right">
         <Button

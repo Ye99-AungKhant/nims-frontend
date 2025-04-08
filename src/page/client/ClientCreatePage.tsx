@@ -383,7 +383,12 @@ const ClientCreatePage = () => {
           </Tabs>
         </Box>
       </Paper>
-      <AddItemModal opened={opened} close={close} mutationFn={createRole} />
+      <AddItemModal
+        title="Designation"
+        opened={opened}
+        close={close}
+        mutationFn={createRole}
+      />
     </Box>
   );
 };

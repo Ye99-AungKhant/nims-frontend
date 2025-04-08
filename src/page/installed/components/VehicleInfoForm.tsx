@@ -9,19 +9,45 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
 import { IconChevronDown, IconUser } from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
 import { useGetClients } from "../../form/hooks/useGetClients";
+import { useNavigate } from "react-router-dom";
+import { AddItemModal } from "../../../components/common/AddItemModal";
+import { useDisclosure } from "@mantine/hooks";
+import { useGetTypes } from "../../form/hooks/useGetTypes";
+import { useCreateType } from "../../../hooks/useCreateType";
+import { useCreateModel } from "../../../hooks/useCreateModel";
+import { useCreateBrand } from "../../../hooks/useCreateBrand";
+import { useGetBrands } from "../../form/hooks/useGetBrands";
+import { useGetModels } from "../../form/hooks/useGetModels";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
 }
-const VehicleInfo = ({ form }: VehicleInfoProps) => {
+const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
   const { data: clientData } = useGetClients();
-  console.log("clientData", clientData);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [modalType, setModalType] = useState("");
+  const { data: vehicleTypeData } = useGetTypes("Vehicle");
+  const { data: vehicleBrandData } = useGetBrands("Vehicle");
+  const { data: vehicleModelData } = useGetModels(
+    "Vehicle",
+    Number(form.values.vehicleBrand)
+  );
+  const { mutate: createType } = useCreateType();
+  const { mutate: createModel } = useCreateModel();
+  const { mutate: createBrand } = useCreateBrand();
+
+  console.log("clientData", form.values);
+  const handleModal = (name: string) => {
+    setModalType(name);
+    open();
+  };
 
   return (
     <>
@@ -71,6 +97,7 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
+                    onClick={() => navigate("/client/create")}
                   >
                     Add
                   </ActionIcon>
@@ -78,18 +105,18 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
               }
             />
             <Select
-              placeholder="Select Client"
+              placeholder="Select Vehicle Type"
               searchable
               comboboxProps={{
                 offset: 0,
               }}
               data={
-                clientData?.data.data.map((data: any) => ({
+                vehicleTypeData?.data.data.map((data: any) => ({
                   value: String(data.id),
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("client")}
+              {...form.getInputProps("vehicleType")}
               leftSection={<IconUser size={16} />}
               rightSectionPointerEvents="all"
               rightSection={
@@ -109,26 +136,30 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
+                    onClick={() => handleModal("Type")}
                   >
                     Add
                   </ActionIcon>
                 </div>
               }
             />
-            <TextInput type="email" leftSection={""} required />
+            <TextInput
+              leftSection={""}
+              {...form.getInputProps("vehiclePlateNo")}
+            />
             <Select
-              placeholder="Select Client"
+              placeholder="Select Vehicle Brand"
               searchable
               comboboxProps={{
                 offset: 0,
               }}
               data={
-                clientData?.data.data.map((data: any) => ({
+                vehicleBrandData?.data.data.map((data: any) => ({
                   value: String(data.id),
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("client")}
+              {...form.getInputProps("vehicleBrand")}
               leftSection={<IconUser size={16} />}
               rightSectionPointerEvents="all"
               rightSection={
@@ -148,6 +179,7 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
+                    onClick={() => handleModal("Brand")}
                   >
                     Add
                   </ActionIcon>
@@ -155,18 +187,18 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
               }
             />
             <Select
-              placeholder="Select Client"
+              placeholder="Select Vehicle Model"
               searchable
               comboboxProps={{
                 offset: 0,
               }}
               data={
-                clientData?.data.data.map((data: any) => ({
+                vehicleModelData?.data.data.map((data: any) => ({
                   value: String(data.id),
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("client")}
+              {...form.getInputProps("vehicleModel")}
               leftSection={<IconUser size={16} />}
               rightSectionPointerEvents="all"
               rightSection={
@@ -186,6 +218,7 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
+                    onClick={() => handleModal("Model")}
                   >
                     Add
                   </ActionIcon>
@@ -193,7 +226,10 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
               }
             />
 
-            <TextInput type="number" leftSection={""} required />
+            <TextInput
+              leftSection={""}
+              {...form.getInputProps("vehicleYear")}
+            />
           </Flex>
         </Grid.Col>
       </Grid>
@@ -207,8 +243,37 @@ const VehicleInfo = ({ form }: VehicleInfoProps) => {
           Continue
         </Button>
       </Group>
+
+      {modalType == "Type" && (
+        <AddItemModal
+          title="Vehicle Type"
+          opened={opened}
+          close={close}
+          mutationFn={createType}
+          type_group={"Vehicle"}
+        />
+      )}
+      {modalType == "Brand" && (
+        <AddItemModal
+          title="Vehicle Brand"
+          opened={opened}
+          close={close}
+          mutationFn={createBrand}
+          type_group={"Vehicle"}
+        />
+      )}
+      {modalType == "Model" && (
+        <AddItemModal
+          title="Vehicle Model"
+          opened={opened}
+          close={close}
+          mutationFn={createModel}
+          type_group={"Vehicle"}
+          brand_id={Number(form.values.vehicleBrand)}
+        />
+      )}
     </>
   );
 };
 
-export default VehicleInfo;
+export default VehicleInfoForm;
