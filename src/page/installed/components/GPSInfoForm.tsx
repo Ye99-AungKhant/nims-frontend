@@ -11,7 +11,14 @@ import {
 } from "@mantine/core";
 import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
-import { IconChevronDown, IconUser } from "@tabler/icons-react";
+import {
+  IconAlignBoxCenterMiddleFilled,
+  IconChevronDown,
+  IconShieldCheckFilled,
+  IconSquareLetterBFilled,
+  IconSquareLetterMFilled,
+  IconUser,
+} from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
@@ -58,7 +65,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
         <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
           <Flex gap={"md"} direction={"column"} mt={10}>
             <Select
-              placeholder="Select Device Brand"
+              // placeholder="Select Device Brand"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -70,7 +77,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("gpsBrand")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconSquareLetterBFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -97,7 +104,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
               }
             />
             <Select
-              placeholder="Select Device Model"
+              // placeholder="Select Device Model"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -109,7 +116,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("gpsModel")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconSquareLetterMFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -135,10 +142,18 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                 </div>
               }
             />
-            <TextInput leftSection={""} {...form.getInputProps("imei")} />
-            <TextInput leftSection={""} {...form.getInputProps("gpsSerial")} />
+            <TextInput
+              // placeholder="Enter IMEI No."
+              leftSection={<IconAlignBoxCenterMiddleFilled size={18} />}
+              {...form.getInputProps("imei")}
+            />
+            <TextInput
+              // placeholder="Enter Serial No."
+              leftSection={<IconAlignBoxCenterMiddleFilled size={18} />}
+              {...form.getInputProps("gpsSerial")}
+            />
             <Select
-              placeholder="Select Warranty"
+              // placeholder="Select Warranty"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -150,7 +165,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("warranty")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconShieldCheckFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -178,7 +193,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
             />
             {/* <DateInput
                             label={`Select Warranty Expiry Date`}
-                            placeholder="Select warranty Expiry Date"
+                            // placeholder="Select warranty Expiry Date"
                             {...form.getInputProps("")}
                           /> */}
           </Flex>

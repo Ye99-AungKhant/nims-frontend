@@ -1,18 +1,9 @@
 import {
-  IconArrowBarToDown,
   IconBackhoe,
-  IconBusFilled,
   IconCircleArrowDown,
-  IconCpu,
-  IconExchange,
-  IconHomeFilled,
   IconRouter,
   IconServer2,
   IconSmartHome,
-  IconTruck,
-  IconTruckDelivery,
-  IconTruckFilled,
-  IconUserPlus,
   IconUsersGroup,
 } from "@tabler/icons-react";
 import { ReactElement } from "react";
@@ -104,13 +95,13 @@ export const MainMenus: MenuItemType[] = [
       {
         id: "3.1",
         title: "List All Devices",
-        url: "",
+        url: "/device",
         icon: <IconRouter />,
       },
       {
         id: "3.2",
         title: "Create New Devices",
-        url: Routes.DASHBOARD.FULL_PATH,
+        url: "/device/create",
         icon: <IconRouter />,
       },
     ],
@@ -123,13 +114,13 @@ export const MainMenus: MenuItemType[] = [
       {
         id: "4.1",
         title: "List All Servers",
-        url: "",
+        url: "/server",
         icon: <IconServer2 />,
       },
       {
         id: "4.2",
         title: "Create New Servers",
-        url: Routes.DASHBOARD.FULL_PATH,
+        url: "/server/create",
         icon: <IconServer2 />,
       },
     ],

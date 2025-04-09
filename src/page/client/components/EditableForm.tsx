@@ -5,6 +5,7 @@ import {
   Input,
   Select,
   Table,
+  Text,
   useMantineTheme,
 } from "@mantine/core";
 import { Box, Stack, Group } from "@mantine/core";
@@ -23,6 +24,7 @@ interface Props {
     value: string | number
   ) => void;
   role: [];
+  error: any;
 }
 
 const EditableForm = ({
@@ -31,6 +33,7 @@ const EditableForm = ({
   setContactFormData,
   handleContactChange,
   role,
+  error,
 }: Props) => {
   const handleAddPerson = () => {
     setContactFormData([
@@ -48,6 +51,11 @@ const EditableForm = ({
   return (
     <Box p={"md"}>
       <Stack gap="md">
+        {contactFormData.length == 0 && (
+          <Text c={"red"}>
+            Contact person have at least one. Please add a contact person!
+          </Text>
+        )}
         <Table withTableBorder withColumnBorders>
           <Table.Thead>
             <Table.Tr>
@@ -73,6 +81,7 @@ const EditableForm = ({
                           e.target.value
                         )
                       }
+                      error={error?.[index]?.[0]}
                     />
                   </Table.Td>
                   <Table.Td>
@@ -83,6 +92,7 @@ const EditableForm = ({
                       onChange={(e) =>
                         handleContactChange(index, "phone", e.target.value)
                       }
+                      error={error?.[index]?.[1]}
                     />
                   </Table.Td>
                   <Table.Td>
@@ -92,6 +102,7 @@ const EditableForm = ({
                       onChange={(e) =>
                         handleContactChange(index, "email", e.target.value)
                       }
+                      error={error?.[index]?.[2]}
                     />
                   </Table.Td>
                   <Table.Td>
@@ -144,6 +155,7 @@ const EditableForm = ({
           radius={"lg"}
           size="sm"
           bg={theme.colors.purple[1]}
+          disabled={contactFormData.length == 0}
         >
           Save
         </Button>

@@ -11,8 +11,8 @@ const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
   isChild = false,
 }) => {
   const { pathname } = useLocation();
+  let isActive = pathname === url || pathname.startsWith(url + "/");
 
-  const active = pathname === url;
   const theme = useMantineTheme();
   return (
     <NavLink
@@ -23,13 +23,12 @@ const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
       component={Link}
       leftSection={icon}
       py="xs"
-      active={pathname === url}
       childrenOffset={0}
       style={{
         textDecoration: "none",
         color: "#f1f1f1",
         fontSize: "16px",
-        backgroundColor: active
+        backgroundColor: isActive
           ? theme.colors.primary[3]
           : isChild
           ? "#111827"

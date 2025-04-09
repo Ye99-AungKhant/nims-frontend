@@ -17,9 +17,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/", index: true, element: <DashboardPage /> },
       { path: "installed", element: <InstalledPage /> },
-      { path: "/installed/create", element: <CreateForm /> },
-      { path: "/installed/creat", element: <InstallationCreatePage /> },
-      { path: "client", element: <ClientPage /> },
+      { path: "/installed/creat", element: <CreateForm /> },
+      { path: "/installed/create", element: <InstallationCreatePage /> },
+      { path: "/client", element: <ClientPage /> },
       { path: "/client/detail", element: <ClientDetailPage /> },
       { path: "/client/create", element: <ClientCreatePage /> },
       { path: "/vehicle", element: <VehiclePage /> },

@@ -11,7 +11,16 @@ import {
 } from "@mantine/core";
 import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
-import { IconChevronDown, IconUser } from "@tabler/icons-react";
+import {
+  IconBuildings,
+  IconCalendarWeek,
+  IconChevronDown,
+  IconLicense,
+  IconSteeringWheelFilled,
+  IconTruckFilled,
+  IconUser,
+  IconWorld,
+} from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
 import { useGetClients } from "../../form/hooks/useGetClients";
 import { useNavigate } from "react-router-dom";
@@ -66,7 +75,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
         <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
           <Flex gap={"md"} direction={"column"} mt={10}>
             <Select
-              placeholder="Select Client"
+              // placeholder="Select Client"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -78,7 +87,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("client")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconBuildings size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -105,7 +114,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
               }
             />
             <Select
-              placeholder="Select Vehicle Type"
+              // placeholder="Select Vehicle Type"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -117,7 +126,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("vehicleType")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconTruckFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -144,11 +153,12 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
               }
             />
             <TextInput
-              leftSection={""}
+              // placeholder="Enter Plate No."
               {...form.getInputProps("vehiclePlateNo")}
+              leftSection={<IconLicense size={16} />}
             />
             <Select
-              placeholder="Select Vehicle Brand"
+              // placeholder="Select Vehicle Brand"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -160,7 +170,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("vehicleBrand")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconWorld size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -187,7 +197,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
               }
             />
             <Select
-              placeholder="Select Vehicle Model"
+              // placeholder="Select Vehicle Model"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -199,7 +209,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                 })) || []
               }
               {...form.getInputProps("vehicleModel")}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconSteeringWheelFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -227,7 +237,8 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
             />
 
             <TextInput
-              leftSection={""}
+              // placeholder="Enter Vehicle Year"
+              leftSection={<IconCalendarWeek size={18} />}
               {...form.getInputProps("vehicleYear")}
             />
           </Flex>

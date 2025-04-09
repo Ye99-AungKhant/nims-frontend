@@ -23,6 +23,7 @@ import {
   IconRoadSign,
   IconAddressBook,
   IconUserPlus,
+  IconChevronDown,
 } from "@tabler/icons-react";
 import { Tabs, TabsList, TabsPanel } from "@mantine/core";
 import EditableForm from "./components/EditableForm"; // Assuming this is in the same directory
@@ -40,10 +41,38 @@ import { useUpdateClientWithContact } from "./hooks/useUpdateClientWithContact";
 import { AddItemModal } from "../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useCreateRole } from "./hooks/useCreateRole";
+import { z } from "zod";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
 }
+
+const addressFormSchema = z.object({
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  country: z.string().min(1, "Country is required"),
+  postal: z.string().min(4, "Postal code must be at least 4 characters"),
+});
+
+const baseInfoFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  contactName: z.string().min(1, "Contact name is required"),
+  role_id: z.number(),
+  phone: z.string().regex(/^\+?\d{7,15}$/, "Phone number is invalid"),
+  email: z.string().email("Invalid email"),
+});
+
+// Contact person schema
+const contactPersonSchema = z.object({
+  contactName: z.string().min(1, "Contact name is required"),
+  role_id: z.number({ message: "Designation is required" }),
+  phone: z.string().regex(/^\+?\d{7,15}$/, "Phone number is invalid"),
+  email: z.string().email("Invalid email"),
+});
+
+// If you want to allow multiple contacts
+const contactFormSchema = z.array(contactPersonSchema);
 
 const ClientCreatePage = () => {
   const theme = useMantineTheme();
@@ -81,6 +110,7 @@ const ClientCreatePage = () => {
   const { mutateAsync: createClient } = useCreateClientWithContact();
   const { mutateAsync: updateClient } = useUpdateClientWithContact(); // Use update mutation
   const { mutate: createRole } = useCreateRole();
+  const [formErrors, setFormErrors] = useState<any>({});
 
   // Set edit mode if ID is provided
   useEffect(() => {
@@ -142,18 +172,53 @@ const ClientCreatePage = () => {
         }
       );
     } else {
-      // Create new client
-      await createClient(data, {
-        onSuccess: () => navigate("/client"),
-      });
+      try {
+        contactFormSchema.parse(contactFormData);
+        setFormErrors({});
+
+        // Create new client
+        await createClient(data, {
+          onSuccess: () => navigate("/client"),
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          console.log(error.flatten().fieldErrors);
+
+          setFormErrors(error.flatten().fieldErrors);
+        }
+      }
     }
 
-    console.log(formData);
-    console.log(contactFormData);
+    // console.log(formData);
+    // console.log(contactFormData);
   };
 
   const handleContinue = (tab: string) => {
-    setActiveTab(tab);
+    try {
+      const data = {
+        name: formData.name,
+        contactName: contactFormData[0].contactName,
+        role_id: contactFormData[0].role_id,
+        phone: contactFormData[0].phone,
+        email: contactFormData[0].email,
+      };
+      if (activeTab == "basicInfo") {
+        baseInfoFormSchema.parse(data);
+      } else {
+        addressFormSchema.parse(formData);
+      }
+
+      setFormErrors({});
+      // ✅ Data is valid
+      console.log("All good! Submitting...");
+      setActiveTab(tab);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.log(error.flatten().fieldErrors);
+
+        setFormErrors(error.flatten().fieldErrors);
+      }
+    }
   };
 
   const title = isEditMode ? "Edit Client" : "New Client";
@@ -173,7 +238,7 @@ const ClientCreatePage = () => {
         </Box>
 
         <Box p={"md"}>
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={() => {}}>
             <TabsList>
               <Tabs.Tab
                 value="basicInfo"
@@ -227,16 +292,16 @@ const ClientCreatePage = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      leftSection={<IconBuilding size={16} />}
-                      required
+                      leftSection={<IconBuilding size={18} />}
+                      error={formErrors?.name?.[0]}
                     />
                     <TextInput
                       value={contactFormData[0]?.contactName}
-                      leftSection={<IconUser size={16} />}
-                      required
+                      leftSection={<IconUser size={18} />}
                       onChange={(e) =>
                         handleContactChange(0, "contactName", e.target.value)
                       }
+                      error={formErrors?.contactName?.[0]}
                     />
                     <Select
                       searchable
@@ -250,46 +315,56 @@ const ClientCreatePage = () => {
                         })) || []
                       }
                       value={String(contactFormData[0]?.role_id)}
-                      leftSection={<IconUser size={16} />}
+                      leftSection={<IconUser size={18} />}
                       onChange={(value) =>
                         handleContactChange(0, "role_id", Number(value))
                       }
+                      error={formErrors?.role_id?.[0]}
                       rightSectionPointerEvents="all"
                       rightSection={
-                        <ActionIcon
-                          size={42}
-                          color={theme.colors.purple[1]}
+                        <div
                           style={{
-                            margin: 0,
-                            width: 70,
-                            borderTopLeftRadius: 0,
-                            borderBottomLeftRadius: 0,
-                            fontSize: 12,
+                            display: "flex",
+                            alignItems: "center",
                           }}
-                          onClick={open}
                         >
-                          Add
-                        </ActionIcon>
+                          <IconChevronDown size={16} style={{ margin: 0 }} />
+                          <ActionIcon
+                            color={theme.colors.purple[1]}
+                            style={{
+                              height: 42,
+                              width: 35,
+                              borderTopLeftRadius: 0,
+                              borderBottomLeftRadius: 0,
+                              fontSize: 12,
+                            }}
+                            onClick={open}
+                          >
+                            Add
+                          </ActionIcon>
+                        </div>
                       }
                     />
                     <TextInput
                       type="email"
                       value={contactFormData[0]?.email}
-                      leftSection={<IconMail size={16} />}
+                      leftSection={<IconMail size={18} />}
                       required
                       onChange={(e) =>
                         handleContactChange(0, "email", e.target.value)
                       }
+                      error={formErrors?.email?.[0]}
                     />
 
                     <TextInput
                       type="number"
                       value={contactFormData[0]?.phone}
-                      leftSection={<IconPhone size={16} />}
+                      leftSection={<IconPhone size={18} />}
                       required
                       onChange={(e) =>
                         handleContactChange(0, "phone", e.target.value)
                       }
+                      error={formErrors?.phone?.[0]}
                     />
                   </Flex>
                 </Grid.Col>
@@ -324,36 +399,36 @@ const ClientCreatePage = () => {
                       name="address"
                       value={formData?.address}
                       onChange={handleChange}
-                      leftSection={<IconMapPin size={16} />}
-                      required
+                      leftSection={<IconMapPin size={18} />}
+                      error={formErrors?.address?.[0]}
                     />
                     <TextInput
                       name="city"
                       value={formData?.city}
                       onChange={handleChange}
-                      leftSection={<IconBuilding size={16} />}
-                      required
+                      leftSection={<IconBuilding size={18} />}
+                      error={formErrors?.city?.[0]}
                     />
                     <TextInput
                       name="state"
                       value={formData?.state}
                       onChange={handleChange}
-                      leftSection={<IconMapPin size={16} />}
-                      required
+                      leftSection={<IconMapPin size={18} />}
+                      error={formErrors?.state?.[0]}
                     />
                     <TextInput
                       name="country"
                       value={formData?.country}
                       onChange={handleChange}
-                      leftSection={<IconMap size={16} />}
-                      required
+                      leftSection={<IconMap size={18} />}
+                      error={formErrors?.country?.[0]}
                     />
                     <TextInput
                       name="postal"
                       value={formData?.postal}
                       onChange={handleChange}
-                      leftSection={<IconZip size={16} />}
-                      required
+                      leftSection={<IconZip size={18} />}
+                      error={formErrors?.postal?.[0]}
                     />
                   </Flex>
                 </Grid.Col>
@@ -377,6 +452,7 @@ const ClientCreatePage = () => {
                   setContactFormData={setContactFormData}
                   handleContactChange={handleContactChange}
                   role={roleData?.data}
+                  error={formErrors}
                 />
               )}
             </TabsPanel>

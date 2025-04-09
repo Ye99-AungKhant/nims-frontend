@@ -4,6 +4,7 @@ import {
   Flex,
   Grid,
   Group,
+  MultiSelect,
   Select,
   Text,
   TextInput,
@@ -12,17 +13,17 @@ import {
 import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
 import {
-  IconAlignBoxCenterMiddleFilled,
+  IconBellFilled,
+  IconCalendarWeek,
   IconChevronDown,
-  IconListNumbers,
-  IconShieldCheckFilled,
-  IconSquareLetterBFilled,
-  IconSquareLetterMFilled,
+  IconClipboardDataFilled,
+  IconCoinFilled,
   IconSquareLetterTFilled,
   IconUser,
+  IconUsers,
+  IconWorld,
 } from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
-import { useGetClients } from "../../form/hooks/useGetClients";
 import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
@@ -30,24 +31,22 @@ import { useGetTypes } from "../../form/hooks/useGetTypes";
 import { useCreateType } from "../../../hooks/useCreateType";
 import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
-import { useGetBrands } from "../../form/hooks/useGetBrands";
-import { useGetModels } from "../../form/hooks/useGetModels";
+import { useGetInstallationEngineers } from "../../form/hooks/useGetInstallationEngineer";
+import { DateInput } from "@mantine/dates";
+import { useGetWarrantyPlans } from "../../form/hooks/useGetWarrantyPlans";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
 }
-const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
+const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data: clientData } = useGetClients();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
-  const { data: typeData } = useGetTypes("Sensor");
-  const { data: brandData } = useGetBrands("Sensor");
-  const { data: modelData } = useGetModels(
-    "Sensor",
-    Number(form.values.vehicleBrand)
-  );
+  const { data: typeData } = useGetTypes("Server");
+  const { data: installationEngineerData } = useGetInstallationEngineers();
+  const { data: warrantyData } = useGetWarrantyPlans();
+
   const { mutate: createType } = useCreateType();
   const { mutate: createModel } = useCreateModel();
   const { mutate: createBrand } = useCreateBrand();
@@ -58,24 +57,41 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
     open();
   };
 
+  const handleServerChange = (field: string, value: string | any) => {
+    form.setFieldValue("server", {
+      ...form.values.server,
+      [field]: value,
+    });
+  };
+
+  const handleInstallionEngChange = (selectedEng: string[]) => {
+    const updatedEng = selectedEng.map((user_id, index) => ({
+      user_id,
+    }));
+
+    form.setFieldValue("installationEngineer", updatedEng);
+  };
+
   return (
     <>
       <Grid>
         <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
           <Flex gap={"xl"} direction={"column"} mt={30}>
-            <Text>Sensor Type *</Text>
-            <Text>Brand *</Text>
-            <Text>Model *</Text>
-            <Text>QTY *</Text>
-            <Text>Serial *</Text>
-            <Text>Warranty *</Text>
+            <Text>Type *</Text>
+            <Text>Domain *</Text>
+            <Text>Installation Engineer *</Text>
+            <Text>Installation Date *</Text>
+            <Text>Subscription Plan *</Text>
+            <Text>Invoice No. *</Text>
+            <Text>Object-Base Fee *</Text>
+            <Text>Expire Date *</Text>
           </Flex>
         </Grid.Col>
 
         <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
           <Flex gap={"md"} direction={"column"} mt={10}>
             <Select
-              // placeholder="Select Sensor Type"
+              // placeholder="Select Server Type"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -86,7 +102,8 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("")}
+              value={form.values.server.type_id}
+              onChange={(value: any) => handleServerChange("type_id", value)}
               leftSection={<IconSquareLetterTFilled size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
@@ -106,84 +123,6 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
-                    onClick={() => navigate("/client/create")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-            <Select
-              // placeholder="Select Sensor Model"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                typeData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("vehicleType")}
-              leftSection={<IconSquareLetterMFilled size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
-                    onClick={() => handleModal("Type")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-            <Select
-              // placeholder="Select Sensor Brand"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                typeData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("vehicleType")}
-              leftSection={<IconSquareLetterBFilled size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
                     onClick={() => handleModal("Type")}
                   >
                     Add
@@ -192,29 +131,27 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
               }
             />
             <TextInput
-              // placeholder="Enter QTY"
-              leftSection={<IconListNumbers size={18} />}
-              {...form.getInputProps("vehicleYear")}
+              // placeholder="Enter domain"
+              leftSection={<IconWorld size={18} />}
+              {...form.getInputProps("vehiclePlateNo")}
             />
-            <TextInput
-              // placeholder="Enter Serial No."
-              leftSection={<IconAlignBoxCenterMiddleFilled size={18} />}
-              {...form.getInputProps("vehicleYear")}
-            />
-            <Select
-              // placeholder="Select Warranty"
+            <MultiSelect
+              // placeholder="Select Installation Engineer"
               searchable
               comboboxProps={{
                 offset: 0,
               }}
               data={
-                modelData?.data.data.map((data: any) => ({
+                installationEngineerData?.data.data.map((data: any) => ({
                   value: String(data.id),
                   label: data.name,
                 })) || []
               }
-              {...form.getInputProps("vehicleModel")}
-              leftSection={<IconShieldCheckFilled size={18} />}
+              value={form.values.installationEngineer
+                .map((eng) => eng.user_id)
+                .filter((eng) => eng !== "")}
+              onChange={(value) => handleInstallionEngChange(value)}
+              leftSection={<IconUsers size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -233,12 +170,86 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                       borderBottomLeftRadius: 0,
                       fontSize: 12,
                     }}
-                    onClick={() => handleModal("Model")}
+                    onClick={() => handleModal("InstallEng")}
                   >
                     Add
                   </ActionIcon>
                 </div>
               }
+            />
+            <DateInput
+              // placeholder="Select Installation Date"
+              leftSection={<IconCalendarWeek size={18} />}
+              value={form.values.server.installed_date}
+              onChange={(date) =>
+                handleServerChange("installed_date", date || "")
+              }
+            />
+            <Select
+              // placeholder="Select Subscription Plan"
+              searchable
+              comboboxProps={{
+                offset: 0,
+              }}
+              data={
+                warrantyData?.data?.map((data: any) => ({
+                  value: String(data.id),
+                  label: data.name,
+                })) || []
+              }
+              value={form.values.server.subscription_plan_id}
+              onChange={(value: any) =>
+                handleServerChange("subscription_plan_id", value)
+              }
+              leftSection={<IconBellFilled size={18} />}
+              rightSectionPointerEvents="all"
+              rightSection={
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <IconChevronDown size={16} style={{ margin: 0 }} />
+                  <ActionIcon
+                    color={theme.colors.purple[1]}
+                    style={{
+                      height: 42,
+                      width: 35,
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                      fontSize: 12,
+                    }}
+                    onClick={() => handleModal("Subscription")}
+                  >
+                    Add
+                  </ActionIcon>
+                </div>
+              }
+            />
+
+            <TextInput
+              // placeholder="Enter Invoice No."
+              leftSection={<IconClipboardDataFilled size={18} />}
+              withAsterisk
+              value={form.values.server.invoice_no}
+              onChange={(e) => handleServerChange("invoice_no", e.target.value)}
+            />
+            <TextInput
+              // placeholder="Enter Fee"
+              leftSection={<IconCoinFilled size={18} />}
+              withAsterisk
+              value={form.values.server.object_base_fee}
+              onChange={(e) =>
+                handleServerChange("object_base_fee", e.target.value)
+              }
+            />
+
+            <DateInput
+              // placeholder="Select expiry Date"
+              leftSection={<IconCalendarWeek size={18} />}
+              value={form.values.server.expire_date}
+              onChange={(date) => handleServerChange("expire_date", date || "")}
             />
           </Flex>
         </Grid.Col>
@@ -250,31 +261,31 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
           size="sm"
           bg={theme.colors.purple[1]}
         >
-          Continue
+          Save
         </Button>
       </Group>
 
       {modalType == "Type" && (
         <AddItemModal
-          title="Vehicle Type"
+          title="Server Type"
           opened={opened}
           close={close}
           mutationFn={createType}
-          type_group={"Vehicle"}
+          type_group={"Server"}
         />
       )}
-      {modalType == "Brand" && (
+      {modalType == "InstallEng" && (
         <AddItemModal
-          title="Vehicle Brand"
+          title="Installation Engineer"
           opened={opened}
           close={close}
           mutationFn={createBrand}
           type_group={"Vehicle"}
         />
       )}
-      {modalType == "Model" && (
+      {modalType == "Subscription" && (
         <AddItemModal
-          title="Vehicle Model"
+          title="Subscription"
           opened={opened}
           close={close}
           mutationFn={createModel}
@@ -286,4 +297,4 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
   );
 };
 
-export default PeripheralInfoForm;
+export default ServerInfoForm;

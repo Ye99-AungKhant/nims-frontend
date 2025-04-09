@@ -11,7 +11,13 @@ import {
 } from "@mantine/core";
 import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
-import { IconChevronDown, IconUser } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconDeviceSim,
+  IconPhoneFilled,
+  IconSquareLetterMFilled,
+  IconUser,
+} from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
@@ -72,7 +78,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
         <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
           <Flex gap={"md"} direction={"column"} mt={10}>
             <Select
-              placeholder="Select Mode"
+              // placeholder="Select Mode"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -82,10 +88,10 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                 { label: "Dual", value: "Dual" },
               ]}
               onChange={(value) => setSimMode(value)}
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconSquareLetterMFilled size={18} />}
             />
             <Select
-              placeholder="Select Operator"
+              // placeholder="Select Operator"
               searchable
               comboboxProps={{
                 offset: 0,
@@ -99,7 +105,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
               onChange={(value) =>
                 handleDualPhoneNumberChange(0, "operator", value)
               }
-              leftSection={<IconUser size={16} />}
+              leftSection={<IconDeviceSim size={18} />}
               rightSectionPointerEvents="all"
               rightSection={
                 <div
@@ -127,7 +133,8 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
             />
             <TextInput
               type="number"
-              leftSection={""}
+              // placeholder="Enter Phone No."
+              leftSection={<IconPhoneFilled size={18} />}
               onChange={(e) =>
                 handleDualPhoneNumberChange(0, "phone_no", e.target.value)
               }
@@ -135,7 +142,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
             {simMode == "Dual" && (
               <>
                 <Select
-                  placeholder="Select Operator"
+                  // placeholder="Select Operator"
                   searchable
                   comboboxProps={{
                     offset: 0,
@@ -149,7 +156,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                   onChange={(value) =>
                     handleDualPhoneNumberChange(1, "operator", value)
                   }
-                  leftSection={<IconUser size={16} />}
+                  leftSection={<IconDeviceSim size={18} />}
                   rightSectionPointerEvents="all"
                   rightSection={
                     <div
@@ -177,7 +184,8 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                 />
                 <TextInput
                   type="number"
-                  leftSection={""}
+                  // placeholder="Enter Phone No."
+                  leftSection={<IconPhoneFilled size={18} />}
                   onChange={(e) =>
                     handleDualPhoneNumberChange(1, "phone_no", e.target.value)
                   }

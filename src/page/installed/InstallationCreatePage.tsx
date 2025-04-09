@@ -8,13 +8,23 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconUserPlus } from "@tabler/icons-react";
+import {
+  IconDeviceSim,
+  IconGitCompare,
+  IconPaperclip,
+  IconRouter,
+  IconServer2,
+  IconTruckFilled,
+  IconUserPlus,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormValues } from "../../utils/types";
 import VehicleInfoForm from "./components/VehicleInfoForm";
 import GPSInfoForm from "./components/GPSInfoForm";
 import SimCardInfoForm from "./components/SimCardInfoForm";
+import PeripheralInfoForm from "./components/PeripheralInfoForm";
+import ServerInfoForm from "./components/ServerInfoForm";
 
 const InstallationCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("vehicleInfo");
@@ -74,7 +84,7 @@ const InstallationCreatePage = () => {
             <TabsList>
               <Tabs.Tab
                 value="vehicleInfo"
-                leftSection={<IconUserPlus size={20} />}
+                leftSection={<IconTruckFilled size={20} />}
                 style={
                   activeTab === "vehicleInfo"
                     ? { color: theme.colors.purple[0] }
@@ -85,7 +95,7 @@ const InstallationCreatePage = () => {
               </Tabs.Tab>
               <Tabs.Tab
                 value="gpsInfo"
-                leftSection={<IconUserPlus size={20} />}
+                leftSection={<IconRouter size={20} />}
                 style={
                   activeTab === "gpsInfo"
                     ? { color: theme.colors.purple[0] }
@@ -96,7 +106,7 @@ const InstallationCreatePage = () => {
               </Tabs.Tab>
               <Tabs.Tab
                 value="simInfo"
-                leftSection={<IconUserPlus size={20} />}
+                leftSection={<IconDeviceSim size={20} />}
                 style={
                   activeTab === "simInfo"
                     ? { color: theme.colors.purple[0] }
@@ -106,10 +116,10 @@ const InstallationCreatePage = () => {
                 SIM Card
               </Tabs.Tab>
               <Tabs.Tab
-                value="contactPersons"
-                leftSection={<IconUserPlus size={20} />}
+                value="peripheralInfo"
+                leftSection={<IconGitCompare size={20} />}
                 style={
-                  activeTab === "contactPersons"
+                  activeTab === "peripheralInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -118,7 +128,7 @@ const InstallationCreatePage = () => {
               </Tabs.Tab>
               <Tabs.Tab
                 value="contactPersons"
-                leftSection={<IconUserPlus size={20} />}
+                leftSection={<IconPaperclip size={20} />}
                 style={
                   activeTab === "contactPersons"
                     ? { color: theme.colors.purple[0] }
@@ -128,10 +138,10 @@ const InstallationCreatePage = () => {
                 Accessories
               </Tabs.Tab>
               <Tabs.Tab
-                value="contactPersons"
-                leftSection={<IconUserPlus size={20} />}
+                value="serverInfo"
+                leftSection={<IconServer2 size={20} />}
                 style={
-                  activeTab === "contactPersons"
+                  activeTab === "serverInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -147,6 +157,12 @@ const InstallationCreatePage = () => {
             </TabsPanel>
             <TabsPanel value="simInfo">
               <SimCardInfoForm form={form} />
+            </TabsPanel>
+            <TabsPanel value="peripheralInfo">
+              <PeripheralInfoForm form={form} />
+            </TabsPanel>
+            <TabsPanel value="serverInfo">
+              <ServerInfoForm form={form} />
             </TabsPanel>
           </Tabs>
         </Box>

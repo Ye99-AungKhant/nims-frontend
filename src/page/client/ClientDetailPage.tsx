@@ -163,7 +163,7 @@ export function ContactPerson({ data }: any) {
         <Table.Tbody>
           {contacts ? (
             contacts.map((person: any) => (
-              <Table.Tr>
+              <Table.Tr key={person.id}>
                 <Table.Td style={{ color: "#474747" }}>{person.name}</Table.Td>
                 <Table.Td style={{ color: "#474747" }}>{person.phone}</Table.Td>
                 <Table.Td style={{ color: "#474747" }}>{person.email}</Table.Td>

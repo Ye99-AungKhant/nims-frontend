@@ -2,12 +2,14 @@ import {
   Button,
   Group,
   Modal,
+  Select,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
+import { useGetRoles } from "../../page/form/hooks/useGetRoles";
 
 interface MutateProps {
   name: string;
@@ -37,6 +39,7 @@ export const AddItemModal = ({
 }: Props) => {
   const theme = useMantineTheme();
   const [name, setName] = useState<string>();
+  const { data: roleData, isLoading: isRoleLoading } = useGetRoles();
 
   const handleAddDesignation = () => {
     if (!name) return;
@@ -54,11 +57,44 @@ export const AddItemModal = ({
       centered={false}
       title={`Add New ${title}`}
     >
-      <TextInput
-        label={title}
-        withAsterisk
-        onChange={(e) => setName(e.target.value)}
-      />
+      {title !== "Installation Engineer" ? (
+        <TextInput
+          label={title}
+          withAsterisk
+          onChange={(e) => setName(e.target.value)}
+        />
+      ) : (
+        <>
+          <TextInput
+            label="Name"
+            withAsterisk
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextInput
+            label="Email"
+            withAsterisk
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextInput
+            label="Phone No."
+            withAsterisk
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Select
+            label="Role"
+            withAsterisk
+            comboboxProps={{
+              offset: 0,
+            }}
+            data={
+              roleData?.data?.map((data: any) => ({
+                value: String(data.id),
+                label: data.name,
+              })) || []
+            }
+          />
+        </>
+      )}
       <Group mt="md" gap="md" justify="right">
         <Button
           radius={"lg"}
