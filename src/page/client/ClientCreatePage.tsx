@@ -309,10 +309,12 @@ const ClientCreatePage = () => {
                         offset: 0,
                       }}
                       data={
-                        roleData?.data?.map((data: any) => ({
-                          value: String(data.id),
-                          label: data.name,
-                        })) || []
+                        roleData?.data
+                          ?.map((data: any) => ({
+                            value: String(data.id),
+                            label: data.name,
+                          }))
+                          .filter((role: any) => role.label !== "Admin") || []
                       }
                       value={String(contactFormData[0]?.role_id)}
                       leftSection={<IconUser size={18} />}

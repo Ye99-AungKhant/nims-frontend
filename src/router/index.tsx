@@ -9,8 +9,13 @@ import { DashboardPage } from "../page/dashboard";
 import ClientDetailPage from "../page/client/ClientDetailPage";
 import ClientCreatePage from "../page/client/ClientCreatePage";
 import InstallationCreatePage from "../page/installed/InstallationCreatePage";
+import LoginPage from "../page/auth/LoginPage";
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
   {
     path: "/",
     element: <RootLayout />,

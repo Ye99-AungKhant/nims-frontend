@@ -8,7 +8,7 @@ import {
 import { useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { useViewPort } from "../../hooks/ui/useViewPort";
-import { useMantineTheme } from "@mantine/core";
+import { Center, Text, useMantineTheme } from "@mantine/core";
 import { useGetRouteParams } from "../../hooks/useGetRouteParams";
 // import './DataTable.module.css'
 
@@ -115,6 +115,13 @@ export function DataTable<T extends Record<string, any> = object>({
       withColumnBorders: true,
       withRowBorders: true,
     },
+    renderEmptyRowsFallback: () => (
+      <Center py="xl" style={{ backgroundColor: "#f0f0f0" }}>
+        <Text color="dimmed" fw={500} size="lg">
+          NO DATA FOUND!!!
+        </Text>
+      </Center>
+    ),
     ...props,
   });
 

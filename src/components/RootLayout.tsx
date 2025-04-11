@@ -14,12 +14,24 @@ import { Outlet } from "react-router-dom";
 import { Sidebar } from "./frames/Sidebar";
 import { SearchInput } from "./common/SearchInput";
 import { GlobalSearch } from "./common/GlobalSearch";
+import { useAuthRoute } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const RootLayout = () => {
+  useAuthRoute();
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const navigate = useNavigate();
+  const authUserRaw = localStorage.getItem("authUser");
+  const authUser = JSON.parse(authUserRaw || "");
 
-  const username = "Ye";
+  const username = authUser.name;
+
+  const handleLogout = () => {
+    localStorage.removeItem("authUser");
+    navigate("/login");
+  };
+
   return (
     <AppShell
       layout="alt"
@@ -70,7 +82,11 @@ const RootLayout = () => {
                     >
                       <Flex w="100%" h="100%" align="center" justify="center">
                         <Text p="0" c="white">
-                          {username[0]?.toUpperCase()}
+                          {username
+                            .split(" ")
+                            .map((part: any) => part[0])
+                            .join("")
+                            .toUpperCase()}
                         </Text>
                       </Flex>
                     </Box>
@@ -84,7 +100,12 @@ const RootLayout = () => {
                         <Text size="sm">{username}</Text>
                       </Flex>
                     </Box>
-                    <Button w="100%" color="red" size="sm">
+                    <Button
+                      w="100%"
+                      color="red"
+                      size="sm"
+                      onClick={handleLogout}
+                    >
                       <Flex align="center" gap="xs">
                         <IconLogout width={18} height={18} />
                         Logout

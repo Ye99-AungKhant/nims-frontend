@@ -112,10 +112,12 @@ const EditableForm = ({
                         offset: 0,
                       }}
                       data={
-                        role.map((data: any) => ({
-                          value: String(data.id),
-                          label: data.name,
-                        })) || []
+                        role
+                          .map((data: any) => ({
+                            value: String(data.id),
+                            label: data.name,
+                          }))
+                          .filter((role: any) => role.label !== "Admin") || []
                       }
                       value={String(person.role_id)}
                       leftSection={<IconUser size={16} />}
