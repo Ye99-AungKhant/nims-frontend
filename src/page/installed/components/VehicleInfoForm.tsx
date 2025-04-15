@@ -5,6 +5,7 @@ import {
   Grid,
   Group,
   Select,
+  Table,
   Text,
   TextInput,
   useMantineTheme,
@@ -32,6 +33,7 @@ import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../form/hooks/useGetBrands";
 import { useGetModels } from "../../form/hooks/useGetModels";
+import FormTable from "../../../components/common/FormTable";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -58,203 +60,198 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
     open();
   };
 
+  const rows = [
+    {
+      label: "Company Name *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{ offset: 0 }}
+          data={
+            clientData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps("client")}
+          leftSection={<IconBuildings size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: 12,
+                }}
+                onClick={() => navigate("/client/create")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Type *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{ offset: 0 }}
+          data={
+            vehicleTypeData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps("vehicleType")}
+          leftSection={<IconTruckFilled size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: 12,
+                }}
+                onClick={() => handleModal("Type")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Plate No. *",
+      input: (
+        <TextInput
+          {...form.getInputProps("vehiclePlateNo")}
+          leftSection={<IconLicense size={16} />}
+        />
+      ),
+    },
+    {
+      label: "Make *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{ offset: 0 }}
+          data={
+            vehicleBrandData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps("vehicleBrand")}
+          leftSection={<IconWorld size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: 12,
+                }}
+                onClick={() => handleModal("Brand")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Model *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{ offset: 0 }}
+          data={
+            vehicleModelData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps("vehicleModel")}
+          leftSection={<IconSteeringWheelFilled size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: 12,
+                }}
+                onClick={() => handleModal("Model")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Year *",
+      input: (
+        <TextInput
+          {...form.getInputProps("vehicleYear")}
+          leftSection={<IconCalendarWeek size={18} />}
+        />
+      ),
+    },
+  ];
+
   return (
     <>
-      <Grid>
-        <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
-          <Flex gap={"xl"} direction={"column"} mt={30}>
-            <Text>Company Name *</Text>
-            <Text>Type *</Text>
-            <Text>Plate No. *</Text>
-            <Text>Make *</Text>
-            <Text>Model *</Text>
-            <Text>Year *</Text>
-          </Flex>
-        </Grid.Col>
-
-        <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
-          <Flex gap={"md"} direction={"column"} mt={10}>
-            <Select
-              // placeholder="Select Client"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                clientData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("client")}
-              leftSection={<IconBuildings size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
-                    onClick={() => navigate("/client/create")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-            <Select
-              // placeholder="Select Vehicle Type"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                vehicleTypeData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("vehicleType")}
-              leftSection={<IconTruckFilled size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
-                    onClick={() => handleModal("Type")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-            <TextInput
-              // placeholder="Enter Plate No."
-              {...form.getInputProps("vehiclePlateNo")}
-              leftSection={<IconLicense size={16} />}
-            />
-            <Select
-              // placeholder="Select Vehicle Brand"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                vehicleBrandData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("vehicleBrand")}
-              leftSection={<IconWorld size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
-                    onClick={() => handleModal("Brand")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-            <Select
-              // placeholder="Select Vehicle Model"
-              searchable
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                vehicleModelData?.data.data.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-              {...form.getInputProps("vehicleModel")}
-              leftSection={<IconSteeringWheelFilled size={18} />}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconChevronDown size={16} style={{ margin: 0 }} />
-                  <ActionIcon
-                    color={theme.colors.purple[1]}
-                    style={{
-                      height: 42,
-                      width: 35,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      fontSize: 12,
-                    }}
-                    onClick={() => handleModal("Model")}
-                  >
-                    Add
-                  </ActionIcon>
-                </div>
-              }
-            />
-
-            <TextInput
-              // placeholder="Enter Vehicle Year"
-              leftSection={<IconCalendarWeek size={18} />}
-              {...form.getInputProps("vehicleYear")}
-            />
-          </Flex>
-        </Grid.Col>
-      </Grid>
-      <Group mt="md" justify="center">
-        <Button
-          onClick={() => {}}
-          radius={"lg"}
-          size="sm"
-          bg={theme.colors.purple[1]}
-        >
-          Continue
-        </Button>
-      </Group>
-
+      <FormTable rows={rows} />
       {modalType == "Type" && (
         <AddItemModal
           title="Vehicle Type"

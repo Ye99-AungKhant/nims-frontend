@@ -7,6 +7,7 @@ import {
   Group,
   Popover,
   Text,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconLogout } from "@tabler/icons-react";
@@ -22,10 +23,11 @@ const RootLayout = () => {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const navigate = useNavigate();
+  const theme = useMantineTheme();
   const authUserRaw = localStorage.getItem("authUser");
-  const authUser = JSON.parse(authUserRaw || "");
+  const authUser = authUserRaw ? JSON.parse(authUserRaw) : null;
 
-  const username = authUser.name;
+  const username = authUser ? authUser.name : "a";
 
   const handleLogout = () => {
     localStorage.removeItem("authUser");
@@ -83,9 +85,9 @@ const RootLayout = () => {
                       <Flex w="100%" h="100%" align="center" justify="center">
                         <Text p="0" c="white">
                           {username
-                            .split(" ")
-                            .map((part: any) => part[0])
-                            .join("")
+                            ?.split(" ")
+                            ?.map((part: any) => part[0])
+                            ?.join("")
                             .toUpperCase()}
                         </Text>
                       </Flex>
@@ -123,9 +125,9 @@ const RootLayout = () => {
         <Sidebar />
       </AppShell.Navbar>
       <AppShell.Main
-        pt={"80px"}
+        pt={"70px"}
         style={{
-          backgroundColor: "var(--mantine-color-gray-0)",
+          backgroundColor: theme.colors.silver[1],
           overflowX: "auto",
         }}
       >

@@ -101,7 +101,7 @@ export function DataTable<T extends Record<string, any> = object>({
     enableColumnPinning: true,
     displayColumnDefOptions: {
       "mrt-row-actions": {
-        header: "Actions", //change header text
+        header: "", //change header text
         size: 150,
       },
       "mrt-row-numbers": {

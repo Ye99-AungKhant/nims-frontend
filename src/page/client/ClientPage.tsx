@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useGetClientsWithContact } from "./hooks/useGetClientWithContact";
 import {
+  IconAddressBook,
   IconCloudDown,
   IconEdit,
   IconEye,
@@ -49,13 +50,16 @@ export const ClientPage = () => {
   };
 
   return (
-    <Box px="md">
-      <Paper shadow="xs">
+    <Box p="30px">
+      <Paper shadow="md">
         <Box style={{ borderBottom: "1px solid #dddddd" }}>
-          <Flex justify={"space-between"} p="sm">
-            <Text size="lg" fw={600} c="black">
-              Clients
-            </Text>
+          <Flex justify={"space-between"} py="sm" px={30}>
+            <Group gap={0}>
+              <IconAddressBook size={24} />
+              <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+                Clients
+              </Text>
+            </Group>
             <Group justify="center">
               <Button
                 onClick={() => {}}
@@ -78,7 +82,7 @@ export const ClientPage = () => {
             </Group>
           </Flex>
         </Box>
-        <Flex justify="space-between" align="center" mb={0} px="md" pt={"md"}>
+        <Flex justify="space-between" align="center" mb={0} px="30px" pt="30px">
           <Group gap={"xs"}>
             <Text color={theme.colors.purple[0]} fz="md">
               Show
@@ -90,7 +94,7 @@ export const ClientPage = () => {
           </Group>
           <SearchInput size="sm" leftSection name={"search"} />
         </Flex>
-        <Box p={"md"}>
+        <Box p="30px" pt={"md"}>
           <DataTable
             columns={clientPageColumns}
             data={clientData?.items || []}
@@ -101,7 +105,7 @@ export const ClientPage = () => {
             enableRowActions
             renderRowActions={({ row }) => {
               return (
-                <Group gap={"xs"}>
+                <Group gap={"xs"} justify="center">
                   <ActionIcon
                     color={theme.colors.chocolate[1]}
                     size={30}

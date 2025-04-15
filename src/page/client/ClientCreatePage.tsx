@@ -6,6 +6,7 @@ import {
   Grid,
   Paper,
   Select,
+  Table,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
@@ -42,6 +43,7 @@ import { AddItemModal } from "../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useCreateRole } from "./hooks/useCreateRole";
 import { z } from "zod";
+import FormTable from "../../components/common/FormTable";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
@@ -107,8 +109,10 @@ const ClientCreatePage = () => {
     isLoading: isClientLoading,
     isSuccess: isClientSuccess,
   } = useGetClientDetailWithContact(id); // Use the new hook
-  const { mutateAsync: createClient } = useCreateClientWithContact();
-  const { mutateAsync: updateClient } = useUpdateClientWithContact(); // Use update mutation
+  const { mutateAsync: createClient, isPending: isPendingCreate } =
+    useCreateClientWithContact();
+  const { mutateAsync: updateClient, isPending: isPendingUpdate } =
+    useUpdateClientWithContact(); // Use update mutation
   const { mutate: createRole } = useCreateRole();
   const [formErrors, setFormErrors] = useState<any>({});
 
@@ -193,7 +197,7 @@ const ClientCreatePage = () => {
     // console.log(contactFormData);
   };
 
-  const handleContinue = (tab: string) => {
+  const handleContinue = () => {
     try {
       const data = {
         name: formData.name,
@@ -209,9 +213,9 @@ const ClientCreatePage = () => {
       }
 
       setFormErrors({});
-      // ✅ Data is valid
-      console.log("All good! Submitting...");
-      setActiveTab(tab);
+      setActiveTab((prev) =>
+        prev == "basicInfo" ? "address" : "contactPersons"
+      );
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.log(error.flatten().fieldErrors);
@@ -228,18 +232,186 @@ const ClientCreatePage = () => {
     return <Box p="md">Loading...</Box>; // Replace with a proper loading indicator
   }
 
+  const baseInfoRows = [
+    {
+      label: "Company Name *",
+      input: (
+        <TextInput
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          leftSection={<IconBuilding size={18} />}
+          error={formErrors?.name?.[0]}
+        />
+      ),
+    },
+    {
+      label: "Primary Contact *",
+      input: (
+        <TextInput
+          value={contactFormData[0]?.contactName}
+          leftSection={<IconUser size={18} />}
+          onChange={(e) =>
+            handleContactChange(0, "contactName", e.target.value)
+          }
+          error={formErrors?.contactName?.[0]}
+        />
+      ),
+    },
+    {
+      label: "Designation *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{
+            offset: 0,
+          }}
+          data={
+            roleData?.data
+              ?.map((data: any) => ({
+                value: String(data.id),
+                label: data.name,
+              }))
+              .filter((role: any) => role.label !== "Admin") || []
+          }
+          value={String(contactFormData[0]?.role_id)}
+          leftSection={<IconUser size={18} />}
+          onChange={(value) => handleContactChange(0, "role_id", Number(value))}
+          error={formErrors?.role_id?.[0]}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: 12,
+                }}
+                onClick={open}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Email *",
+      input: (
+        <TextInput
+          type="email"
+          value={contactFormData[0]?.email}
+          leftSection={<IconMail size={18} />}
+          required
+          onChange={(e) => handleContactChange(0, "email", e.target.value)}
+          error={formErrors?.email?.[0]}
+        />
+      ),
+    },
+    {
+      label: "Phone *",
+      input: (
+        <TextInput
+          type="number"
+          value={contactFormData[0]?.phone}
+          leftSection={<IconPhone size={18} />}
+          required
+          onChange={(e) => handleContactChange(0, "phone", e.target.value)}
+          error={formErrors?.phone?.[0]}
+        />
+      ),
+    },
+  ];
+
+  const addressRows = [
+    {
+      label: "Address *",
+      input: (
+        <TextInput
+          name="address"
+          value={formData?.address}
+          onChange={handleChange}
+          leftSection={<IconMapPin size={18} />}
+          error={formErrors?.address?.[0]}
+        />
+      ),
+    },
+    {
+      label: "City*",
+      input: (
+        <TextInput
+          name="city"
+          value={formData?.city}
+          onChange={handleChange}
+          leftSection={<IconBuilding size={18} />}
+          error={formErrors?.city?.[0]}
+        />
+      ),
+    },
+    {
+      label: "State *",
+      input: (
+        <TextInput
+          name="state"
+          value={formData?.state}
+          onChange={handleChange}
+          leftSection={<IconMapPin size={18} />}
+          error={formErrors?.state?.[0]}
+        />
+      ),
+    },
+    {
+      label: "Country *",
+      input: (
+        <TextInput
+          name="country"
+          value={formData?.country}
+          onChange={handleChange}
+          leftSection={<IconMap size={18} />}
+          error={formErrors?.country?.[0]}
+        />
+      ),
+    },
+    {
+      label: "Postal/ZIP Code *",
+      input: (
+        <TextInput
+          name="postal"
+          value={formData?.postal}
+          onChange={handleChange}
+          leftSection={<IconZip size={18} />}
+          error={formErrors?.postal?.[0]}
+        />
+      ),
+    },
+  ];
+
   return (
-    <Box px="md">
+    <Box p="30px">
       <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
-          <Text size="lg" fw={500}>
-            {title}
-          </Text>
+        <Box style={{ borderBottom: "1px solid #dddddd" }} py="sm" px={30}>
+          <Group gap={0}>
+            <IconAddressBook size={24} />
+            <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+              {title}
+            </Text>
+          </Group>
         </Box>
 
-        <Box p={"md"}>
+        <Box px={"30px"} pt={"30px"}>
           <Tabs value={activeTab} onChange={() => {}}>
-            <TabsList>
+            <TabsList mb={20}>
               <Tabs.Tab
                 value="basicInfo"
                 leftSection={<IconAddressBook size={20} />}
@@ -275,177 +447,13 @@ const ClientCreatePage = () => {
               </Tabs.Tab>
             </TabsList>
             <TabsPanel value="basicInfo">
-              <Grid>
-                <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
-                  <Flex gap={"xl"} direction={"column"} mt={30}>
-                    <Text>Company Name *</Text>
-                    <Text>Primary Contact *</Text>
-                    <Text>Designation *</Text>
-                    <Text>Email *</Text>
-                    <Text>Phone *</Text>
-                  </Flex>
-                </Grid.Col>
-
-                <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
-                  <Flex gap={"md"} direction={"column"} mt={10}>
-                    <TextInput
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      leftSection={<IconBuilding size={18} />}
-                      error={formErrors?.name?.[0]}
-                    />
-                    <TextInput
-                      value={contactFormData[0]?.contactName}
-                      leftSection={<IconUser size={18} />}
-                      onChange={(e) =>
-                        handleContactChange(0, "contactName", e.target.value)
-                      }
-                      error={formErrors?.contactName?.[0]}
-                    />
-                    <Select
-                      searchable
-                      comboboxProps={{
-                        offset: 0,
-                      }}
-                      data={
-                        roleData?.data
-                          ?.map((data: any) => ({
-                            value: String(data.id),
-                            label: data.name,
-                          }))
-                          .filter((role: any) => role.label !== "Admin") || []
-                      }
-                      value={String(contactFormData[0]?.role_id)}
-                      leftSection={<IconUser size={18} />}
-                      onChange={(value) =>
-                        handleContactChange(0, "role_id", Number(value))
-                      }
-                      error={formErrors?.role_id?.[0]}
-                      rightSectionPointerEvents="all"
-                      rightSection={
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <IconChevronDown size={16} style={{ margin: 0 }} />
-                          <ActionIcon
-                            color={theme.colors.purple[1]}
-                            style={{
-                              height: 42,
-                              width: 35,
-                              borderTopLeftRadius: 0,
-                              borderBottomLeftRadius: 0,
-                              fontSize: 12,
-                            }}
-                            onClick={open}
-                          >
-                            Add
-                          </ActionIcon>
-                        </div>
-                      }
-                    />
-                    <TextInput
-                      type="email"
-                      value={contactFormData[0]?.email}
-                      leftSection={<IconMail size={18} />}
-                      required
-                      onChange={(e) =>
-                        handleContactChange(0, "email", e.target.value)
-                      }
-                      error={formErrors?.email?.[0]}
-                    />
-
-                    <TextInput
-                      type="number"
-                      value={contactFormData[0]?.phone}
-                      leftSection={<IconPhone size={18} />}
-                      required
-                      onChange={(e) =>
-                        handleContactChange(0, "phone", e.target.value)
-                      }
-                      error={formErrors?.phone?.[0]}
-                    />
-                  </Flex>
-                </Grid.Col>
-              </Grid>
-              <Group mt="md" justify="center">
-                <Button
-                  onClick={() => handleContinue("address")}
-                  radius={"lg"}
-                  size="sm"
-                  bg={theme.colors.purple[1]}
-                >
-                  Continue
-                </Button>
-              </Group>
+              <FormTable rows={baseInfoRows} />
             </TabsPanel>
 
             <TabsPanel value="address">
-              <Grid>
-                <Grid.Col span={{ base: 4, md: 3, lg: 3 }}>
-                  <Flex gap={"xl"} direction={"column"} mt={30}>
-                    <Text>Address *</Text>
-                    <Text>City *</Text>
-                    <Text>State *</Text>
-                    <Text>Country *</Text>
-                    <Text>Postal/ZIP Code *</Text>
-                  </Flex>
-                </Grid.Col>
-
-                <Grid.Col span={{ base: 6, md: 3, lg: 8 }}>
-                  <Flex gap={"md"} direction={"column"} mt={10}>
-                    <TextInput
-                      name="address"
-                      value={formData?.address}
-                      onChange={handleChange}
-                      leftSection={<IconMapPin size={18} />}
-                      error={formErrors?.address?.[0]}
-                    />
-                    <TextInput
-                      name="city"
-                      value={formData?.city}
-                      onChange={handleChange}
-                      leftSection={<IconBuilding size={18} />}
-                      error={formErrors?.city?.[0]}
-                    />
-                    <TextInput
-                      name="state"
-                      value={formData?.state}
-                      onChange={handleChange}
-                      leftSection={<IconMapPin size={18} />}
-                      error={formErrors?.state?.[0]}
-                    />
-                    <TextInput
-                      name="country"
-                      value={formData?.country}
-                      onChange={handleChange}
-                      leftSection={<IconMap size={18} />}
-                      error={formErrors?.country?.[0]}
-                    />
-                    <TextInput
-                      name="postal"
-                      value={formData?.postal}
-                      onChange={handleChange}
-                      leftSection={<IconZip size={18} />}
-                      error={formErrors?.postal?.[0]}
-                    />
-                  </Flex>
-                </Grid.Col>
-              </Grid>
-              <Group mt="md" justify="center">
-                <Button
-                  onClick={() => handleContinue("contactPersons")}
-                  radius={"lg"}
-                  size="sm"
-                  bg={theme.colors.purple[1]}
-                >
-                  Continue
-                </Button>
-              </Group>
+              <FormTable rows={addressRows} />
             </TabsPanel>
+
             <TabsPanel value="contactPersons">
               {!isRoleLoading && (
                 <EditableForm
@@ -459,6 +467,23 @@ const ClientCreatePage = () => {
               )}
             </TabsPanel>
           </Tabs>
+        </Box>
+
+        <Box style={{ borderTop: "1px solid #dddddd" }} p="md">
+          <Group justify="center">
+            <Button
+              onClick={
+                activeTab !== "contactPersons" ? handleContinue : handleSubmit
+              }
+              radius={"lg"}
+              size="sm"
+              bg={theme.colors.purple[1]}
+              disabled={contactFormData.length == 0}
+              loading={isPendingCreate || isPendingUpdate}
+            >
+              {activeTab !== "contactPersons" ? "Continue" : "Save"}
+            </Button>
+          </Group>
         </Box>
       </Paper>
       <AddItemModal

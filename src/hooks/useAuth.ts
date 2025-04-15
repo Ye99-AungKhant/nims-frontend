@@ -13,7 +13,7 @@ export function useAuthedRoute() {
 
 export function useAuthRoute() {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("authUser");
+  const accessToken = localStorage.getItem("authUser") || null;
 
   useEffect(() => {
     if (accessToken) {

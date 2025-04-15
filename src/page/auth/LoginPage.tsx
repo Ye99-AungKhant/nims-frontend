@@ -60,15 +60,7 @@ const LoginPage = () => {
         component="form"
         onSubmit={form.onSubmit((values) => handleLogin(values))}
       >
-        <Box
-          component="img"
-          alt="logo"
-          src="/wimslogoblue.png"
-          style={{
-            width: "100%",
-            height: "60px",
-          }}
-        />
+        <Box component="img" alt="logo" src="/wimslogoblue.png" h={"80"} />
         <TextInput
           mt={20}
           withAsterisk

@@ -45,22 +45,9 @@ export const MainMenus: MenuItemType[] = [
   },
   {
     id: "5",
-    title: "Installed",
+    title: "Installed Objects",
+    url: Routes.INSTALL.FULL_PATH,
     icon: <IconCircleArrowDown />,
-    children: [
-      {
-        id: "5.1",
-        title: "List All Installed",
-        url: Routes.INSTALL.FULL_PATH,
-        icon: <IconCircleArrowDown />,
-      },
-      {
-        id: "5.2",
-        title: "Create New Installation",
-        url: `${Routes.INSTALL.FULL_PATH}/create`,
-        icon: <IconCircleArrowDown />,
-      },
-    ],
   },
   {
     id: "1",

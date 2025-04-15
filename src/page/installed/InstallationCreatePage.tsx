@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Group,
   Paper,
   Tabs,
   TabsList,
@@ -9,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
+  IconCircleArrowDown,
   IconDeviceSim,
   IconGitCompare,
   IconPaperclip,
@@ -72,14 +75,17 @@ const InstallationCreatePage = () => {
   });
 
   return (
-    <Box px="md">
+    <Box p={30}>
       <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} p="sm">
-          <Text size="lg" fw={500}>
-            {"New Installation"}
-          </Text>
+        <Box style={{ borderBottom: "1px solid #dddddd" }} py="sm" px={30}>
+          <Group gap={0}>
+            <IconCircleArrowDown size={24} />
+            <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+              New Installation
+            </Text>
+          </Group>
         </Box>
-        <Box p={"md"}>
+        <Box px={"30px"} pt={"30px"}>
           <Tabs value={activeTab} onChange={setActiveTab}>
             <TabsList>
               <Tabs.Tab
@@ -149,6 +155,7 @@ const InstallationCreatePage = () => {
                 Server Info
               </Tabs.Tab>
             </TabsList>
+
             <TabsPanel value="vehicleInfo">
               <VehicleInfoForm form={form} />
             </TabsPanel>
@@ -165,6 +172,20 @@ const InstallationCreatePage = () => {
               <ServerInfoForm form={form} />
             </TabsPanel>
           </Tabs>
+        </Box>
+        <Box style={{ borderTop: "1px solid #dddddd" }} p="md">
+          <Group justify="center">
+            <Button
+              onClick={() => {}}
+              radius={"lg"}
+              size="sm"
+              bg={theme.colors.purple[1]}
+              disabled={false}
+              loading={false}
+            >
+              {activeTab !== "serverInfo" ? "Continue" : "Save"}
+            </Button>
+          </Group>
         </Box>
       </Paper>
     </Box>

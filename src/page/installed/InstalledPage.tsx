@@ -11,7 +11,13 @@ import {
 } from "@mantine/core";
 import { useGetInstalled } from "./hooks/useGetInstalled";
 import dayjs from "dayjs";
-import { IconEdit, IconEye, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  IconCircleArrowDown,
+  IconEdit,
+  IconEye,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
@@ -44,13 +50,16 @@ export const InstalledPage = () => {
   ));
 
   return (
-    <Box px={10} pb={30}>
+    <Box p="30px">
       <Paper shadow="xs">
         <Box style={{ borderBottom: "1px solid #dddddd" }}>
-          <Flex justify={"space-between"} p="sm">
-            <Text size="lg" fw={600} c="black">
-              Installed Objects
-            </Text>
+          <Flex justify={"space-between"} py="sm" px={30}>
+            <Group gap={0}>
+              <IconCircleArrowDown size={24} />
+              <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+                Installed Objects
+              </Text>
+            </Group>
             <Group justify="center">
               <Button
                 onClick={() => navigate("create")}
@@ -64,7 +73,7 @@ export const InstalledPage = () => {
             </Group>
           </Flex>
         </Box>
-        <Flex justify="space-between" align="center" mb={0} px="md" pt={"md"}>
+        <Flex justify="space-between" align="center" mb={0} px="30px" pt="30px">
           <Group gap={"xs"}>
             <Text color={theme.colors.purple[0]} fz="md">
               Show
@@ -76,7 +85,7 @@ export const InstalledPage = () => {
           </Group>
           <SearchInput size="sm" leftSection name={"search"} />
         </Flex>
-        <Box p={"md"}>
+        <Box p="30px" pt={"md"}>
           <DataTable
             columns={[]}
             data={[]}

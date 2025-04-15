@@ -13,10 +13,6 @@ import LoginPage from "../page/auth/LoginPage";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
     path: "/",
     element: <RootLayout />,
     children: [
@@ -30,6 +26,10 @@ const router = createBrowserRouter([
       { path: "/vehicle", element: <VehiclePage /> },
       { path: "/vehicle/create", element: <VehicleCreatePage /> },
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
 

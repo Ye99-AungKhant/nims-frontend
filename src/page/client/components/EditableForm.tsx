@@ -49,7 +49,7 @@ const EditableForm = ({
   const theme = useMantineTheme();
 
   return (
-    <Box p={"md"}>
+    <Box mt={30}>
       <Stack gap="md">
         {contactFormData.length == 0 && (
           <Text c={"red"}>
@@ -151,7 +151,7 @@ const EditableForm = ({
         <IconPlus size={18} />
         Add Person
       </Button>
-      <Group mt="md" justify="center">
+      {/* <Group mt="md" justify="center">
         <Button
           onClick={handleSubmit}
           radius={"lg"}
@@ -161,7 +161,7 @@ const EditableForm = ({
         >
           Save
         </Button>
-      </Group>
+      </Group> */}
     </Box>
   );
 };

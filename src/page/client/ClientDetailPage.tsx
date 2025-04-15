@@ -13,6 +13,7 @@ import {
   Button,
   useMantineTheme,
   Flex,
+  LoadingOverlay,
 } from "@mantine/core";
 import {
   IconUser,
@@ -34,7 +35,11 @@ export function ViewClient({ data }: any) {
 
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
-      <Group style={{ borderBottom: "1px solid #dddddd" }} p="sm" gap={0}>
+      <Group
+        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
+        py="sm"
+        gap={0}
+      >
         <IconAddressBook size={24} />
         <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
           View Client
@@ -46,7 +51,11 @@ export function ViewClient({ data }: any) {
           <Table.Tr h={50}>
             <Table.Th
               w={300}
-              style={{ color: "#684498", backgroundColor: "#f0f0f0" }}
+              style={{
+                color: "#684498",
+                backgroundColor: "#f0f0f0",
+                paddingLeft: "25px",
+              }}
             >
               Company
             </Table.Th>
@@ -62,7 +71,13 @@ export function ViewClient({ data }: any) {
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "#684498", backgroundColor: "#fff" }}>
+            <Table.Th
+              style={{
+                color: "#684498",
+                backgroundColor: "#fff",
+                paddingLeft: "25px",
+              }}
+            >
               Primary Contact
             </Table.Th>
             <Table.Td style={{ fontSize: 17, color: "#707070" }}>
@@ -71,7 +86,13 @@ export function ViewClient({ data }: any) {
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "#684498", backgroundColor: "#f0f0f0" }}>
+            <Table.Th
+              style={{
+                color: "#684498",
+                backgroundColor: "#f0f0f0",
+                paddingLeft: "25px",
+              }}
+            >
               Designation
             </Table.Th>
             <Table.Td
@@ -86,7 +107,13 @@ export function ViewClient({ data }: any) {
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple", backgroundColor: "#fff" }}>
+            <Table.Th
+              style={{
+                color: "#684498",
+                backgroundColor: "#fff",
+                paddingLeft: "25px",
+              }}
+            >
               Email
             </Table.Th>
             <Table.Td style={{ fontSize: 17, color: "#707070" }}>
@@ -95,7 +122,13 @@ export function ViewClient({ data }: any) {
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple", backgroundColor: "#f0f0f0" }}>
+            <Table.Th
+              style={{
+                color: "#684498",
+                backgroundColor: "#f0f0f0",
+                paddingLeft: "25px",
+              }}
+            >
               Phone
             </Table.Th>
             <Table.Td
@@ -110,7 +143,9 @@ export function ViewClient({ data }: any) {
           </Table.Tr>
 
           <Table.Tr h={50}>
-            <Table.Th style={{ color: "purple" }}>Address</Table.Th>
+            <Table.Th style={{ color: "#684498", paddingLeft: "25px" }}>
+              Address
+            </Table.Th>
             <Table.Td style={{ fontSize: 17, color: "#707070" }}>
               {data.address}
             </Table.Td>
@@ -144,51 +179,63 @@ export function ContactPerson({ data }: any) {
 
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
-      <Group style={{ borderBottom: "1px solid #dddddd" }} p="sm" gap={0}>
+      <Group
+        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
+        py="sm"
+        gap={0}
+      >
         <IconUsersGroup size={24} />
         <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
           Contact Persons
         </Text>
       </Group>
-      <Table striped highlightOnHover>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
-            <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
-            <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
-            <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
-            <Table.Th></Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {contacts ? (
-            contacts.map((person: any) => (
-              <Table.Tr key={person.id}>
-                <Table.Td style={{ color: "#474747" }}>{person.name}</Table.Td>
-                <Table.Td style={{ color: "#474747" }}>{person.phone}</Table.Td>
-                <Table.Td style={{ color: "#474747" }}>{person.email}</Table.Td>
-                <Table.Td style={{ color: "#474747" }}>
-                  {person.role.name}
-                </Table.Td>
-                <Table.Td>
-                  <ActionIcon
-                    color="red"
-                    radius="lg"
-                    variant="outline"
-                    onClick={() => deleteClientSelect(person.id)}
-                  >
-                    <IconTrash size={18} />
-                  </ActionIcon>
-                </Table.Td>
-              </Table.Tr>
-            ))
-          ) : (
+      <Box px={25} pt={10}>
+        <Table striped highlightOnHover>
+          <Table.Thead>
             <Table.Tr>
-              <Table.Td>No Data Found!</Table.Td>
+              <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
+              <Table.Th></Table.Th>
             </Table.Tr>
-          )}
-        </Table.Tbody>
-      </Table>
+          </Table.Thead>
+          <Table.Tbody>
+            {contacts ? (
+              contacts.map((person: any) => (
+                <Table.Tr key={person.id}>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {person.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {person.phone}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {person.email}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {person.role.name}
+                  </Table.Td>
+                  <Table.Td>
+                    <ActionIcon
+                      color="red"
+                      radius="lg"
+                      variant="outline"
+                      onClick={() => deleteClientSelect(person.id)}
+                    >
+                      <IconTrash size={18} />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))
+            ) : (
+              <Table.Tr>
+                <Table.Td>No Data Found!</Table.Td>
+              </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
+      </Box>
       <Modal
         opened={opened}
         onClose={close}
@@ -228,52 +275,55 @@ export default function ClientDetailPage() {
   };
 
   return (
-    <Box style={{ display: "flex", gap: "20px" }} px="md">
+    <Box style={{ display: "flex", gap: "30px" }} p="30px">
       {/* Left Card */}
-      <Paper shadow="sm" radius="md" style={{ width: 300 }}>
-        <Flex
-          style={{ borderBottom: "1px solid #dddddd" }}
-          p="sm"
-          justify={"center"}
-        >
-          <Text size="lg" fw={500} color={theme.colors.purple[0]}>
-            {clientData?.items.name}
-          </Text>
-        </Flex>
-        <Stack p="md">
-          <Group
-            onClick={() => handleMenuBtn("client")}
-            p={"xs"}
-            gap={0}
-            className={`menu-item ${menuBtn === "client" ? "active" : ""}`}
+
+      {!isLoading && (
+        <Paper shadow="sm" radius="md" style={{ width: 300 }}>
+          <Flex
+            style={{ borderBottom: "1px solid #dddddd" }}
+            p="sm"
+            justify={"center"}
           >
-            <IconAddressBook size={20} className="textIcon" />
-            <Text className="text">Client</Text>
-          </Group>
-          <Group
-            onClick={() => handleMenuBtn("contactPaerson")}
-            p={"xs"}
-            gap={0}
-            className={`menu-item ${
-              menuBtn === "contactPaerson" ? "active" : ""
-            }`}
-          >
-            <IconUsersGroup size={20} className="textIcon" />
-            <Text className="text">Contact Persons</Text>
-          </Group>
-          <Group
-            onClick={() =>
-              navigate("/client/create", { state: { id: param.state.id } })
-            }
-            p={"xs"}
-            gap={0}
-            className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
-          >
-            <IconEdit size={20} className="textIcon" />
-            <Text className="text">Edit</Text>
-          </Group>
-        </Stack>
-      </Paper>
+            <Text size="lg" fw={500} color={theme.colors.purple[0]}>
+              {clientData?.items?.name}
+            </Text>
+          </Flex>
+          <Stack p="30px">
+            <Group
+              onClick={() => handleMenuBtn("client")}
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${menuBtn === "client" ? "active" : ""}`}
+            >
+              <IconAddressBook size={20} className="textIcon" />
+              <Text className="text">Client</Text>
+            </Group>
+            <Group
+              onClick={() => handleMenuBtn("contactPaerson")}
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${
+                menuBtn === "contactPaerson" ? "active" : ""
+              }`}
+            >
+              <IconUsersGroup size={20} className="textIcon" />
+              <Text className="text">Contact Persons</Text>
+            </Group>
+            <Group
+              onClick={() =>
+                navigate("/client/create", { state: { id: param.state.id } })
+              }
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
+            >
+              <IconEdit size={20} className="textIcon" />
+              <Text className="text">Edit</Text>
+            </Group>
+          </Stack>
+        </Paper>
+      )}
 
       {/* Right Card */}
       {!isLoading && menuBtn == "client" ? (
