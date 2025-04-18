@@ -34,6 +34,8 @@ import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../form/hooks/useGetBrands";
 import { useGetModels } from "../../form/hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
+import { useUpdateType } from "../../../hooks/useUpdateType";
+import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -45,14 +47,19 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   const { data: vehicleTypeData } = useGetTypes("Vehicle");
-  const { data: vehicleBrandData } = useGetBrands("Vehicle");
+  const { data: vehicleBrandData } = useGetBrands(
+    Number(form.values.vehicleType),
+    "Vehicle"
+  );
   const { data: vehicleModelData } = useGetModels(
     "Vehicle",
     Number(form.values.vehicleBrand)
   );
   const { mutate: createType } = useCreateType();
-  const { mutate: createModel } = useCreateModel();
+  const { mutate: updateType } = useUpdateType();
   const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: createModel } = useCreateModel();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -92,8 +99,9 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => navigate("/client/create")}
               >
                 Add
@@ -134,8 +142,9 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Type")}
               >
                 Add
@@ -185,8 +194,9 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Brand")}
               >
                 Add
@@ -227,8 +237,9 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Model")}
               >
                 Add
@@ -258,7 +269,9 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           opened={opened}
           close={close}
           mutationFn={createType}
+          updateMutationFn={updateType}
           type_group={"Vehicle"}
+          dataList={vehicleTypeData?.data.data}
         />
       )}
       {modalType == "Brand" && (
@@ -267,7 +280,10 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           opened={opened}
           close={close}
           mutationFn={createBrand}
+          updateMutationFn={updateBrand}
           type_group={"Vehicle"}
+          selectItem={vehicleTypeData?.data.data}
+          dataList={vehicleBrandData?.data.data}
         />
       )}
       {modalType == "Model" && (
@@ -276,8 +292,8 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           opened={opened}
           close={close}
           mutationFn={createModel}
+          updateMutationFn={updateType}
           type_group={"Vehicle"}
-          brand_id={Number(form.values.vehicleBrand)}
         />
       )}
     </>

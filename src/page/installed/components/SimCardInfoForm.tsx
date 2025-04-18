@@ -115,8 +115,9 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={open}
               >
                 Add

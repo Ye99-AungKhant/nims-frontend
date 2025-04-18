@@ -85,8 +85,8 @@ const components: any = {
     styles: (theme: MantineTheme) => ({
       trapFocus: false,
       content: { padding: 0 },
-      header: { position: "static" },
-      body: { padding: "0 20px 20px 20px" },
+      header: { position: "static", borderBottom: "1px solid #dddddd" },
+      body: { padding: 0 },
       title: {
         fontSize: 18,
         fontWeight: 600,

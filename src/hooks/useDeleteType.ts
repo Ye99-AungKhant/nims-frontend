@@ -1,14 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
-import { createType } from "../services/type.service";
+import { deleteType } from "../services/type.service";
 import { queryClient } from "../utils/react-query/queryClient";
 
-export const useCreateType = () => {
+export const useDeleteType = () => {
   return useMutation({
     mutationFn: async (params: any) => {
       try {
-        return await createType(params);
+        return await deleteType(params);
       } catch (error) {
-        console.log("create type error", error);
+        console.log("delete type error", error);
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["types"] }),

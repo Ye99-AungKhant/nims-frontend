@@ -37,7 +37,7 @@ export function ViewClient({ data }: any) {
     <Paper shadow="sm" style={{ flex: 1 }}>
       <Group
         style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="sm"
+        py="md"
         gap={0}
       >
         <IconAddressBook size={24} />
@@ -46,112 +46,112 @@ export function ViewClient({ data }: any) {
         </Text>
       </Group>
 
-      <Table variant="vertical" withTableBorder highlightOnHover>
-        <Table.Tbody>
-          <Table.Tr h={50}>
-            <Table.Th
-              w={300}
-              style={{
-                color: "#684498",
-                backgroundColor: "#f0f0f0",
-                paddingLeft: "25px",
-              }}
-            >
-              Company
-            </Table.Th>
-            <Table.Td
-              style={{
-                fontSize: 17,
-                color: "#707070",
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              {data.name}
-            </Table.Td>
-          </Table.Tr>
+      <Box px={30} mt={30}>
+        <Divider />
+        <Table variant="vertical">
+          <Table.Tbody>
+            <Table.Tr h={50}>
+              <Table.Th
+                w={300}
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Company
+              </Table.Th>
+              <Table.Td
+                style={{
+                  fontSize: 17,
+                  color: "#707070",
+                }}
+              >
+                {data.name}
+              </Table.Td>
+            </Table.Tr>
 
-          <Table.Tr h={50}>
-            <Table.Th
-              style={{
-                color: "#684498",
-                backgroundColor: "#fff",
-                paddingLeft: "25px",
-              }}
-            >
-              Primary Contact
-            </Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-              {data.contact_person[0]?.name}
-            </Table.Td>
-          </Table.Tr>
+            <Table.Tr h={50}>
+              <Table.Th
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Primary Contact
+              </Table.Th>
+              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+                {data.contact_person[0]?.name}
+              </Table.Td>
+            </Table.Tr>
 
-          <Table.Tr h={50}>
-            <Table.Th
-              style={{
-                color: "#684498",
-                backgroundColor: "#f0f0f0",
-                paddingLeft: "25px",
-              }}
-            >
-              Designation
-            </Table.Th>
-            <Table.Td
-              style={{
-                fontSize: 17,
-                color: "#707070",
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              {data.contact_person[0]?.role.name}
-            </Table.Td>
-          </Table.Tr>
+            <Table.Tr h={50}>
+              <Table.Th
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Designation
+              </Table.Th>
+              <Table.Td
+                style={{
+                  fontSize: 17,
+                  color: "#707070",
+                }}
+              >
+                {data.contact_person[0]?.role.name}
+              </Table.Td>
+            </Table.Tr>
 
-          <Table.Tr h={50}>
-            <Table.Th
-              style={{
-                color: "#684498",
-                backgroundColor: "#fff",
-                paddingLeft: "25px",
-              }}
-            >
-              Email
-            </Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-              {data.contact_person[0]?.email}
-            </Table.Td>
-          </Table.Tr>
+            <Table.Tr h={50}>
+              <Table.Th
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Email
+              </Table.Th>
+              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+                {data.contact_person[0]?.email}
+              </Table.Td>
+            </Table.Tr>
 
-          <Table.Tr h={50}>
-            <Table.Th
-              style={{
-                color: "#684498",
-                backgroundColor: "#f0f0f0",
-                paddingLeft: "25px",
-              }}
-            >
-              Phone
-            </Table.Th>
-            <Table.Td
-              style={{
-                fontSize: 17,
-                color: "#707070",
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              {data.contact_person[0]?.phone}
-            </Table.Td>
-          </Table.Tr>
+            <Table.Tr h={50}>
+              <Table.Th
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Phone
+              </Table.Th>
+              <Table.Td
+                style={{
+                  fontSize: 17,
+                  color: "#707070",
+                }}
+              >
+                {data.contact_person[0]?.phone}
+              </Table.Td>
+            </Table.Tr>
 
-          <Table.Tr h={50}>
-            <Table.Th style={{ color: "#684498", paddingLeft: "25px" }}>
-              Address
-            </Table.Th>
-            <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-              {data.address}
-            </Table.Td>
-          </Table.Tr>
-        </Table.Tbody>
-      </Table>
+            <Table.Tr h={50}>
+              <Table.Th
+                style={{
+                  color: "#684498",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Address
+              </Table.Th>
+              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
+                {data.address}
+              </Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+        </Table>
+      </Box>
     </Paper>
   );
 }
@@ -181,7 +181,7 @@ export function ContactPerson({ data }: any) {
     <Paper shadow="sm" style={{ flex: 1 }}>
       <Group
         style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="sm"
+        py="md"
         gap={0}
       >
         <IconUsersGroup size={24} />
@@ -189,9 +189,10 @@ export function ContactPerson({ data }: any) {
           Contact Persons
         </Text>
       </Group>
-      <Box px={25} pt={10}>
-        <Table striped highlightOnHover>
-          <Table.Thead>
+      <Box px={30} pt={30}>
+        <Divider />
+        <Table striped highlightOnHover withRowBorders>
+          <Table.Thead h={50}>
             <Table.Tr>
               <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
               <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
@@ -201,7 +202,7 @@ export function ContactPerson({ data }: any) {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {contacts ? (
+            {contacts.length ? (
               contacts.map((person: any) => (
                 <Table.Tr key={person.id}>
                   <Table.Td style={{ color: "#474747" }}>
@@ -230,7 +231,11 @@ export function ContactPerson({ data }: any) {
               ))
             ) : (
               <Table.Tr>
-                <Table.Td>No Data Found!</Table.Td>
+                <Table.Td colSpan={5}>
+                  <Center py={"md"}>
+                    <Text color="dimmed">NO DATA FOUND!!!</Text>
+                  </Center>
+                </Table.Td>
               </Table.Tr>
             )}
           </Table.Tbody>
@@ -279,22 +284,47 @@ export default function ClientDetailPage() {
       {/* Left Card */}
 
       {!isLoading && (
-        <Paper shadow="sm" radius="md" style={{ width: 300 }}>
+        <Paper shadow="sm" style={{ width: "31%" }}>
           <Flex
-            style={{ borderBottom: "1px solid #dddddd" }}
-            p="sm"
+            p="lg"
+            pb={0}
             justify={"center"}
+            align="center"
+            direction={"column"}
           >
-            <Text size="lg" fw={500} color={theme.colors.purple[0]}>
+            <Box
+              className="cursor-pointer"
+              w="64px"
+              h="64px"
+              bg="indigo"
+              style={{
+                borderRadius: "100%",
+              }}
+            >
+              <Flex w="100%" h="100%" align="center" justify="center">
+                <Text p="0" c="white" fw={500} size="30">
+                  {clientData?.items?.name
+                    ?.split(" ")
+                    ?.map((part: any) => part[0])
+                    ?.join("")
+                    .toUpperCase()}
+                </Text>
+              </Flex>
+            </Box>
+            <Text size="lg" fw={500} color={theme.colors.purple[0]} mt={5}>
               {clientData?.items?.name}
             </Text>
           </Flex>
-          <Stack p="30px">
+          <Box p="30px">
             <Group
               onClick={() => handleMenuBtn("client")}
               p={"xs"}
               gap={0}
               className={`menu-item ${menuBtn === "client" ? "active" : ""}`}
+              style={{
+                borderTop: "1px solid #dddddd",
+                borderBottom: "1px solid #dddddd",
+              }}
             >
               <IconAddressBook size={20} className="textIcon" />
               <Text className="text">Client</Text>
@@ -306,6 +336,9 @@ export default function ClientDetailPage() {
               className={`menu-item ${
                 menuBtn === "contactPaerson" ? "active" : ""
               }`}
+              style={{
+                borderBottom: "1px solid #dddddd",
+              }}
             >
               <IconUsersGroup size={20} className="textIcon" />
               <Text className="text">Contact Persons</Text>
@@ -317,11 +350,14 @@ export default function ClientDetailPage() {
               p={"xs"}
               gap={0}
               className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
+              style={{
+                borderBottom: "1px solid #dddddd",
+              }}
             >
               <IconEdit size={20} className="textIcon" />
               <Text className="text">Edit</Text>
             </Group>
-          </Stack>
+          </Box>
         </Paper>
       )}
 

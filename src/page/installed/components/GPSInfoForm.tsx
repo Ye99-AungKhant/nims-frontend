@@ -83,8 +83,9 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Brand")}
               >
                 Add
@@ -127,8 +128,9 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Model")}
               >
                 Add
@@ -189,8 +191,9 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Brand")}
               >
                 Add

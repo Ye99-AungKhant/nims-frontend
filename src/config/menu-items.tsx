@@ -55,61 +55,61 @@ export const MainMenus: MenuItemType[] = [
     url: Routes.CLIENT.FULL_PATH,
     icon: <IconUsersGroup stroke={3} />,
   },
-  {
-    id: "2",
-    title: "Vehicle",
-    icon: <IconBackhoe />,
-    children: [
-      {
-        id: "2.1",
-        title: "List All Vehicles",
-        url: "/vehicle",
-        icon: <IconBackhoe />,
-      },
-      {
-        id: "2.2",
-        title: "Create New Vehicles",
-        url: "/vehicle/create",
-        icon: <IconBackhoe />,
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Device",
-    icon: <IconRouter />,
-    children: [
-      {
-        id: "3.1",
-        title: "List All Devices",
-        url: "/device",
-        icon: <IconRouter />,
-      },
-      {
-        id: "3.2",
-        title: "Create New Devices",
-        url: "/device/create",
-        icon: <IconRouter />,
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Server",
-    icon: <IconServer2 />,
-    children: [
-      {
-        id: "4.1",
-        title: "List All Servers",
-        url: "/server",
-        icon: <IconServer2 />,
-      },
-      {
-        id: "4.2",
-        title: "Create New Servers",
-        url: "/server/create",
-        icon: <IconServer2 />,
-      },
-    ],
-  },
+  // {
+  //   id: "2",
+  //   title: "Vehicle",
+  //   icon: <IconBackhoe />,
+  //   children: [
+  //     {
+  //       id: "2.1",
+  //       title: "List All Vehicles",
+  //       url: "/vehicle",
+  //       icon: <IconBackhoe />,
+  //     },
+  //     {
+  //       id: "2.2",
+  //       title: "Create New Vehicles",
+  //       url: "/vehicle/create",
+  //       icon: <IconBackhoe />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "3",
+  //   title: "Device",
+  //   icon: <IconRouter />,
+  //   children: [
+  //     {
+  //       id: "3.1",
+  //       title: "List All Devices",
+  //       url: "/device",
+  //       icon: <IconRouter />,
+  //     },
+  //     {
+  //       id: "3.2",
+  //       title: "Create New Devices",
+  //       url: "/device/create",
+  //       icon: <IconRouter />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "4",
+  //   title: "Server",
+  //   icon: <IconServer2 />,
+  //   children: [
+  //     {
+  //       id: "4.1",
+  //       title: "List All Servers",
+  //       url: "/server",
+  //       icon: <IconServer2 />,
+  //     },
+  //     {
+  //       id: "4.2",
+  //       title: "Create New Servers",
+  //       url: "/server/create",
+  //       icon: <IconServer2 />,
+  //     },
+  //   ],
+  // },
 ] as const;

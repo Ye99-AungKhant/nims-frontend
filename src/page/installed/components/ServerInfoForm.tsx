@@ -108,8 +108,9 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => setModalType("Type")}
               >
                 Add
@@ -164,8 +165,9 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("InstallEng")}
               >
                 Add
@@ -221,8 +223,9 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => handleModal("Subscription")}
               >
                 Add

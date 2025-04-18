@@ -104,9 +104,6 @@ export function DataTable<T extends Record<string, any> = object>({
         header: "", //change header text
         size: 150,
       },
-      "mrt-row-numbers": {
-        maxSize: 10,
-      },
     },
     defaultColumn: {
       size: 10,

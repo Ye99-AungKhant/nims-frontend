@@ -53,7 +53,7 @@ export const ClientPage = () => {
     <Box p="30px">
       <Paper shadow="md">
         <Box style={{ borderBottom: "1px solid #dddddd" }}>
-          <Flex justify={"space-between"} py="sm" px={30}>
+          <Flex justify={"space-between"} py="md" px={30}>
             <Group gap={0}>
               <IconAddressBook size={24} />
               <Text size="lg" fw={600} c={"dark"} ml={"8px"}>

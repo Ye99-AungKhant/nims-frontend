@@ -53,7 +53,7 @@ export const InstalledPage = () => {
     <Box p="30px">
       <Paper shadow="xs">
         <Box style={{ borderBottom: "1px solid #dddddd" }}>
-          <Flex justify={"space-between"} py="sm" px={30}>
+          <Flex justify={"space-between"} py="md" px={30}>
             <Group gap={0}>
               <IconCircleArrowDown size={24} />
               <Text size="lg" fw={600} c={"dark"} ml={"8px"}>

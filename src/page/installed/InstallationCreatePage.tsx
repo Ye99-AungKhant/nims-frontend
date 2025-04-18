@@ -77,8 +77,8 @@ const InstallationCreatePage = () => {
   return (
     <Box p={30}>
       <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} py="sm" px={30}>
-          <Group gap={0}>
+        <Box style={{ borderBottom: "1px solid #dddddd" }} py="md" px={30}>
+          <Group gap={0} h={36}>
             <IconCircleArrowDown size={24} />
             <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
               New Installation
@@ -182,6 +182,7 @@ const InstallationCreatePage = () => {
               bg={theme.colors.purple[1]}
               disabled={false}
               loading={false}
+              fw={500}
             >
               {activeTab !== "serverInfo" ? "Continue" : "Save"}
             </Button>

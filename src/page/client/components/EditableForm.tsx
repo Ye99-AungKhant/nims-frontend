@@ -126,7 +126,7 @@ const EditableForm = ({
                       }
                     />
                   </Table.Td>
-                  <Table.Td>
+                  <Table.Td align="center">
                     <ActionIcon
                       size={30}
                       variant="subtle"
@@ -144,7 +144,7 @@ const EditableForm = ({
       <Button
         size="xs"
         onClick={handleAddPerson}
-        mt="xs"
+        my="xs"
         bg={theme.colors.success[5]}
         radius={"lg"}
       >

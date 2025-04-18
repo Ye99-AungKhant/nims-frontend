@@ -1,13 +1,20 @@
+import { Box, Flex } from "@mantine/core";
 import { MRT_ColumnDef } from "mantine-react-table";
 
 export const clientPageColumns: MRT_ColumnDef<any>[] = [
   {
     header: "#",
+    Header: ({ column }) => <Box pl={"xs"}>{column.columnDef.header}</Box>,
     Cell: ({ row, table }) =>
       row.index +
       1 +
       (table.getState().pagination.pageIndex - 1) *
         table.getState().pagination.pageSize,
+    mantineTableBodyCellProps: {
+      style: {
+        textAlign: "center",
+      },
+    },
   },
   {
     header: "Company",

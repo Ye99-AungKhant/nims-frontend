@@ -295,8 +295,9 @@ const ClientCreatePage = () => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={open}
               >
                 Add
@@ -400,8 +401,8 @@ const ClientCreatePage = () => {
   return (
     <Box p="30px">
       <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} py="sm" px={30}>
-          <Group gap={0}>
+        <Box style={{ borderBottom: "1px solid #dddddd" }} py="md" px={30}>
+          <Group gap={0} h={36}>
             <IconAddressBook size={24} />
             <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
               {title}
@@ -480,6 +481,7 @@ const ClientCreatePage = () => {
               bg={theme.colors.purple[1]}
               disabled={contactFormData.length == 0}
               loading={isPendingCreate || isPendingUpdate}
+              fw={500}
             >
               {activeTab !== "contactPersons" ? "Continue" : "Save"}
             </Button>
@@ -491,6 +493,7 @@ const ClientCreatePage = () => {
         opened={opened}
         close={close}
         mutationFn={createRole}
+        updateMutationFn={() => {}}
       />
     </Box>
   );

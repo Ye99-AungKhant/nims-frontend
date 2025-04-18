@@ -93,8 +93,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => setModalType("Type")}
               >
                 Add
@@ -137,8 +138,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => setModalType("Brand")}
               >
                 Add
@@ -181,8 +183,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => setModalType("Model")}
               >
                 Add
@@ -243,8 +246,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   width: 60,
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                  fontSize: 12,
+                  fontSize: " var(--mantine-font-size-sm)",
                 }}
+                fw={500}
                 onClick={() => setModalType("Type")}
               >
                 Add

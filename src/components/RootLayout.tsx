@@ -51,7 +51,7 @@ const RootLayout = () => {
       }}
     >
       <AppShell.Header h={70}>
-        <Box p="md">
+        <Box py="md" px={30}>
           <Flex w="100%" justify="space-between" align="center">
             <Group>
               <ActionIcon
