@@ -41,7 +41,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [simMode, setSimMode] = useState<string | null>("Single");
-  const { data: brandData } = useGetBrands("Operator");
+  const { data: brandData } = useGetBrands(0, "Operator");
   const { mutate: createBrand } = useCreateBrand();
 
   const handleDualPhoneNumberChange = (

@@ -1,10 +1,10 @@
 import { apiClient } from "../utils/axios/apiClient";
 
-export const getBrand = async (type_id: number, type_group: string) => {
+export const getBrand = async (type_group: string, type_id?: number) => {
   return await apiClient.get("/brand", {
     params: {
-      type_id,
       type_group,
+      type_id,
     },
   });
 };

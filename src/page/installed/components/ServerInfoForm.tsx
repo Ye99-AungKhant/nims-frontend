@@ -196,7 +196,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            warrantyData?.data?.map((data: any) => ({
+            warrantyData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []

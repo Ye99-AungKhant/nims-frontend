@@ -62,6 +62,7 @@ export interface FormValues {
   vehicleModel: string;
   vehicleYear: string;
   vehiclePlateNo: string;
+  vehicleOdometer: string;
   gpsBrand: string;
   gpsModel: string;
   imei: string;

@@ -7,3 +7,7 @@ export const getRole = async () => {
 export const createRole = async (name: any) => {
   return await apiClient.post("/role", name);
 };
+
+export const updateRole = async (params: any) => {
+  return await apiClient.patch("/role", params);
+};

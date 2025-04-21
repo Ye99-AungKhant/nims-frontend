@@ -16,6 +16,7 @@ import {
   IconBuildings,
   IconCalendarWeek,
   IconChevronDown,
+  IconEngine,
   IconLicense,
   IconSteeringWheelFilled,
   IconTruckFilled,
@@ -36,6 +37,10 @@ import { useGetModels } from "../../form/hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
 import { useUpdateType } from "../../../hooks/useUpdateType";
 import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
+import { useUpdateModel } from "../../../hooks/useUpdateModel";
+import { useDeleteType } from "../../../hooks/useDeleteType";
+import { useDeleteModel } from "../../../hooks/useDeleteModel";
+import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -48,8 +53,8 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
   const [modalType, setModalType] = useState("");
   const { data: vehicleTypeData } = useGetTypes("Vehicle");
   const { data: vehicleBrandData } = useGetBrands(
-    Number(form.values.vehicleType),
-    "Vehicle"
+    "Vehicle",
+    Number(form.values.vehicleType)
   );
   const { data: vehicleModelData } = useGetModels(
     "Vehicle",
@@ -57,9 +62,13 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
   );
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
+  const { mutate: deleteType } = useDeleteType();
   const { mutate: createBrand } = useCreateBrand();
   const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: deleteBrand } = useDeleteBrand();
   const { mutate: createModel } = useCreateModel();
+  const { mutate: updateModel } = useUpdateModel();
+  const { mutate: deleteModel } = useDeleteModel();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -155,16 +164,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Plate No. *",
-      input: (
-        <TextInput
-          {...form.getInputProps("vehiclePlateNo")}
-          leftSection={<IconLicense size={16} />}
-        />
-      ),
-    },
-    {
-      label: "Make *",
+      label: "Brand *",
       input: (
         <Select
           searchable
@@ -258,6 +258,24 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
         />
       ),
     },
+    {
+      label: "Plate No. *",
+      input: (
+        <TextInput
+          {...form.getInputProps("vehiclePlateNo")}
+          leftSection={<IconLicense size={16} />}
+        />
+      ),
+    },
+    {
+      label: "Odometer/Engine Hour *",
+      input: (
+        <TextInput
+          {...form.getInputProps("vehicleOdometer")}
+          leftSection={<IconEngine size={16} />}
+        />
+      ),
+    },
   ];
 
   return (
@@ -270,6 +288,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           close={close}
           mutationFn={createType}
           updateMutationFn={updateType}
+          deleteMutationFn={deleteType}
           type_group={"Vehicle"}
           dataList={vehicleTypeData?.data.data}
         />
@@ -279,8 +298,10 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           title="Vehicle Brand"
           opened={opened}
           close={close}
+          isHaveType={true}
           mutationFn={createBrand}
           updateMutationFn={updateBrand}
+          deleteMutationFn={deleteBrand}
           type_group={"Vehicle"}
           selectItem={vehicleTypeData?.data.data}
           dataList={vehicleBrandData?.data.data}
@@ -291,9 +312,13 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
           title="Vehicle Model"
           opened={opened}
           close={close}
+          isHaveType={true}
           mutationFn={createModel}
-          updateMutationFn={updateType}
+          updateMutationFn={updateModel}
+          deleteMutationFn={deleteModel}
           type_group={"Vehicle"}
+          selectItem={vehicleBrandData?.data.data}
+          dataList={vehicleModelData?.data.data}
         />
       )}
     </>

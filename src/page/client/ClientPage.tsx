@@ -156,10 +156,10 @@ export const ClientPage = () => {
         }
         centered={false}
       >
-        <Center>Are you sure you want to delete?</Center>
-        <Group mt="md" gap="md" justify="right">
+        <Center>Are you sure you want to delete this record?</Center>
+        <Group m="md" gap="md" justify="right">
           <Button radius={"lg"} size="sm" onClick={deleteClientWithContact}>
-            Delete
+            Yes, Delete it!
           </Button>
           <Button radius={"lg"} size="sm" onClick={close} color="gray">
             Cancel

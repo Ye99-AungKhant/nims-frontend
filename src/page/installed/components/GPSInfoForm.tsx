@@ -29,6 +29,14 @@ import { useGetBrands } from "../../form/hooks/useGetBrands";
 import { useGetModels } from "../../form/hooks/useGetModels";
 import { DateInput } from "@mantine/dates";
 import FormTable from "../../../components/common/FormTable";
+import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
+import { useDeleteBrand } from "./../../../hooks/useDeleteBrand";
+import { useUpdateModel } from "../../../hooks/useUpdateModel";
+import { useDeleteModel } from "../../../hooks/useDeleteModel";
+import { useGetWarrantyPlans } from "../../form/hooks/useGetWarrantyPlans";
+import { useCreateWarrantyPlan } from "../../../hooks/useCreateWarrantyPlan";
+import { useUpdateWarrantyPlan } from "./../../../hooks/useUpdateWarrantyPlan";
+import { useDeleteWarrantyPlan } from "../../../hooks/useDeleteWarrantyPlan";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -40,8 +48,17 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
   const [modalType, setModalType] = useState("");
   const { data: brandData } = useGetBrands("GPS");
   const { data: modelData } = useGetModels("GPS", Number(form.values.gpsBrand));
-  const { mutate: createModel } = useCreateModel();
+  const { data: warrantyData } = useGetWarrantyPlans();
+
   const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: deleteBrand } = useDeleteBrand();
+  const { mutate: createModel } = useCreateModel();
+  const { mutate: updateModel } = useUpdateModel();
+  const { mutate: deleteModel } = useDeleteModel();
+  const { mutate: createWarrantyPlan } = useCreateWarrantyPlan();
+  const { mutate: updateWarrantyPlan } = useUpdateWarrantyPlan();
+  const { mutate: deleteWarrantyPlan } = useDeleteWarrantyPlan();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -167,7 +184,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            brandData?.data.data.map((data: any) => ({
+            warrantyData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []
@@ -194,7 +211,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => handleModal("Brand")}
+                onClick={() => handleModal("Warranty")}
               >
                 Add
               </ActionIcon>
@@ -214,6 +231,10 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
           opened={opened}
           close={close}
           mutationFn={createBrand}
+          updateMutationFn={updateBrand}
+          deleteMutationFn={deleteBrand}
+          selectItem={brandData?.data.data}
+          dataList={brandData?.data.data}
           type_group={"GPS"}
         />
       )}
@@ -222,9 +243,26 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
           title="GPS Model"
           opened={opened}
           close={close}
+          isHaveType={true}
           mutationFn={createModel}
+          updateMutationFn={updateModel}
+          deleteMutationFn={deleteModel}
+          selectItem={brandData?.data.data}
+          dataList={modelData?.data.data}
           type_group={"GPS"}
-          brand_id={Number(form.values.vehicleBrand)}
+        />
+      )}
+      {modalType == "Warranty" && (
+        <AddItemModal
+          title="GPS Warranty"
+          opened={opened}
+          close={close}
+          mutationFn={createWarrantyPlan}
+          updateMutationFn={updateWarrantyPlan}
+          deleteMutationFn={deleteWarrantyPlan}
+          selectItem={warrantyData?.data.data}
+          dataList={warrantyData?.data.data}
+          type_group={"GPS"}
         />
       )}
     </>

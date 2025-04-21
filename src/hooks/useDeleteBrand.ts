@@ -1,19 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { deleteType } from "../services/type.service";
 import { queryClient } from "../utils/react-query/queryClient";
+import { deleteBrand } from "../services/brand.service";
 
-export const useDeleteType = () => {
+export const useDeleteBrand = () => {
   return useMutation({
     mutationFn: async (params: any) => {
       try {
-        return await deleteType(params);
+        return await deleteBrand(params);
       } catch (error) {
-        console.log("delete type error", error);
+        console.log("delete brand error", error);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["types"] }),
-        queryClient.invalidateQueries({ queryKey: ["brands"] }),
+      queryClient.invalidateQueries({ queryKey: ["brands"] }),
         queryClient.invalidateQueries({ queryKey: ["models"] });
     },
   });

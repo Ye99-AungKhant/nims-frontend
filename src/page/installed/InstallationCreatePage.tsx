@@ -42,6 +42,7 @@ const InstallationCreatePage = () => {
       vehicleModel: "",
       vehicleYear: "",
       vehiclePlateNo: "",
+      vehicleOdometer: "",
       gpsBrand: "",
       gpsModel: "",
       imei: "",

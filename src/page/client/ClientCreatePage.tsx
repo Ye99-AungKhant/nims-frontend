@@ -44,6 +44,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useCreateRole } from "./hooks/useCreateRole";
 import { z } from "zod";
 import FormTable from "../../components/common/FormTable";
+import { useUpdateRole } from "./hooks/useUpdateRole";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
@@ -114,6 +115,7 @@ const ClientCreatePage = () => {
   const { mutateAsync: updateClient, isPending: isPendingUpdate } =
     useUpdateClientWithContact(); // Use update mutation
   const { mutate: createRole } = useCreateRole();
+  const { mutate: updateRole } = useUpdateRole();
   const [formErrors, setFormErrors] = useState<any>({});
 
   // Set edit mode if ID is provided
@@ -493,7 +495,9 @@ const ClientCreatePage = () => {
         opened={opened}
         close={close}
         mutationFn={createRole}
-        updateMutationFn={() => {}}
+        updateMutationFn={updateRole}
+        deleteMutationFn={() => {}}
+        dataList={roleData?.data.filter((role: any) => role.name !== "Admin")}
       />
     </Box>
   );

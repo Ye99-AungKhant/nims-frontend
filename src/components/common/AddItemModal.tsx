@@ -16,7 +16,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useGetRoles } from "../../page/form/hooks/useGetRoles";
-import { useDeleteType } from "../../hooks/useDeleteType";
+import { useDisclosure } from "@mantine/hooks";
 
 interface EditableField {
   id: number;
@@ -37,6 +37,7 @@ interface Props {
   selectItem?: any[];
   opened: boolean;
   close: () => void;
+  isHaveType?: boolean;
   mutationFn: UseMutateFunction<
     AxiosResponse<any, any> | undefined,
     Error,
@@ -49,6 +50,12 @@ interface Props {
     MutateProps | string,
     unknown
   >;
+  deleteMutationFn: UseMutateFunction<
+    AxiosResponse<any, any> | undefined,
+    Error,
+    number,
+    unknown
+  >;
 }
 export const AddItemModal = ({
   title,
@@ -57,10 +64,13 @@ export const AddItemModal = ({
   selectItem,
   opened,
   close,
+  isHaveType = false,
   mutationFn,
   updateMutationFn,
+  deleteMutationFn,
 }: Props) => {
   const theme = useMantineTheme();
+  const [deleteItem, setDeleteItem] = useState(0);
   const [name, setName] = useState<string>();
   const [selectedId, setSelectedId] = useState<string | null>();
   const { data: roleData, isLoading: isRoleLoading } = useGetRoles();
@@ -71,7 +81,6 @@ export const AddItemModal = ({
     id: number;
     field: keyof EditableField;
   } | null>(null);
-  const { mutate: deleteType } = useDeleteType();
 
   const handleTypeChange = (
     id: number,
@@ -95,8 +104,9 @@ export const AddItemModal = ({
     }
   };
 
-  const handleDelete = (id: number) => {
-    // deleteType(id);
+  const handleDelete = () => {
+    deleteMutationFn(deleteItem);
+    setDeleteItem(0);
   };
 
   const handleAddDesignation = () => {
@@ -140,14 +150,18 @@ export const AddItemModal = ({
           >
             <Table.Tr>
               <Table.Th fw={"normal"}>#</Table.Th>
-              {title !== "Vehicle Type" && (
-                <Table.Th fw={"normal"}>Type</Table.Th>
-              )}
+              {isHaveType && <Table.Th fw={"normal"}>Type</Table.Th>}
 
               <Table.Th fw={"normal"}>{title}</Table.Th>
-              <Table.Th fw={"normal"} w={"10%"} style={{ textAlign: "center" }}>
-                Action
-              </Table.Th>
+              {title !== "Designation" && (
+                <Table.Th
+                  fw={"normal"}
+                  w={"10%"}
+                  style={{ textAlign: "center" }}
+                >
+                  Action
+                </Table.Th>
+              )}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -155,40 +169,78 @@ export const AddItemModal = ({
               data.map((item, index) => (
                 <Table.Tr key={item.id}>
                   <Table.Td>{index + 1}</Table.Td>
-                  {title !== "Vehicle Type" && (
-                    <Table.Td
-                      onClick={() =>
-                        setEditingCell({ id: item.id, field: "type_id" })
-                      }
-                      style={{ cursor: "pointer" }}
-                    >
-                      {(editingCell?.id === item.id &&
-                        editingCell?.field === "type_id") ||
-                      editingCell?.field === "brand_id" ? (
-                        <Select
-                          autoFocus
-                          comboboxProps={{
-                            offset: 0,
-                          }}
-                          value={String(item?.type_id)}
-                          data={
-                            selectItem?.map((data: any) => ({
-                              value: String(data.id),
-                              label: data.name,
-                            })) || []
-                          }
-                          onChange={(value) =>
-                            handleTypeChange(item.id, "type_id", value || "")
-                          }
-                          variant="unstyled"
-                          size="xs"
-                          onBlur={handleUpdate}
-                          nothingFoundMessage="Please first create vehicle type."
-                        />
-                      ) : (
-                        item?.type?.name
-                      )}
-                    </Table.Td>
+                  {isHaveType ? (
+                    title == "Vehicle Brand" ? (
+                      <Table.Td
+                        onClick={() =>
+                          setEditingCell({ id: item.id, field: "type_id" })
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        {(editingCell?.id === item.id &&
+                          editingCell?.field === "type_id") ||
+                        editingCell?.field === "brand_id" ? (
+                          <Select
+                            autoFocus
+                            comboboxProps={{
+                              offset: 0,
+                            }}
+                            value={String(item?.type_id)}
+                            data={
+                              selectItem?.map((data: any) => ({
+                                value: String(data.id),
+                                label: data.name,
+                              })) || []
+                            }
+                            onChange={(value) =>
+                              handleTypeChange(item.id, "type_id", value || "")
+                            }
+                            variant="unstyled"
+                            size="xs"
+                            onBlur={handleUpdate}
+                            nothingFoundMessage="Please first create vehicle type."
+                          />
+                        ) : (
+                          item?.type?.name
+                        )}
+                      </Table.Td>
+                    ) : (
+                      <Table.Td
+                        onClick={() =>
+                          setEditingCell({ id: item.id, field: "type_id" })
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        {(editingCell?.id === item.id &&
+                          editingCell?.field === "type_id") ||
+                        editingCell?.field === "brand_id" ? (
+                          <Select
+                            autoFocus
+                            comboboxProps={{
+                              offset: 0,
+                            }}
+                            value={String(item?.brand_id)}
+                            data={
+                              selectItem?.map((data: any) => ({
+                                value: String(data.id),
+                                label: data.name,
+                              })) || []
+                            }
+                            onChange={(value) =>
+                              handleTypeChange(item.id, "type_id", value || "")
+                            }
+                            variant="unstyled"
+                            size="xs"
+                            onBlur={handleUpdate}
+                            nothingFoundMessage="Please first create vehicle type."
+                          />
+                        ) : (
+                          item?.brand?.name
+                        )}
+                      </Table.Td>
+                    )
+                  ) : (
+                    ""
                   )}
 
                   <Table.Td
@@ -217,15 +269,18 @@ export const AddItemModal = ({
                       item.name
                     )}
                   </Table.Td>
-                  <Table.Td style={{ textAlign: "center" }}>
-                    <Button
-                      color="dark"
-                      size="xs"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Table.Td>
+
+                  {title !== "Designation" && (
+                    <Table.Td style={{ textAlign: "center" }}>
+                      <Button
+                        color="dark"
+                        size="xs"
+                        onClick={() => setDeleteItem(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Table.Td>
+                  )}
                 </Table.Tr>
               ))
             ) : (
@@ -244,10 +299,12 @@ export const AddItemModal = ({
       <Box px={20}>
         {title !== "Installation Engineer" ? (
           <Grid grow>
-            {title !== "Vehicle Type" && (
+            {isHaveType && (
               <Grid.Col span={6}>
                 <Select
-                  label="Select Type"
+                  label={`Select ${type_group} ${
+                    title.includes("Brand") ? "Type" : "Brand"
+                  }`}
                   withAsterisk
                   comboboxProps={{
                     offset: 0,
@@ -259,7 +316,9 @@ export const AddItemModal = ({
                     })) || []
                   }
                   onChange={(value) => setSelectedId(value)}
-                  nothingFoundMessage="Please first create vehicle type."
+                  nothingFoundMessage={`Please first create ${type_group} ${
+                    title.includes("Brand") ? "type" : "brand"
+                  }`}
                 />
               </Grid.Col>
             )}
@@ -320,6 +379,26 @@ export const AddItemModal = ({
           Save
         </Button>
       </Group>
+      <Modal
+        opened={Boolean(deleteItem)}
+        onClose={() => setDeleteItem(0)}
+        title={
+          <Text size="xl" fw={700} c={"dark"}>
+            Confirm Delete {title}
+          </Text>
+        }
+        centered={false}
+      >
+        <Center>Are you sure you want to delete this record?</Center>
+        <Group m="md" gap="md" justify="right">
+          <Button radius={"lg"} size="sm" onClick={handleDelete}>
+            Yes, Delete it!
+          </Button>
+          <Button radius={"lg"} size="sm" onClick={close} color="gray">
+            Cancel
+          </Button>
+        </Group>
+      </Modal>
     </Modal>
   );
 };

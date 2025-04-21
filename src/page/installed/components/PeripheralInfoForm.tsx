@@ -44,7 +44,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   const { data: typeData } = useGetTypes("Sensor");
-  const { data: brandData } = useGetBrands("Sensor");
+  const { data: brandData } = useGetBrands(0, "Sensor");
   const { data: modelData } = useGetModels(
     "Sensor",
     Number(form.values.vehicleBrand)
