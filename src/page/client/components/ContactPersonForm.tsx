@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Select, TextInput } from "@mantine/core";
-import { useGetRoles } from "../../form/hooks/useGetRoles";
+import { useGetRoles } from "../hooks/useGetRoles";
 import { useState } from "react";
 
 export const ContactPersonForm = ({

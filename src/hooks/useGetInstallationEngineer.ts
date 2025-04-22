@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getInstallationEngineer } from "../../../services/installationEngineer.service";
+import { getInstallationEngineer } from "../services/installationEngineer.service";
 
 export const useGetInstallationEngineers = () => {
   return useQuery({

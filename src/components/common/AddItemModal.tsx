@@ -15,9 +15,6 @@ import {
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { useGetRoles } from "../../page/form/hooks/useGetRoles";
-import { useDisclosure } from "@mantine/hooks";
-import UserCreateForm from "./UserCreateForm";
 
 interface EditableField {
   id: number;

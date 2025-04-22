@@ -1,5 +1,4 @@
 import { Box, Button, Group, Paper, TextInput } from "@mantine/core";
-import React from "react";
 
 export const ClientCreate = () => {
   return (

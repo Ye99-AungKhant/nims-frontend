@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useGetBrands } from "../../page/form/hooks/useGetBrands";
+import { useGetBrands } from "../../hooks/useGetBrands";
 import { useCreateType } from "../../hooks/useCreateType";
 import { useCreateBrand } from "../../hooks/useCreateBrand";
 import { useCreateModel } from "../../hooks/useCreateModel";

@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
-import { useGetBrands } from "../../form/hooks/useGetBrands";
+import { useGetBrands } from "../../../hooks/useGetBrands";
 import FormTable from "../../../components/common/FormTable";
 import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
 import { useDeleteBrand } from "../../../hooks/useDeleteBrand";

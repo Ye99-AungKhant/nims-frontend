@@ -1,7 +1,7 @@
 import { useCreateWarrantyPlan } from "../../hooks/useCreateWarrantyPlan";
 import { useDeleteWarrantyPlan } from "../../hooks/useDeleteWarrantyPlan";
 import { useUpdateWarrantyPlan } from "../../hooks/useUpdateWarrantyPlan";
-import { useGetWarrantyPlans } from "../../page/form/hooks/useGetWarrantyPlans";
+import { useGetWarrantyPlans } from "../../hooks/useGetWarrantyPlans";
 import { AddItemModal } from "./AddItemModal";
 
 interface Props {

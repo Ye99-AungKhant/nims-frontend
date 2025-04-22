@@ -24,16 +24,16 @@ import {
   IconWorld,
 } from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
-import { useGetClients } from "../../form/hooks/useGetClients";
+import { useGetClients } from "../../../hooks/useGetClients";
 import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
-import { useGetTypes } from "../../form/hooks/useGetTypes";
+import { useGetTypes } from "../../../hooks/useGetTypes";
 import { useCreateType } from "../../../hooks/useCreateType";
 import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
-import { useGetBrands } from "../../form/hooks/useGetBrands";
-import { useGetModels } from "../../form/hooks/useGetModels";
+import { useGetBrands } from "../../../hooks/useGetBrands";
+import { useGetModels } from "../../../hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
 import { useUpdateType } from "../../../hooks/useUpdateType";
 import { useUpdateBrand } from "../../../hooks/useUpdateBrand";

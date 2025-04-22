@@ -1,7 +1,7 @@
 import { Box, Flex, Paper, Table } from "@mantine/core";
 import React from "react";
-import { useGetTypes } from "../form/hooks/useGetTypes";
-import { useGetBrands } from "../form/hooks/useGetBrands";
+import { useGetTypes } from "../../hooks/useGetTypes";
+import { useGetBrands } from "../../hooks/useGetBrands";
 
 export const VehiclePage = () => {
   const { data: typeData } = useGetTypes("Vehicle");

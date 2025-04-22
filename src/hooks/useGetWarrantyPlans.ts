@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getWarrantyPlan } from "../../../services/warrantyPlan.service";
+import { getWarrantyPlan } from "../services/warrantyPlan.service";
 
 export const useGetWarrantyPlans = () => {
   return useQuery({

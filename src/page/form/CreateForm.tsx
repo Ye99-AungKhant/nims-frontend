@@ -19,16 +19,16 @@ import {
 } from "@mantine/core";
 import { DateInput, DatePicker } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { useGetClients } from "./hooks/useGetClients";
+import { useGetClients } from "../../hooks/useGetClients";
 import { ClientType } from "../../utils/types";
-import { useGetTypes } from "./hooks/useGetTypes";
-import { useGetBrands } from "./hooks/useGetBrands";
-import { useGetModels } from "./hooks/useGetModels";
-import { useGetWarrantyPlans } from "./hooks/useGetWarrantyPlans";
+import { useGetTypes } from "../../hooks/useGetTypes";
+import { useGetBrands } from "../../hooks/useGetBrands";
+import { useGetModels } from "../../hooks/useGetModels";
+import { useGetWarrantyPlans } from "../../hooks/useGetWarrantyPlans";
 import { operatorData } from "../../config/operator";
 import { useForm } from "@mantine/form";
-import { useGetInstallationEngineers } from "./hooks/useGetInstallationEngineer";
-import { useGetRoles } from "./hooks/useGetRoles";
+import { useGetInstallationEngineers } from "../../hooks/useGetInstallationEngineer";
+import { useGetRoles } from "../../hooks/useGetRoles";
 import { useCreateFormSubmit } from "./hooks/useCreateFormSubmit";
 import { useNavigate } from "react-router-dom";
 
