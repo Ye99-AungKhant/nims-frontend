@@ -17,6 +17,7 @@ import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useGetRoles } from "../../page/form/hooks/useGetRoles";
 import { useDisclosure } from "@mantine/hooks";
+import UserCreateForm from "./UserCreateForm";
 
 interface EditableField {
   id: number;
@@ -73,7 +74,6 @@ export const AddItemModal = ({
   const [deleteItem, setDeleteItem] = useState(0);
   const [name, setName] = useState<string>();
   const [selectedId, setSelectedId] = useState<string | null>();
-  const { data: roleData, isLoading: isRoleLoading } = useGetRoles();
 
   const [data, setData] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -333,36 +333,7 @@ export const AddItemModal = ({
             </Grid.Col>
           </Grid>
         ) : (
-          <>
-            <TextInput
-              label="Name"
-              withAsterisk
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextInput
-              label="Email"
-              withAsterisk
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextInput
-              label="Phone No."
-              withAsterisk
-              onChange={(e) => setName(e.target.value)}
-            />
-            <Select
-              label="Role"
-              withAsterisk
-              comboboxProps={{
-                offset: 0,
-              }}
-              data={
-                roleData?.data?.map((data: any) => ({
-                  value: String(data.id),
-                  label: data.name,
-                })) || []
-              }
-            />
-          </>
+          <></>
         )}
       </Box>
       <Divider my={"md"} color="#dddddd" />

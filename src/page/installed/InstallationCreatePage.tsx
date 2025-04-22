@@ -28,6 +28,7 @@ import GPSInfoForm from "./components/GPSInfoForm";
 import SimCardInfoForm from "./components/SimCardInfoForm";
 import PeripheralInfoForm from "./components/PeripheralInfoForm";
 import ServerInfoForm from "./components/ServerInfoForm";
+import AccessoryInfoForm from "./components/AccessoryInfoForm";
 
 const InstallationCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("vehicleInfo");
@@ -134,10 +135,10 @@ const InstallationCreatePage = () => {
                 Peripheral
               </Tabs.Tab>
               <Tabs.Tab
-                value="contactPersons"
+                value="accessoryInfo"
                 leftSection={<IconPaperclip size={20} />}
                 style={
-                  activeTab === "contactPersons"
+                  activeTab === "accessoryInfo"
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
@@ -168,6 +169,9 @@ const InstallationCreatePage = () => {
             </TabsPanel>
             <TabsPanel value="peripheralInfo">
               <PeripheralInfoForm form={form} />
+            </TabsPanel>
+            <TabsPanel value="accessoryInfo">
+              <AccessoryInfoForm form={form} />
             </TabsPanel>
             <TabsPanel value="serverInfo">
               <ServerInfoForm form={form} />

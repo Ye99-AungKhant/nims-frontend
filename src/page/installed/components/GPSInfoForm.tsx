@@ -37,6 +37,7 @@ import { useGetWarrantyPlans } from "../../form/hooks/useGetWarrantyPlans";
 import { useCreateWarrantyPlan } from "../../../hooks/useCreateWarrantyPlan";
 import { useUpdateWarrantyPlan } from "./../../../hooks/useUpdateWarrantyPlan";
 import { useDeleteWarrantyPlan } from "../../../hooks/useDeleteWarrantyPlan";
+import WarrantyPlan from "../../../components/common/WarrantyPlan";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -253,15 +254,10 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
         />
       )}
       {modalType == "Warranty" && (
-        <AddItemModal
+        <WarrantyPlan
           title="GPS Warranty"
           opened={opened}
           close={close}
-          mutationFn={createWarrantyPlan}
-          updateMutationFn={updateWarrantyPlan}
-          deleteMutationFn={deleteWarrantyPlan}
-          selectItem={warrantyData?.data.data}
-          dataList={warrantyData?.data.data}
           type_group={"GPS"}
         />
       )}

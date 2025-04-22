@@ -22,11 +22,11 @@ import { UseFormReturnType } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
-import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../form/hooks/useGetBrands";
-import { useGetModels } from "../../form/hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
+import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
+import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -41,8 +41,10 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [simMode, setSimMode] = useState<string | null>("Single");
-  const { data: brandData } = useGetBrands(0, "Operator");
+  const { data: brandData } = useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: deleteBrand } = useDeleteBrand();
 
   const handleDualPhoneNumberChange = (
     index: number,
@@ -209,6 +211,10 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
         opened={opened}
         close={close}
         mutationFn={createBrand}
+        updateMutationFn={updateBrand}
+        deleteMutationFn={deleteBrand}
+        selectItem={brandData?.data.data}
+        dataList={brandData?.data.data}
         type_group={"Operator"}
       />
     </>

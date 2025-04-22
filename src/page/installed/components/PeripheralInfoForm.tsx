@@ -33,25 +33,34 @@ import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../form/hooks/useGetBrands";
 import { useGetModels } from "../../form/hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
+import { useGetWarrantyPlans } from "../../form/hooks/useGetWarrantyPlans";
+import { useUpdateType } from "../../../hooks/useUpdateType";
+import { useDeleteType } from "../../../hooks/useDeleteType";
+import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
+import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
+import { useUpdateModel } from "../../../hooks/useUpdateModel";
+import { useDeleteModel } from "../../../hooks/useDeleteModel";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
 }
 const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
-  const { data: clientData } = useGetClients();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   const { data: typeData } = useGetTypes("Sensor");
-  const { data: brandData } = useGetBrands(0, "Sensor");
-  const { data: modelData } = useGetModels(
-    "Sensor",
-    Number(form.values.vehicleBrand)
-  );
+  const { data: brandData } = useGetBrands("Sensor");
+  const { data: modelData } = useGetModels("Sensor");
+  const { data: warrantyData } = useGetWarrantyPlans();
   const { mutate: createType } = useCreateType();
-  const { mutate: createModel } = useCreateModel();
+  const { mutate: updateType } = useUpdateType();
+  const { mutate: deleteType } = useDeleteType();
   const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: deleteBrand } = useDeleteBrand();
+  const { mutate: createModel } = useCreateModel();
+  const { mutate: updateModel } = useUpdateModel();
+  const { mutate: deleteModel } = useDeleteModel();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -96,7 +105,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => setModalType("Type")}
+                onClick={() => handleModal("Type")}
               >
                 Add
               </ActionIcon>
@@ -114,7 +123,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            typeData?.data.data.map((data: any) => ({
+            brandData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []
@@ -141,7 +150,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => setModalType("Brand")}
+                onClick={() => handleModal("Brand")}
               >
                 Add
               </ActionIcon>
@@ -159,7 +168,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            typeData?.data.data.map((data: any) => ({
+            modelData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []
@@ -186,7 +195,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => setModalType("Model")}
+                onClick={() => handleModal("Model")}
               >
                 Add
               </ActionIcon>
@@ -222,7 +231,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            modelData?.data.data.map((data: any) => ({
+            warrantyData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []
@@ -249,7 +258,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => setModalType("Type")}
+                onClick={() => handleModal("Warranty")}
               >
                 Add
               </ActionIcon>
@@ -266,30 +275,42 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
 
       {modalType == "Type" && (
         <AddItemModal
-          title="Vehicle Type"
+          title="Peripheral Type"
           opened={opened}
           close={close}
           mutationFn={createType}
-          type_group={"Vehicle"}
+          updateMutationFn={updateType}
+          deleteMutationFn={deleteType}
+          type_group={"Sensor"}
+          dataList={typeData?.data.data}
         />
       )}
       {modalType == "Brand" && (
         <AddItemModal
-          title="Vehicle Brand"
+          title="Peripheral Brand"
           opened={opened}
           close={close}
+          isHaveType={true}
           mutationFn={createBrand}
-          type_group={"Vehicle"}
+          updateMutationFn={updateBrand}
+          deleteMutationFn={deleteBrand}
+          selectItem={typeData?.data.data}
+          dataList={brandData?.data.data}
+          type_group={"Sensor"}
         />
       )}
       {modalType == "Model" && (
         <AddItemModal
-          title="Vehicle Model"
+          title="Peripheral Model"
           opened={opened}
           close={close}
+          isHaveType={true}
+          type_group={"Sensor"}
           mutationFn={createModel}
-          type_group={"Vehicle"}
-          brand_id={Number(form.values.vehicleBrand)}
+          updateMutationFn={updateModel}
+          deleteMutationFn={deleteModel}
+          selectItem={brandData?.data.data}
+          dataList={modelData?.data.data}
         />
       )}
     </>

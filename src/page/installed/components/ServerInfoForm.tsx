@@ -35,6 +35,9 @@ import { useGetInstallationEngineers } from "../../form/hooks/useGetInstallation
 import { DateInput } from "@mantine/dates";
 import { useGetWarrantyPlans } from "../../form/hooks/useGetWarrantyPlans";
 import FormTable from "../../../components/common/FormTable";
+import { useUpdateType } from "../../../hooks/useUpdateType";
+import { useDeleteType } from "../../../hooks/useDeleteType";
+import WarrantyPlan from "../../../components/common/WarrantyPlan";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -49,8 +52,8 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const { data: warrantyData } = useGetWarrantyPlans();
 
   const { mutate: createType } = useCreateType();
-  const { mutate: createModel } = useCreateModel();
-  const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateType } = useUpdateType();
+  const { mutate: deleteType } = useDeleteType();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -111,7 +114,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                   fontSize: " var(--mantine-font-size-sm)",
                 }}
                 fw={500}
-                onClick={() => setModalType("Type")}
+                onClick={() => handleModal("Type")}
               >
                 Add
               </ActionIcon>
@@ -281,6 +284,9 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           opened={opened}
           close={close}
           mutationFn={createType}
+          updateMutationFn={updateType}
+          deleteMutationFn={deleteType}
+          dataList={typeData?.data.data}
           type_group={"Server"}
         />
       )}
@@ -289,18 +295,18 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           title="Installation Engineer"
           opened={opened}
           close={close}
-          mutationFn={createBrand}
-          type_group={"Vehicle"}
+          mutationFn={createType}
+          updateMutationFn={updateType}
+          deleteMutationFn={deleteType}
+          type_group={"Server"}
         />
       )}
       {modalType == "Subscription" && (
-        <AddItemModal
-          title="Subscription"
+        <WarrantyPlan
+          title="Server Subscription Plan"
           opened={opened}
           close={close}
-          mutationFn={createModel}
-          type_group={"Vehicle"}
-          brand_id={Number(form.values.vehicleBrand)}
+          type_group={"Server"}
         />
       )}
     </>
