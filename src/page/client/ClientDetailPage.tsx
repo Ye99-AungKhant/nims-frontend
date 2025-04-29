@@ -29,6 +29,7 @@ import { useGetClientDetailWithContact } from "./hooks/useGetClientWithContact";
 import "../../assets/styles/ultis.css";
 import { useDeleteContact } from "./hooks/useDeleteContact";
 import { useDisclosure } from "@mantine/hooks";
+import { PageLoading } from "../../components/common/PageLoading";
 
 export function ViewClient({ data }: any) {
   console.log("data", data);
@@ -46,111 +47,114 @@ export function ViewClient({ data }: any) {
         </Text>
       </Group>
 
-      <Box px={30} mt={30}>
+      <Box px={30} mt={30} pb={10}>
         <Divider />
-        <Table variant="vertical">
-          <Table.Tbody>
-            <Table.Tr h={50}>
-              <Table.Th
-                w={300}
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Company
-              </Table.Th>
-              <Table.Td
-                style={{
-                  fontSize: 17,
-                  color: "#707070",
-                }}
-              >
-                {data.name}
-              </Table.Td>
-            </Table.Tr>
+        {data && (
+          <Table variant="vertical">
+            <Table.Tbody>
+              <Table.Tr h={50}>
+                <Table.Th
+                  w={300}
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Company
+                </Table.Th>
+                <Table.Td
+                  style={{
+                    color: "#707070",
+                  }}
+                >
+                  {data.name}
+                </Table.Td>
+              </Table.Tr>
 
-            <Table.Tr h={50}>
-              <Table.Th
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Primary Contact
-              </Table.Th>
-              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-                {data.contact_person[0]?.name}
-              </Table.Td>
-            </Table.Tr>
+              <Table.Tr h={50}>
+                <Table.Th
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Primary Contact
+                </Table.Th>
+                <Table.Td style={{ color: "#707070" }}>
+                  {data.contact_person[0]?.name}
+                </Table.Td>
+              </Table.Tr>
 
-            <Table.Tr h={50}>
-              <Table.Th
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Designation
-              </Table.Th>
-              <Table.Td
-                style={{
-                  fontSize: 17,
-                  color: "#707070",
-                }}
-              >
-                {data.contact_person[0]?.role.name}
-              </Table.Td>
-            </Table.Tr>
+              <Table.Tr h={50}>
+                <Table.Th
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Designation
+                </Table.Th>
+                <Table.Td
+                  style={{
+                    color: "#707070",
+                  }}
+                >
+                  {data.contact_person[0]?.role.name}
+                </Table.Td>
+              </Table.Tr>
 
-            <Table.Tr h={50}>
-              <Table.Th
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Email
-              </Table.Th>
-              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-                {data.contact_person[0]?.email}
-              </Table.Td>
-            </Table.Tr>
+              <Table.Tr h={50}>
+                <Table.Th
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Email
+                </Table.Th>
+                <Table.Td style={{ color: "#707070" }}>
+                  {data.contact_person[0]?.email}
+                </Table.Td>
+              </Table.Tr>
 
-            <Table.Tr h={50}>
-              <Table.Th
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Phone
-              </Table.Th>
-              <Table.Td
-                style={{
-                  fontSize: 17,
-                  color: "#707070",
-                }}
-              >
-                {data.contact_person[0]?.phone}
-              </Table.Td>
-            </Table.Tr>
+              <Table.Tr h={50}>
+                <Table.Th
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Phone
+                </Table.Th>
+                <Table.Td
+                  style={{
+                    color: "#707070",
+                  }}
+                >
+                  {data.contact_person[0]?.phone}
+                </Table.Td>
+              </Table.Tr>
 
-            <Table.Tr h={50}>
-              <Table.Th
-                style={{
-                  color: "#684498",
-                  backgroundColor: "#fff",
-                }}
-              >
-                Address
-              </Table.Th>
-              <Table.Td style={{ fontSize: 17, color: "#707070" }}>
-                {data.address}
-              </Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
+              <Table.Tr h={50}>
+                <Table.Th
+                  style={{
+                    color: "#684498",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  Address
+                </Table.Th>
+                <Table.Td
+                  style={{
+                    color: "#707070",
+                  }}
+                >
+                  {data.address}
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+        )}
       </Box>
     </Paper>
   );
@@ -251,10 +255,10 @@ export function ContactPerson({ data }: any) {
         }
         centered={false}
       >
-        <Center>Are you sure you want to delete?</Center>
-        <Group mt="md" gap="md" justify="right">
+        <Center>Are you sure you want to delete this record?</Center>
+        <Group m="md" gap="md" justify="right">
           <Button radius={"lg"} size="sm" onClick={deleteContact}>
-            Delete
+            Yes, Delete it!
           </Button>
           <Button radius={"lg"} size="sm" onClick={close} color="gray">
             Cancel
@@ -278,6 +282,10 @@ export default function ClientDetailPage() {
   const handleMenuBtn = (name: string) => {
     setMenuBtn(name);
   };
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
 
   return (
     <Box style={{ display: "flex", gap: "30px" }} p="30px">

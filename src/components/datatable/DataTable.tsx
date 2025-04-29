@@ -3,14 +3,11 @@ import {
   useMantineReactTable,
   MantineReactTable,
   MRT_TableOptions,
-  MRT_PaginationState,
 } from "mantine-react-table";
-import { useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { useViewPort } from "../../hooks/ui/useViewPort";
 import { Center, Text, useMantineTheme } from "@mantine/core";
 import { useGetRouteParams } from "../../hooks/useGetRouteParams";
-// import './DataTable.module.css'
 
 interface TableProps<T extends Record<string, any>> {
   data: T[];
@@ -31,25 +28,19 @@ export function DataTable<T extends Record<string, any> = object>({
   const { isMobile } = useViewPort();
   const theme = useMantineTheme();
   const { pageIndex, pageSize } = useGetRouteParams();
-  // const [pagination, setPagination] = useState<MRT_PaginationState>({
-  //   pageIndex: pageIndex ? parseInt(pageIndex) : 0,
-  //   pageSize: pageSize ? parseInt(pageSize) : 10,
-  // });
 
   const table = useMantineReactTable({
     columns,
     data,
-    // manualFiltering: true,
-    // ui
+
+    manualFiltering: true,
     enableTopToolbar: false,
     enableBottomToolbar: false,
     enableColumnActions: false,
     enableColumnFilters: false,
     manualPagination: true,
     enableSorting: false,
-    enableStickyHeader: true,
-    enablePinning: true,
-    enableColumnResizing: true,
+
     initialState: {
       density: "md",
       columnPinning: {
@@ -57,10 +48,16 @@ export function DataTable<T extends Record<string, any> = object>({
       },
     },
     mantineTableContainerProps: {
-      style: { maxHeight: "calc(100vh - 300px)" },
+      style: {
+        maxHeight: "calc(100vh - 300px)",
+      },
     },
     mantinePaperProps: {
-      style: { height: "100%", width: "100%", overflowX: "auto" },
+      style: {
+        height: "100%",
+        // width: "100%",
+        // overflowX: "auto",
+      },
     },
     mantineTableBodyCellProps: {
       style: {
@@ -89,7 +86,7 @@ export function DataTable<T extends Record<string, any> = object>({
     },
     // table state
     state: {
-      isLoading,
+      showSkeletons: isLoading,
       pagination: {
         pageIndex: pageIndex ? parseInt(pageIndex) : 1,
         pageSize: pageSize ? parseInt(pageSize) : 10,
@@ -101,7 +98,7 @@ export function DataTable<T extends Record<string, any> = object>({
     enableColumnPinning: true,
     displayColumnDefOptions: {
       "mrt-row-actions": {
-        header: "", //change header text
+        header: "",
         size: 150,
       },
     },
@@ -111,6 +108,7 @@ export function DataTable<T extends Record<string, any> = object>({
     mantineTableProps: {
       withColumnBorders: true,
       withRowBorders: true,
+      // withTableBorder: true,
     },
     renderEmptyRowsFallback: () => (
       <Center py="xl" style={{ backgroundColor: "#f0f0f0" }}>

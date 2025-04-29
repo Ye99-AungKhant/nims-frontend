@@ -4,6 +4,7 @@ import {
   Flex,
   Grid,
   Group,
+  MultiSelect,
   Select,
   Text,
   TextInput,
@@ -51,7 +52,7 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
 
-  const handleAccessoryChange = (
+  const handleAccessoryQtyChange = (
     index: number,
     field: keyof Operators,
     value: any
@@ -64,31 +65,58 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
     form.setFieldValue("accessory", updatedAccessory);
   };
 
-  console.log("clientData", form.values);
+  // console.log("clientData", form.values);
 
-  const addNewAccessory = () => {
-    form.setFieldValue("accessory", [
-      ...form.values.accessory,
-      { type_id: "", qty: "" },
-    ]);
+  const handleAccessoryTypeChange = (selectedTypes: string[]) => {
+    const currentAccessories = form.values.accessory || [];
+
+    // Keep only the accessories that are still selected
+    const updatedAccessories = currentAccessories.filter((acc) =>
+      selectedTypes.includes(acc.type_id)
+    );
+
+    // Find new selected types that are not yet in the form
+    const existingTypeIds = updatedAccessories.map((acc) => acc.type_id);
+    const newAccessories = selectedTypes
+      .filter((typeId) => !existingTypeIds.includes(typeId))
+      .map((typeId) => ({
+        type_id: typeId,
+        qty: "", // new item with empty qty
+      }));
+
+    form.setFieldValue("accessory", [...updatedAccessories, ...newAccessories]);
   };
 
-  const rows = (index: number) => [
+  const getShortName = (index: number) => {
+    return form.values.accessory.length > 1
+      ? accessoryTypeData?.data?.data
+          .find(
+            (typeItem: any) =>
+              typeItem.id === Number(form.values.accessory[index].type_id)
+          )
+          ?.name?.split(" ")
+          ?.map((part: any) => part[0])
+          ?.join("")
+          .toUpperCase()
+      : "";
+  };
+
+  const rows = [
     {
-      label: "Accessory Type *",
+      label: "Accessory Type",
       input: (
-        <Select
+        <MultiSelect
           searchable
           comboboxProps={{
             offset: 0,
           }}
           data={
             accessoryTypeData?.data.data.map((data: any) => ({
-              value: data.name,
+              value: String(data.id),
               label: data.name,
             })) || []
           }
-          onChange={(value) => handleAccessoryChange(index, "type_id", value)}
+          onChange={handleAccessoryTypeChange}
           leftSection={<IconDeviceSim size={18} />}
           rightSectionPointerEvents="all"
           rightSectionWidth={90}
@@ -119,37 +147,33 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
         />
       ),
     },
+  ];
+
+  const QtyRows = (index: number) => [
     {
-      label: "Accessory QTY *",
+      label: `${getShortName(index)} QTY`,
       input: (
         <TextInput
           type="number"
           leftSection={<IconPhoneFilled size={18} />}
-          onChange={(e) => handleAccessoryChange(index, "qty", e.target.value)}
+          // value={form.values.accessory[index].qty}
+          // onChange={(e) =>
+          //   handleAccessoryQtyChange(index, "qty", e.target.value)
+          // }
+          // error={form.errors[`accessory.${index}.qty`]}
+          {...form.getInputProps(`accessory.${index}.qty`)}
         />
       ),
     },
   ];
 
-  const rowData = form.values.accessory.map((acc, index) => [...rows(index)]);
-  console.log(rowData);
-
   return (
     <>
-      {rowData.map((accesoryData) => (
-        <FormTable rows={accesoryData} />
+      <FormTable rows={rows} mb={0} />
+      {form.values.accessory.map((accessory, index) => (
+        <FormTable rows={QtyRows(index)} key={index} mt={0} mb={0} />
       ))}
 
-      {/* <Button
-        size="xs"
-        onClick={addNewAccessory}
-        my="xs"
-        bg={theme.colors.success[5]}
-        radius={"lg"}
-      >
-        <IconPlus size={18} />
-        Add New Accessory
-      </Button> */}
       <AddItemModal
         title="Accessory"
         opened={opened}

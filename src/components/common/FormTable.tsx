@@ -2,8 +2,10 @@ import { Table } from "@mantine/core";
 
 interface Props {
   rows: any[];
+  mt?: any;
+  mb?: any;
 }
-const FormTable = ({ rows }: Props) => {
+const FormTable = ({ rows, mt = 40, mb = 10 }: Props) => {
   return (
     <Table
       withColumnBorders={false}
@@ -11,8 +13,8 @@ const FormTable = ({ rows }: Props) => {
       highlightOnHover={false}
       verticalSpacing="0"
       striped={false}
-      mt={40}
-      mb={10}
+      mt={mt}
+      mb={mb}
     >
       <Table.Tbody>
         {rows.map((row, index) => (

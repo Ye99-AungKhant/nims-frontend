@@ -22,32 +22,13 @@ import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
 import { DataTable } from "../../components/datatable/DataTable";
+import { InstalledObjectPageColumns } from "./components/InstalledObjectPageColumns";
 
 export const InstalledPage = () => {
-  const { data } = useGetInstalled("");
+  const { data, isLoading } = useGetInstalled("");
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  console.log(data?.data.data);
-
-  const rows = data?.data?.data?.map((row: any, index: number) => (
-    <Table.Tr key={index}>
-      <Table.Td style={{ fontSize: 17 }}>{index + 1}</Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>{row.client.name}</Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>{row.plate_number}</Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>{row.device[0]?.imei}</Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>
-        {row.device[0]?.server[0]?.domain}
-      </Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>
-        {row.device[0]?.server[0]?.expire_date
-          ? dayjs(row.device[0].server[0].expire_date).format("MMM-DD-YYYY")
-          : ""}
-      </Table.Td>
-      <Table.Td style={{ fontSize: 17 }}>
-        {row.device[0]?.server[0]?.invoice_no}
-      </Table.Td>
-    </Table.Tr>
-  ));
+  console.log("installed", data?.items);
 
   return (
     <Box p="30px">
@@ -87,16 +68,16 @@ export const InstalledPage = () => {
         </Flex>
         <Box p="30px" pt={"md"}>
           <DataTable
-            columns={[]}
-            data={[]}
-            totalPage={0}
-            totalCount={0}
+            columns={InstalledObjectPageColumns}
+            data={data?.items || []}
+            totalPage={data?.totalPage}
+            totalCount={data?.totalCount}
             enableRowOrdering={false}
-            isLoading={false}
+            isLoading={isLoading}
             enableRowActions
             renderRowActions={({ row }) => {
               return (
-                <Group gap={"xs"}>
+                <Group gap={"xs"} justify="center">
                   <ActionIcon
                     color={theme.colors.chocolate[1]}
                     size={30}

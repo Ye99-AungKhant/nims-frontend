@@ -18,10 +18,8 @@ import {
   IconRouter,
   IconServer2,
   IconTruckFilled,
-  IconUserPlus,
 } from "@tabler/icons-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FormValues } from "../../utils/types";
 import VehicleInfoForm from "./components/VehicleInfoForm";
 import GPSInfoForm from "./components/GPSInfoForm";
@@ -29,11 +27,25 @@ import SimCardInfoForm from "./components/SimCardInfoForm";
 import PeripheralInfoForm from "./components/PeripheralInfoForm";
 import ServerInfoForm from "./components/ServerInfoForm";
 import AccessoryInfoForm from "./components/AccessoryInfoForm";
+import {
+  AccessorySchema,
+  GpsSchema,
+  InstallationEngineerSchema,
+  OperatorSchema,
+  PeripheralSchema,
+  ServerSchema,
+  VehicleSchema,
+} from "./components/InstallValidation";
+import { z } from "zod";
+import { useCreateInstallObject } from "../../hooks/useCreatInstallObject";
+import { useNavigate } from "react-router-dom";
 
 const InstallationCreatePage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("vehicleInfo");
-  const navigate = useNavigate();
+  const [allowedTabs, setAllowedTabs] = useState(["vehicleInfo"]);
+  const { mutate, isPending } = useCreateInstallObject();
   const theme = useMantineTheme();
+  const navigate = useNavigate();
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -49,17 +61,19 @@ const InstallationCreatePage = () => {
       imei: "",
       gpsSerial: "",
       warranty: "",
-      operator: { operator: "", phone_no: "" },
       operators: [{ operator: "", phone_no: "" }],
       peripheral: [
         {
           sensor_type_id: "",
-          brand_id: "",
-          model_id: "",
-          serial_no: "",
           qty: "",
-          warranty_plan_id: "",
-          warranty_expiry_date: new Date(),
+          detail: [
+            {
+              brand_id: "",
+              model_id: "",
+              serial_no: "",
+              warranty_plan_id: "",
+            },
+          ],
         },
       ],
       accessory: [{ type_id: "", qty: "" }],
@@ -76,6 +90,79 @@ const InstallationCreatePage = () => {
     },
   });
 
+  const handleContinue = () => {
+    let schema;
+
+    if (activeTab === "vehicleInfo") {
+      schema = VehicleSchema;
+    } else if (activeTab === "gpsInfo") {
+      schema = GpsSchema;
+    } else if (activeTab === "simInfo") {
+      schema = OperatorSchema;
+    } else if (activeTab === "peripheralInfo") {
+      schema = PeripheralSchema;
+    } else if (activeTab === "accessoryInfo") {
+      schema = AccessorySchema;
+    } else if (activeTab === "serverInfo") {
+      schema = z.object({
+        server: ServerSchema,
+        installationEngineer: InstallationEngineerSchema,
+      });
+    }
+
+    if (!schema) return;
+
+    const result = schema.safeParse(form.values);
+
+    const fieldErrors: Record<string, string> = {};
+    if (!result.success) {
+      result.error.errors.forEach((error) => {
+        const path = error.path.join(".");
+        fieldErrors[path] = error.message;
+      });
+
+      form.setErrors(fieldErrors);
+      console.log("fieldErrors", fieldErrors);
+
+      return;
+    }
+    form.setErrors(fieldErrors);
+    const tabOrder = [
+      "vehicleInfo",
+      "gpsInfo",
+      "simInfo",
+      "peripheralInfo",
+      "accessoryInfo",
+      "serverInfo",
+    ];
+
+    const currentIndex = tabOrder.indexOf(activeTab || "vehicleInfo");
+    const nextTab = tabOrder[currentIndex + 1];
+
+    if (nextTab) {
+      // Grant access to next tab
+      if (!allowedTabs.includes(nextTab)) {
+        setAllowedTabs((prev) => [...prev, nextTab]);
+      }
+      setActiveTab(nextTab);
+    }
+  };
+
+  const handleSubmit = () => {
+    const newValues = { ...form.values };
+
+    if (
+      newValues.peripheral.length === 1 &&
+      newValues.peripheral[0].sensor_type_id === ""
+    ) {
+      newValues.peripheral = [];
+    }
+
+    mutate(newValues, {
+      onSuccess: () => navigate("/installed"),
+    });
+  };
+
   return (
     <Box p={30}>
       <Paper shadow="sm" radius="md">
@@ -88,7 +175,14 @@ const InstallationCreatePage = () => {
           </Group>
         </Box>
         <Box px={"30px"} pt={"30px"}>
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs
+            value={activeTab}
+            onChange={(value) => {
+              if (value && allowedTabs.includes(value)) {
+                setActiveTab(value);
+              }
+            }}
+          >
             <TabsList>
               <Tabs.Tab
                 value="vehicleInfo"
@@ -181,12 +275,14 @@ const InstallationCreatePage = () => {
         <Box style={{ borderTop: "1px solid #dddddd" }} p="md">
           <Group justify="center">
             <Button
-              onClick={() => {}}
+              onClick={
+                activeTab !== "serverInfo" ? handleContinue : handleSubmit
+              }
               radius={"lg"}
               size="sm"
               bg={theme.colors.purple[1]}
               disabled={false}
-              loading={false}
+              loading={isPending}
               fw={500}
             >
               {activeTab !== "serverInfo" ? "Continue" : "Save"}

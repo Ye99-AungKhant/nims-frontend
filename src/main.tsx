@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "mantine-react-table/styles.css";
 import "./assets/styles/index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";

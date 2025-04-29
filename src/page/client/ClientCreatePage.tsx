@@ -45,6 +45,7 @@ import { useCreateRole } from "./hooks/useCreateRole";
 import { z } from "zod";
 import FormTable from "../../components/common/FormTable";
 import { useUpdateRole } from "./hooks/useUpdateRole";
+import { PageLoading } from "../../components/common/PageLoading";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
@@ -83,6 +84,7 @@ const ClientCreatePage = () => {
   const id = param?.state?.id as ClientCreatePageProps;
   const [opened, { open, close }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("basicInfo");
+  const [allowedTabs, setAllowedTabs] = useState(["basicInfo"]);
   const [formData, setFormData] = useState<ClientPayloadType>({
     name: "",
     address: "",
@@ -213,11 +215,14 @@ const ClientCreatePage = () => {
       } else {
         addressFormSchema.parse(formData);
       }
-
       setFormErrors({});
-      setActiveTab((prev) =>
-        prev == "basicInfo" ? "address" : "contactPersons"
-      );
+      const nextTab = activeTab === "basicInfo" ? "address" : "contactPersons";
+
+      if (!allowedTabs.includes(nextTab)) {
+        setAllowedTabs((prev) => [...prev, nextTab]);
+      }
+
+      setActiveTab(nextTab);
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.log(error.flatten().fieldErrors);
@@ -227,11 +232,18 @@ const ClientCreatePage = () => {
     }
   };
 
+  const handleTabChange = (value: string | null) => {
+    // Allow moving to tabs that are already validated
+    if (value && allowedTabs.includes(value)) {
+      setActiveTab(value);
+    }
+  };
+
   const title = isEditMode ? "Edit Client" : "New Client";
 
   // Show loading state
   if (isClientLoading || isRoleLoading) {
-    return <Box p="md">Loading...</Box>; // Replace with a proper loading indicator
+    return <PageLoading />;
   }
 
   const baseInfoRows = [
@@ -413,7 +425,7 @@ const ClientCreatePage = () => {
         </Box>
 
         <Box px={"30px"} pt={"30px"}>
-          <Tabs value={activeTab} onChange={() => {}}>
+          <Tabs value={activeTab} onChange={handleTabChange}>
             <TabsList mb={20}>
               <Tabs.Tab
                 value="basicInfo"

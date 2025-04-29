@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Button,
+  Checkbox,
   Flex,
   Grid,
   Group,
@@ -40,7 +41,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [simMode, setSimMode] = useState<string | null>("Single");
+  const [selectedSim, setSelectedSim] = useState("SINGLE");
   const { data: brandData } = useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
   const { mutate: updateBrand } = useUpdateBrand();
@@ -65,25 +66,28 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
     {
       label: "Mode *",
       input: (
-        <Select
-          searchable
-          comboboxProps={{
-            offset: 0,
-          }}
-          data={[
-            { label: "Single", value: "Single" },
-            { label: "Dual", value: "Dual" },
-          ]}
-          onChange={(value) => setSimMode(value)}
-          leftSection={<IconSquareLetterMFilled size={18} />}
-          rightSection={
-            <IconChevronDown size={16} style={{ marginRight: 20 }} />
-          }
-        />
+        <Group>
+          <Checkbox
+            label="SINGLE SIM"
+            size="sm"
+            radius={"sm"}
+            checked={selectedSim === "SINGLE"}
+            onChange={() => setSelectedSim("SINGLE")}
+            color={theme.colors.purple[1]}
+          />
+          <Checkbox
+            label="DUAL SIM"
+            size="sm"
+            radius={"sm"}
+            checked={selectedSim === "DUAL"}
+            onChange={() => setSelectedSim("DUAL")}
+            color={theme.colors.purple[1]}
+          />
+        </Group>
       ),
     },
     {
-      label: "First Operator *",
+      label: selectedSim === "DUAL" ? "First Operator *" : "Operator *",
       input: (
         <Select
           searchable
@@ -126,11 +130,12 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          error={form.errors[`operators.${0}.operator`]}
         />
       ),
     },
     {
-      label: "First Phone No. *",
+      label: selectedSim === "DUAL" ? "First Phone No. *" : "Phone No. *",
       input: (
         <TextInput
           type="number"
@@ -138,6 +143,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
           onChange={(e) =>
             handleDualPhoneNumberChange(0, "phone_no", e.target.value)
           }
+          error={form.errors[`operators.${0}.phone_no`]}
         />
       ),
     },
@@ -184,6 +190,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          error={form.errors[`operators.${1}.operator`]}
         />
       ),
     },
@@ -196,12 +203,14 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
           onChange={(e) =>
             handleDualPhoneNumberChange(1, "phone_no", e.target.value)
           }
+          error={form.errors[`operators.${1}.phone_no`]}
         />
       ),
     },
   ];
 
-  const rowFilter = simMode === "Dual" ? rows : rows.slice(0, rows.length - 2);
+  const rowFilter =
+    selectedSim === "DUAL" ? rows : rows.slice(0, rows.length - 2);
 
   return (
     <>

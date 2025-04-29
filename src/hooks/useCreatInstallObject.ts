@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { createInstallObject } from "../../../services/installObject.service";
+import { createInstallObject } from "../services/installObject.service";
 
-export const useCreateFormSubmit = () => {
+export const useCreateInstallObject = () => {
   return useMutation({
     mutationFn: async (params: any) => {
       try {

@@ -26,14 +26,27 @@ interface Operator {
   phone_no: string;
 }
 
-interface Peripheral {
-  sensor_type_id: string;
+// export interface Peripheral {
+//   sensor_type_id: string;
+//   brand_id: string;
+//   model_id: string;
+//   serial_no: string;
+//   qty: string;
+//   warranty_plan_id: string;
+//   warranty_expiry_date: Date;
+// }
+
+export interface PeripheralDetail {
   brand_id: string;
   model_id: string;
   serial_no: string;
-  qty: string;
   warranty_plan_id: string;
-  warranty_expiry_date: Date;
+}
+
+export interface Peripheral {
+  sensor_type_id: string;
+  qty: string;
+  detail: PeripheralDetail[];
 }
 
 interface Accessory {
@@ -68,7 +81,6 @@ export interface FormValues {
   imei: string;
   gpsSerial: string;
   warranty: string;
-  operator: Operator;
   operators: Operator[];
   peripheral: Peripheral[];
   accessory: Accessory[];

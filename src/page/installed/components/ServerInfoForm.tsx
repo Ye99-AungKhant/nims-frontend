@@ -36,6 +36,13 @@ import FormTable from "../../../components/common/FormTable";
 import { useUpdateType } from "../../../hooks/useUpdateType";
 import { useDeleteType } from "../../../hooks/useDeleteType";
 import WarrantyPlan from "../../../components/common/WarrantyPlan";
+import { useGetBrands } from "../../../hooks/useGetBrands";
+import { useCreateBrand } from "../../../hooks/useCreateBrand";
+import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
+import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
+import { useCreateInstallationEngineer } from "../../../hooks/useCreateInstallEngineer";
+import { useUpdateInstallEngineer } from "../../../hooks/useUpdateInstallEngineer";
+import { useDeleteInstallEngineer } from "../../../hooks/useDeleteInstallEngineer";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -46,12 +53,26 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   const { data: typeData } = useGetTypes("Server");
-  const { data: installationEngineerData } = useGetInstallationEngineers();
+  const { data: domainData } = useGetBrands(
+    "Server",
+    Number(form.values.server.type_id)
+  );
   const { data: warrantyData } = useGetWarrantyPlans();
 
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
+
+  const { mutate: createBrand } = useCreateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: deleteBrand } = useDeleteBrand();
+
+  const { data: installationEngineerData } = useGetInstallationEngineers();
+  const { mutate: createInstallationEngineer } =
+    useCreateInstallationEngineer();
+
+  const { mutate: updateInstallationEngineer } = useUpdateInstallEngineer();
+  const { mutate: deleteInstallationEngineer } = useDeleteInstallEngineer();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
@@ -118,15 +139,55 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          error={form.errors[`server.type_id`]}
         />
       ),
     },
     {
       label: "Domain *",
       input: (
-        <TextInput
+        <Select
+          searchable
+          comboboxProps={{
+            offset: 0,
+          }}
+          data={
+            domainData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+              type_id: String(data.type_id),
+            })) || []
+          }
+          value={form.values.server.domain}
+          onChange={(value: any) => handleServerChange("domain", value)}
           leftSection={<IconWorld size={18} />}
-          {...form.getInputProps("vehiclePlateNo")}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: " var(--mantine-font-size-sm)",
+                }}
+                fw={500}
+                onClick={() => handleModal("Brand")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+          error={form.errors[`server.domain`]}
         />
       ),
     },
@@ -139,7 +200,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            installationEngineerData?.data.data.map((data: any) => ({
+            installationEngineerData?.data?.data?.map((data: any) => ({
               value: String(data.id),
               label: data.name,
             })) || []
@@ -175,6 +236,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          error={form.errors[`installationEngineer.${0}.user_id`]}
         />
       ),
     },
@@ -185,6 +247,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           leftSection={<IconCalendarWeek size={18} />}
           value={form.values.server.installed_date}
           onChange={(date) => handleServerChange("installed_date", date || "")}
+          error={form.errors[`server.installed_date`]}
         />
       ),
     },
@@ -233,6 +296,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          error={form.errors[`server.subscription_plan_id`]}
         />
       ),
     },
@@ -244,6 +308,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           withAsterisk
           value={form.values.server.invoice_no}
           onChange={(e) => handleServerChange("invoice_no", e.target.value)}
+          error={form.errors[`server.invoice_no`]}
         />
       ),
     },
@@ -257,6 +322,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           onChange={(e) =>
             handleServerChange("object_base_fee", e.target.value)
           }
+          error={form.errors[`server.object_base_fee`]}
         />
       ),
     },
@@ -267,6 +333,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           leftSection={<IconCalendarWeek size={18} />}
           value={form.values.server.expire_date}
           onChange={(date) => handleServerChange("expire_date", date || "")}
+          error={form.errors[`server.expire_date`]}
         />
       ),
     },
@@ -288,15 +355,29 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
           type_group={"Server"}
         />
       )}
+      {modalType == "Brand" && (
+        <AddItemModal
+          title="Server Domain"
+          opened={opened}
+          close={close}
+          isHaveType={true}
+          mutationFn={createBrand}
+          updateMutationFn={updateBrand}
+          deleteMutationFn={deleteBrand}
+          selectItem={typeData?.data.data}
+          dataList={domainData?.data.data}
+          type_group={"Server"}
+        />
+      )}
       {modalType == "InstallEng" && (
         <AddItemModal
           title="Installation Engineer"
           opened={opened}
           close={close}
-          mutationFn={createType}
-          updateMutationFn={updateType}
-          deleteMutationFn={deleteType}
-          type_group={"Server"}
+          mutationFn={createInstallationEngineer}
+          updateMutationFn={updateInstallationEngineer}
+          deleteMutationFn={deleteInstallationEngineer}
+          dataList={installationEngineerData?.data?.data}
         />
       )}
       {modalType == "Subscription" && (
