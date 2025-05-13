@@ -72,16 +72,25 @@ export const InstalledObjectPageColumns: MRT_ColumnDef<any>[] = [
   {
     header: "Status",
     accessorKey: "status",
+    size: 140,
     Cell: ({ cell }) => (
       <span
         style={{
-          backgroundColor: "#ABC37B",
+          backgroundColor: `${
+            cell.getValue<string>() === "Active"
+              ? "#ABC37B"
+              : cell.getValue<string>() === "ExpireSoon"
+              ? "#cea836"
+              : "#F15D60"
+          } `,
           color: "white",
           padding: "3px 10px",
           borderRadius: 20,
         }}
       >
-        {cell.getValue<string>()}
+        {cell.getValue<string>() === "ExpireSoon"
+          ? "Expire Soon"
+          : cell.getValue<string>()}
       </span>
     ),
   },

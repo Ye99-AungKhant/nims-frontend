@@ -42,11 +42,14 @@ import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 import { useUpdateModel } from "../../../hooks/useUpdateModel";
 import { useDeleteModel } from "../../../hooks/useDeleteModel";
 import WarrantyPlan from "../../../components/common/WarrantyPlan";
+import { useGetBrandAll } from "../../../hooks/useGetBrandAll";
+import { useGetModelAll } from "../../../hooks/useGetModelAll";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  isEditMode?: boolean;
 }
-const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
+const PeripheralInfoForm = ({ form, isEditMode }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
@@ -60,7 +63,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
   ]);
   const { data: typeData } = useGetTypes("Sensor");
   const { data: brandData } = useGetBrands("Sensor", selectedTypeId);
-  const { data: modelData } = useGetModels("Sensor", selectedBrandId);
+  // const { data: modelData } = useGetModels("Sensor", selectedBrandId);
+  const getAllBrandData = useGetBrandAll(form);
+  const getAllModelData = useGetModelAll(form);
   const { data: warrantyData } = useGetWarrantyPlans();
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
@@ -73,8 +78,8 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
   const { mutate: deleteModel } = useDeleteModel();
 
   const [storeBrandData, setStoreBrandData] = useState<any[]>([]);
+  const [storeModelData, setStoreModelData] = useState<any[]>([]);
 
-  // console.log("clientData", form.values);
   const handleModal = (name: string) => {
     setModalType(name);
     open();
@@ -278,9 +283,9 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            storeBrandData
+            getAllBrandData
               .filter(
-                (brand) =>
+                (brand: any) =>
                   brand.type_id ===
                   Number(form.values.peripheral[indexNum].sensor_type_id)
               )
@@ -291,9 +296,11 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
               })) || []
           }
           value={form.values.peripheral[indexNum].detail[index]?.brand_id}
-          onChange={(value: any) =>
-            handleFieldChange(indexNum, "detail", value, index, "brand_id")
-          }
+          onChange={(value: any) => {
+            handleFieldChange(indexNum, "detail", value, index, "brand_id");
+            const modelPath = `peripheral.${indexNum}.detail.${index}.model_id`;
+            form.setFieldValue(modelPath, null);
+          }}
           leftSection={<IconSquareLetterMFilled size={18} />}
           rightSectionPointerEvents="all"
           rightSectionWidth={90}
@@ -333,10 +340,19 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
             offset: 0,
           }}
           data={
-            modelData?.data.data.map((data: any) => ({
-              value: String(data.id),
-              label: data.name,
-            })) || []
+            getAllModelData
+              .filter(
+                (model: any) =>
+                  model.brand_id ===
+                  Number(
+                    form.values.peripheral[indexNum].detail[index].brand_id
+                  )
+              )
+              .map((data: any) => ({
+                value: String(data.id),
+                label: data.name,
+                brand_id: String(data.brand_id),
+              })) || []
           }
           value={form.values.peripheral[indexNum].detail[index]?.model_id}
           onChange={(value: any) =>
@@ -531,19 +547,121 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
     },
   ];
 
-  useEffect(() => {
-    if (brandData?.data?.data?.length) {
-      setStoreBrandData((prev) => {
-        const currentBrandIds = new Set(prev.map((item) => item.id));
-        const newData = brandData.data.data.filter(
-          (newItem: any) => !currentBrandIds.has(newItem.id)
-        );
-        return [...prev, ...newData];
-      });
-    }
-  }, [selectedTypeId, brandData]);
+  // useEffect(() => {
+  //   form.values.peripheral.map((p) => {
+  //     setSelectedTypeId(Number(p.sensor_type_id));
+  //   });
+  // }, [form.values.peripheral.length]);
+
+  // useEffect(() => {
+  //   if (brandData?.data?.data?.length) {
+  //     setStoreBrandData((prev) => {
+  //       const currentBrandIds = new Set(prev.map((item) => item.id));
+  //       const newData = brandData.data.data.filter(
+  //         (newItem: any) => !currentBrandIds.has(newItem.id)
+  //       );
+  //       return [...prev, ...newData];
+  //     });
+  //   }
+  // }, [selectedTypeId, brandData]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const brandResponses = await Promise.all(getAllBrandData);
+  //       const modelResponses = await Promise.all(getAllModelData);
+
+  //       console.log("hehe", brandResponses, modelResponses);
+
+  //       const allPeriBrand = brandResponses
+  //         .map((allBrand) => ({
+  //           ...allBrand.data?.data.data,
+  //         }))
+  //         .flatMap((item) => Object.values(item));
+
+  //       setStoreBrandData((prev) => {
+  //         const currentBrandIds = new Set(prev.map((item) => item.id));
+  //         const newData = allPeriBrand.filter(
+  //           (newItem: any) => !currentBrandIds.has(newItem.id)
+  //         );
+  //         return [...prev, ...newData];
+  //       });
+
+  //       console.log("getAllBrandData", allPeriBrand);
+  //     } catch (error) {
+  //       console.error("Failed to fetch brand/model data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [form.values.peripheral, isEditMode]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (selectedBrandId) {
+  //         const modelResponses = await Promise.all(getAllModelData);
+  //         const allPeriModel = modelResponses
+  //           .map((allModel) => ({
+  //             ...allModel.data?.data.data,
+  //           }))
+  //           .flatMap((item) => Object.values(item));
+
+  //         console.log("lee", modelResponses, allPeriModel);
+
+  //         setStoreModelData((prev) => {
+  //           const currentModelIds = new Set(prev.map((item) => item.id));
+  //           const newData = allPeriModel.filter(
+  //             (newItem: any) => !currentModelIds.has(newItem.id)
+  //           );
+  //           return [...prev, ...newData];
+  //         });
+  //         console.log("getAllModelData", allPeriModel);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch brand/model data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [form.values.peripheral, isEditMode, selectedBrandId]);
+
+  // useEffect(() => {
+  //   // const allBrandReady = getAllBrandData.every((q) => q.isSuccess);
+  //   // const allModelReady = getAllModelData.every((q) => q.isSuccess);
+
+  //   // console.log("heee", allBrandReady, allModelReady);
+
+  //   // if (!allBrandReady || !allModelReady) return; // wait until all done
+
+  //   const allPeriBrand = getAllBrandData
+  //     .map((q) => q.data?.data?.data)
+  //     .flatMap((obj) => Object.values(obj || {}));
+
+  //   setStoreBrandData((prev) => {
+  //     const currentBrandIds = new Set(prev.map((item) => item.id));
+  //     const newData = allPeriBrand.filter(
+  //       (item: any) => !currentBrandIds.has(item.id)
+  //     );
+  //     return [...prev, ...newData];
+  //   });
+
+  //   // const allPeriModel = getAllModelData
+  //   //   .map((q) => q?.data?.data?.data)
+  //   //   .flatMap((obj) => Object.values(obj || {}));
+
+  //   // console.log("allPeriModel", getAllModelData);
+
+  //   // setStoreModelData((prev) => {
+  //   //   const currentModelIds = new Set(prev.map((item) => item.id));
+  //   //   const newData = getAllModelData.filter(
+  //   //     (item: any) => !currentModelIds.has(item.id)
+  //   //   );
+  //   //   return [...prev, ...newData];
+  //   // });
+  //   // console.log("selectedBrandId", selectedBrandId);
+  // }, [form.values.peripheral, selectedBrandId, selectedTypeId]);
 
   // console.log("storeBrandData", storeBrandData);
+  // console.log("storeModelData", storeModelData);
 
   return (
     <>
@@ -583,7 +701,7 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
           updateMutationFn={updateBrand}
           deleteMutationFn={deleteBrand}
           selectItem={typeData?.data.data}
-          dataList={storeBrandData}
+          dataList={getAllBrandData}
           type_group={"Sensor"}
         />
       )}
@@ -597,8 +715,8 @@ const PeripheralInfoForm = ({ form }: VehicleInfoProps) => {
           mutationFn={createModel}
           updateMutationFn={updateModel}
           deleteMutationFn={deleteModel}
-          selectItem={brandData?.data.data}
-          dataList={modelData?.data.data}
+          selectItem={getAllBrandData}
+          dataList={getAllModelData}
         />
       )}
       {modalType == "Warranty" && (

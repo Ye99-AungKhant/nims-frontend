@@ -22,6 +22,7 @@ export interface ClientContactPersonPayloadType {
 }
 
 interface Operator {
+  id?: number;
   operator: string;
   phone_no: string;
 }
@@ -44,17 +45,20 @@ export interface PeripheralDetail {
 }
 
 export interface Peripheral {
+  id?: number;
   sensor_type_id: string;
   qty: string;
   detail: PeripheralDetail[];
 }
 
 interface Accessory {
+  id?: number;
   type_id: string;
   qty: string;
 }
 
 interface Server {
+  id?: number;
   type_id: string;
   domain: string;
   installed_date: Date;
@@ -65,17 +69,20 @@ interface Server {
 }
 
 interface InstallationEngineer {
+  id?: number;
   user_id: string;
 }
 
 export interface FormValues {
   client: string;
+  vehicleId?: number;
   vehicleType: string;
   vehicleBrand: string;
   vehicleModel: string;
   vehicleYear: string;
   vehiclePlateNo: string;
   vehicleOdometer: string;
+  gpsId?: number;
   gpsBrand: string;
   gpsModel: string;
   imei: string;
@@ -86,4 +93,28 @@ export interface FormValues {
   accessory: Accessory[];
   server: Server;
   installationEngineer: InstallationEngineer[];
+}
+
+export interface PermissionType {
+  id: number;
+  page_name: string;
+  view: boolean;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+}
+
+export interface RoleType {
+  id: number;
+  name: string;
+  permissions: PermissionType[];
+}
+
+export interface UserType {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  role: RoleType;
 }

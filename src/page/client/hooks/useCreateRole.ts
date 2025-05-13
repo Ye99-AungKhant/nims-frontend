@@ -4,15 +4,16 @@ import { queryClient } from "../../../utils/react-query/queryClient";
 
 export const useCreateRole = () => {
   return useMutation({
-    mutationFn: async (name: any) => {
+    mutationFn: async (params: any) => {
       try {
-        return await createRole({ name });
+        return await createRole(params);
       } catch (error) {
         console.log("create role error", error);
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
+      queryClient.invalidateQueries({ queryKey: ["authRoles"] });
     },
   });
 };

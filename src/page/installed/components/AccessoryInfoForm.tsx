@@ -110,6 +110,9 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
           comboboxProps={{
             offset: 0,
           }}
+          value={form.values.accessory
+            .map((acc) => acc.type_id)
+            .filter((accId) => accId !== "")}
           data={
             accessoryTypeData?.data.data.map((data: any) => ({
               value: String(data.id),
@@ -161,6 +164,7 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
           //   handleAccessoryQtyChange(index, "qty", e.target.value)
           // }
           // error={form.errors[`accessory.${index}.qty`]}
+          // {...form.getInputProps(`accessory.${index}.qty`).onChange}
           {...form.getInputProps(`accessory.${index}.qty`)}
         />
       ),

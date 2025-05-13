@@ -19,7 +19,7 @@ import {
   IconServer2,
   IconTruckFilled,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormValues } from "../../utils/types";
 import VehicleInfoForm from "./components/VehicleInfoForm";
 import GPSInfoForm from "./components/GPSInfoForm";
@@ -38,14 +38,24 @@ import {
 } from "./components/InstallValidation";
 import { z } from "zod";
 import { useCreateInstallObject } from "../../hooks/useCreatInstallObject";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useGetInstalledDetail } from "./hooks/useGetInstalled";
+import { useUpdateInstalledObject } from "../../hooks/useUpdateInstalledObject";
 
 const InstallationCreatePage = () => {
+  const param = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>("vehicleInfo");
   const [allowedTabs, setAllowedTabs] = useState(["vehicleInfo"]);
+  const id = param?.state?.id;
+  const { data: installedObject, isLoading } = useGetInstalledDetail(id);
   const { mutate, isPending } = useCreateInstallObject();
+  const { mutate: updateObjectMutate, isPending: updateObjectIsLoading } =
+    useUpdateInstalledObject();
   const theme = useMantineTheme();
   const navigate = useNavigate();
+
+  console.log("useParam", id);
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -122,8 +132,6 @@ const InstallationCreatePage = () => {
       });
 
       form.setErrors(fieldErrors);
-      console.log("fieldErrors", fieldErrors);
-
       return;
     }
     form.setErrors(fieldErrors);
@@ -150,7 +158,6 @@ const InstallationCreatePage = () => {
 
   const handleSubmit = () => {
     const newValues = { ...form.values };
-
     if (
       newValues.peripheral.length === 1 &&
       newValues.peripheral[0].sensor_type_id === ""
@@ -158,10 +165,94 @@ const InstallationCreatePage = () => {
       newValues.peripheral = [];
     }
 
-    mutate(newValues, {
-      onSuccess: () => navigate("/installed"),
-    });
+    if (isEditMode) {
+      console.log("object update submit", form.values);
+      updateObjectMutate(newValues, {
+        onSuccess: () => navigate("/installed"),
+      });
+    } else {
+      mutate(newValues, {
+        onSuccess: () => navigate("/installed"),
+      });
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log("edit data", installedObject);
+    if (id && installedObject) {
+      const data = installedObject.items;
+      const transformedPeripheral = data?.device[0]?.peripheral?.map(
+        (p: any) => ({
+          id: p.id,
+          sensor_type_id: String(p.sensor_type_id) || "",
+          qty: String(p.qty) || "",
+          detail: p.peripheralDetail.map((d: any) => ({
+            brand_id: String(d.brand_id) || "",
+            model_id: String(d.model_id) || "",
+            serial_no: d.serial_no || "",
+            warranty_plan_id: String(d.warranty_plan_id) || "",
+          })),
+        })
+      );
+
+      const transformedAccessory = data?.device[0]?.accessory.map(
+        (acc: any) => ({
+          id: acc.id,
+          type_id: String(acc.type_id),
+          qty: String(acc.qty),
+        })
+      );
+
+      const transformedInstallEng =
+        data?.device[0]?.server[0]?.installation_engineer.map((eng: any) => ({
+          id: eng.id,
+          user_id: String(eng.user_id),
+        }));
+
+      form.setValues({
+        client: String(data.client_id),
+        vehicleId: data.id,
+        vehicleType: String(data.type_id),
+        vehicleBrand: String(data.brand_id),
+        vehicleModel: String(data.model_id),
+        vehicleYear: String(data.year),
+        vehiclePlateNo: data.plate_number,
+        vehicleOdometer: String(data?.odometer),
+        gpsId: data?.device[0]?.id,
+        gpsBrand: String(data?.device[0]?.brand_id),
+        gpsModel: String(data?.device[0]?.model_id),
+        imei: data?.device[0]?.imei,
+        gpsSerial: data?.device[0]?.serial_no,
+        warranty: String(data?.device[0]?.warranty_plan_id),
+        operators: data?.device[0]?.simcard,
+        peripheral: transformedPeripheral,
+        accessory: transformedAccessory,
+        server: {
+          id: data?.device[0]?.server[0].id,
+          type_id: String(data?.device[0]?.server[0].type_id),
+          domain: String(data?.device[0]?.server[0].domain_id),
+          installed_date:
+            new Date(data?.device[0]?.server[0].installed_date) || new Date(),
+          subscription_plan_id: String(
+            data?.device[0]?.server[0].subscription_plan_id
+          ),
+          expire_date:
+            new Date(data?.device[0]?.server[0].expire_date) || new Date(),
+          invoice_no: data?.device[0]?.server[0].invoice_no,
+          object_base_fee: String(data?.device[0]?.server[0].object_base_fee),
+        },
+        installationEngineer: transformedInstallEng,
+      });
+    }
+  }, [id, isEditMode, isLoading]);
 
   return (
     <Box p={30}>
@@ -170,7 +261,7 @@ const InstallationCreatePage = () => {
           <Group gap={0} h={36}>
             <IconCircleArrowDown size={24} />
             <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
-              New Installation
+              {isEditMode ? "Edit" : "New"} Installation
             </Text>
           </Group>
         </Box>
@@ -262,7 +353,7 @@ const InstallationCreatePage = () => {
               <SimCardInfoForm form={form} />
             </TabsPanel>
             <TabsPanel value="peripheralInfo">
-              <PeripheralInfoForm form={form} />
+              <PeripheralInfoForm form={form} isEditMode={true} />
             </TabsPanel>
             <TabsPanel value="accessoryInfo">
               <AccessoryInfoForm form={form} />
@@ -282,7 +373,7 @@ const InstallationCreatePage = () => {
               size="sm"
               bg={theme.colors.purple[1]}
               disabled={false}
-              loading={isPending}
+              loading={isPending || updateObjectIsLoading}
               fw={500}
             >
               {activeTab !== "serverInfo" ? "Continue" : "Save"}

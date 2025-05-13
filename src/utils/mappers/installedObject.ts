@@ -14,6 +14,6 @@ export const mapInstalledObjectListToEntity = (param: any): any => {
     expire_date: dayjs(param.device[0]?.server[0]?.expire_date).format(
       "DD-MM-YYYY"
     ),
-    status: "Active",
+    status: param.device[0]?.server[0]?.status,
   };
 };

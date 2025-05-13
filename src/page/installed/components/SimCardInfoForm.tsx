@@ -94,6 +94,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
           comboboxProps={{
             offset: 0,
           }}
+          value={form.values.operators[0]?.operator}
           data={
             brandData?.data.data.map((data: any) => ({
               value: data.name,
@@ -140,6 +141,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
         <TextInput
           type="number"
           leftSection={<IconPhoneFilled size={18} />}
+          value={form.values.operators[0]?.phone_no}
           onChange={(e) =>
             handleDualPhoneNumberChange(0, "phone_no", e.target.value)
           }
@@ -155,6 +157,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
           comboboxProps={{
             offset: 0,
           }}
+          value={form.values.operators[1]?.operator}
           data={
             brandData?.data.data.map((data: any) => ({
               value: data.name,
@@ -200,6 +203,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
         <TextInput
           type="number"
           leftSection={<IconPhoneFilled size={18} />}
+          value={form.values.operators[1]?.phone_no}
           onChange={(e) =>
             handleDualPhoneNumberChange(1, "phone_no", e.target.value)
           }

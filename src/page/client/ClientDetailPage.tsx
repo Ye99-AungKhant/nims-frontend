@@ -30,6 +30,7 @@ import "../../assets/styles/ultis.css";
 import { useDeleteContact } from "./hooks/useDeleteContact";
 import { useDisclosure } from "@mantine/hooks";
 import { PageLoading } from "../../components/common/PageLoading";
+import PermissionGate from "../../components/middleware/PermissionGate";
 
 export function ViewClient({ data }: any) {
   console.log("data", data);
@@ -310,10 +311,11 @@ export default function ClientDetailPage() {
               }}
             >
               <Flex w="100%" h="100%" align="center" justify="center">
-                <Text p="0" c="white" fw={500} size="30">
+                <Text p="0" c="white" fw={500} size="20">
                   {clientData?.items?.name
                     ?.split(" ")
                     ?.map((part: any) => part[0])
+                    ?.slice(0, 4)
                     ?.join("")
                     .toUpperCase()}
                 </Text>
@@ -351,20 +353,27 @@ export default function ClientDetailPage() {
               <IconUsersGroup size={20} className="textIcon" />
               <Text className="text">Contact Persons</Text>
             </Group>
-            <Group
-              onClick={() =>
-                navigate("/client/create", { state: { id: param.state.id } })
-              }
-              p={"xs"}
-              gap={0}
-              className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
-              style={{
-                borderBottom: "1px solid #dddddd",
-              }}
+
+            <PermissionGate
+              page={"clients"}
+              scope={"update"}
+              errorProps={{ style: { display: "none" } }}
             >
-              <IconEdit size={20} className="textIcon" />
-              <Text className="text">Edit</Text>
-            </Group>
+              <Group
+                onClick={() =>
+                  navigate("/client/create", { state: { id: param.state.id } })
+                }
+                p={"xs"}
+                gap={0}
+                className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
+                style={{
+                  borderBottom: "1px solid #dddddd",
+                }}
+              >
+                <IconEdit size={20} className="textIcon" />
+                <Text className="text">Edit</Text>
+              </Group>
+            </PermissionGate>
           </Box>
         </Paper>
       )}

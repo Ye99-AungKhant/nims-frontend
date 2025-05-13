@@ -17,6 +17,7 @@ import { SearchInput } from "./common/SearchInput";
 import { GlobalSearch } from "./common/GlobalSearch";
 import { useAuthRoute } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
 
 const RootLayout = () => {
   useAuthRoute();
@@ -27,7 +28,9 @@ const RootLayout = () => {
   const authUserRaw = localStorage.getItem("authUser");
   const authUser = authUserRaw ? JSON.parse(authUserRaw) : null;
 
-  const username = authUser ? authUser.name : "a";
+  const { user } = useUserStore();
+
+  const username = user ? user.name : "a";
 
   const handleLogout = () => {
     localStorage.removeItem("authUser");
@@ -95,12 +98,20 @@ const RootLayout = () => {
                   </Popover.Target>
                   <Popover.Dropdown>
                     <Box py="sm">
-                      <Flex gap="sm" align="center">
-                        <Text size="sm" fw="bold">
-                          Username:
-                        </Text>
-                        <Text size="sm">{username}</Text>
-                      </Flex>
+                      <Box>
+                        <Flex gap={"sm"} align="center">
+                          <Text size="sm" fw="bold">
+                            Username:
+                          </Text>
+                          <Text size="sm">{username}</Text>
+                        </Flex>
+                        <Flex gap={"sm"} align="center">
+                          <Text size="sm" fw="bold">
+                            Role:
+                          </Text>
+                          <Text size="sm">{user?.role.name}</Text>
+                        </Flex>
+                      </Box>
                     </Box>
                     <Button
                       w="100%"

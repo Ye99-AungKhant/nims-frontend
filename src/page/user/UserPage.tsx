@@ -2,64 +2,56 @@ import {
   ActionIcon,
   Box,
   Button,
-  Center,
   Flex,
   Group,
-  Modal,
   Paper,
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { useState } from "react";
-import { useDisclosure } from "@mantine/hooks";
-import { useGetClientsWithContact } from "./hooks/useGetClientWithContact";
 import {
-  IconAddressBook,
   IconCloudDown,
   IconEdit,
   IconEye,
   IconPlus,
   IconTrash,
+  IconUsers,
 } from "@tabler/icons-react";
-import { DataTable } from "../../components/datatable/DataTable";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
-import { useDeleteClientWithContact } from "./hooks/useDeleteClientWithContact";
-import { clientPageColumns } from "./clientPageColumns";
+import { DataTable } from "../../components/datatable/DataTable";
+import { userPageColumns } from "./userPageColumns";
 import PermissionGate from "../../components/middleware/PermissionGate";
+import { useGetAllUsers } from "../../hooks/useGetAllUsers";
+import DeleteConfirmModal from "../../components/common/DeleteConfirmModal";
+import { useDisclosure } from "@mantine/hooks";
+import { useDeleteUserByAdmin } from "../../hooks/useDeleteUserByAdmin";
 
-export const ClientPage = () => {
+const UserPage = () => {
+  const navigate = useNavigate();
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
-  const { data: clientData, isLoading } = useGetClientsWithContact();
-  const [deleteClient, setDeleteClient] = useState<number>();
-  const { mutate: deleteClientWithContactMutate } =
-    useDeleteClientWithContact();
-  const navigate = useNavigate();
+  const [deleteUser, setDeleteUser] = useState<number | string>(0);
 
-  const deleteClientSelect = (id: any) => {
-    setDeleteClient(id);
+  const { data, isLoading } = useGetAllUsers();
+  const { mutate, isPending } = useDeleteUserByAdmin();
+
+  const deleteUserSelect = (id: any) => {
+    setDeleteUser(id);
     open();
   };
 
-  const deleteClientWithContact = () => {
-    console.log(deleteClient);
-
-    deleteClientWithContactMutate(deleteClient);
-    close();
-  };
-
   return (
-    <PermissionGate page={"clients"} scope={"view"}>
+    <PermissionGate page={"users"} scope={"view"}>
       <Box p="30px">
         <Paper shadow="md">
           <Box style={{ borderBottom: "1px solid #dddddd" }}>
             <Flex justify={"space-between"} py="md" px={30}>
               <Group gap={0}>
-                <IconAddressBook size={24} />
+                <IconUsers size={24} />
                 <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
-                  Clients
+                  Users
                 </Text>
               </Group>
               <Group justify="center">
@@ -74,7 +66,7 @@ export const ClientPage = () => {
                 </Button>
 
                 <PermissionGate
-                  page={"clients"}
+                  page={"users"}
                   scope={"create"}
                   errorProps={{ style: { display: "none" } }}
                 >
@@ -85,7 +77,7 @@ export const ClientPage = () => {
                     radius={"lg"}
                     size="xs"
                   >
-                    New Client
+                    New User
                   </Button>
                 </PermissionGate>
               </Group>
@@ -111,17 +103,17 @@ export const ClientPage = () => {
           </Flex>
           <Box p="30px" pt={"md"}>
             <DataTable
-              columns={clientPageColumns}
-              data={clientData?.items || []}
-              totalPage={clientData?.totalPage}
-              totalCount={clientData?.totalCount}
+              columns={userPageColumns}
+              data={data?.items || []}
+              totalPage={data?.totalPage}
+              totalCount={data?.totalCount}
               enableRowOrdering={false}
               isLoading={isLoading}
               enableRowActions
               renderRowActions={({ row }) => {
                 return (
                   <Group gap={"xs"} justify="center">
-                    <ActionIcon
+                    {/* <ActionIcon
                       color={theme.colors.chocolate[1]}
                       size={30}
                       radius="lg"
@@ -135,10 +127,10 @@ export const ClientPage = () => {
                       }
                     >
                       <IconEye size={18} />
-                    </ActionIcon>
+                    </ActionIcon> */}
 
                     <PermissionGate
-                      page={"clients"}
+                      page={"users"}
                       scope={"update"}
                       errorProps={{ style: { display: "none" } }}
                     >
@@ -148,7 +140,7 @@ export const ClientPage = () => {
                         radius="lg"
                         variant="outline"
                         onClick={() =>
-                          navigate("create", { state: { id: row.original.id } })
+                          navigate("create", { state: { data: row.original } })
                         }
                       >
                         <IconEdit size={18} />
@@ -156,7 +148,7 @@ export const ClientPage = () => {
                     </PermissionGate>
 
                     <PermissionGate
-                      page={"clients"}
+                      page={"users"}
                       scope={"delete"}
                       errorProps={{ style: { display: "none" } }}
                     >
@@ -164,7 +156,7 @@ export const ClientPage = () => {
                         color={theme.colors.chocolate[1]}
                         radius="lg"
                         variant="outline"
-                        onClick={() => deleteClientSelect(row.original.id)}
+                        onClick={() => deleteUserSelect(row.original.id)}
                       >
                         <IconTrash size={18} />
                       </ActionIcon>
@@ -175,27 +167,17 @@ export const ClientPage = () => {
             />
           </Box>
         </Paper>
-        <Modal
+        <DeleteConfirmModal
           opened={opened}
+          mutationFn={mutate}
+          isloading={isPending}
           onClose={close}
-          title={
-            <Text size="xl" fw={700} c={"dark"}>
-              Confirm Delete Client
-            </Text>
-          }
-          centered={false}
-        >
-          <Center>Are you sure you want to delete this record?</Center>
-          <Group m="md" gap="md" justify="right">
-            <Button radius={"lg"} size="sm" onClick={deleteClientWithContact}>
-              Yes, Delete it!
-            </Button>
-            <Button radius={"lg"} size="sm" onClick={close} color="gray">
-              Cancel
-            </Button>
-          </Group>
-        </Modal>
+          title={"User"}
+          id={deleteUser}
+        />
       </Box>
     </PermissionGate>
   );
 };
+
+export default UserPage;

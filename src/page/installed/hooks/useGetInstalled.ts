@@ -4,21 +4,42 @@ import { mapInstalledObjectListToEntity } from "../../../utils/mappers/installed
 import { useGetRouteParams } from "../../../hooks/useGetRouteParams";
 
 export const useGetInstalled = (isgetExpire: boolean | "") => {
-  const { pageIndex, pageSize, search } = useGetRouteParams();
+  const { pageIndex, pageSize, search, filter_by, fromDate, toDate } =
+    useGetRouteParams();
+  const dateFilter =
+    filter_by && (fromDate || toDate) ? { filter_by, fromDate, toDate } : "";
+
   return useQuery({
-    queryKey: ["getInstalled", pageIndex, pageSize, search],
+    queryKey: ["getInstalled", pageIndex, pageSize, search, dateFilter],
     queryFn: async () => {
       return await getInstalled({
         filterByExpireDate: isgetExpire,
         pageIndex,
         pageSize,
         search,
+        filter_by,
+        fromDate,
+        toDate,
       });
     },
     select: (res) => ({
       totalCount: res?.data?.data.totalCount || 0,
       totalPage: res?.data?.data.totalPages || 0,
       items: res?.data?.data?.data.map(mapInstalledObjectListToEntity),
+    }),
+  });
+};
+
+export const useGetInstalledDetail = (id: number) => {
+  return useQuery({
+    queryKey: ["getInstalledDetail"],
+    queryFn: async () => {
+      return await getInstalled({
+        id,
+      });
+    },
+    select: (res) => ({
+      items: res?.data?.data?.data[0],
     }),
   });
 };

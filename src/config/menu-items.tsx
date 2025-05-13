@@ -4,6 +4,8 @@ import {
   IconRouter,
   IconServer2,
   IconSmartHome,
+  IconUserCog,
+  IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
 import { ReactElement } from "react";
@@ -26,6 +28,10 @@ export const Routes = {
     PATH: "client",
     FULL_PATH: "/client",
   },
+  USER: {
+    PATH: "user",
+    FULL_PATH: "/user",
+  },
 } as const;
 
 export type MenuItemType = {
@@ -38,13 +44,13 @@ export type MenuItemType = {
 
 export const MainMenus: MenuItemType[] = [
   {
-    id: "6",
+    id: "1",
     title: "Dashboard",
     url: Routes.DASHBOARD.FULL_PATH,
     icon: <IconSmartHome stroke={5} width={20} height={20} />,
   },
   {
-    id: "5",
+    id: "2",
     title: "Objects",
     icon: <IconCircleArrowDown />,
     children: [
@@ -57,10 +63,29 @@ export const MainMenus: MenuItemType[] = [
     ],
   },
   {
-    id: "1",
+    id: "3",
     title: "Clients",
     url: Routes.CLIENT.FULL_PATH,
     icon: <IconUsersGroup stroke={3} />,
+  },
+  {
+    id: "4",
+    title: "Users",
+    icon: <IconUsers />,
+    children: [
+      {
+        id: "4.1",
+        title: "List All Users",
+        url: Routes.USER.FULL_PATH,
+        icon: <IconUsers />,
+      },
+      {
+        id: "4.2",
+        title: "List All Roles",
+        url: "/role",
+        icon: <IconUserCog />,
+      },
+    ],
   },
   // {
   //   id: "2",

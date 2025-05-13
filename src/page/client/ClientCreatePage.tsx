@@ -46,6 +46,7 @@ import { z } from "zod";
 import FormTable from "../../components/common/FormTable";
 import { useUpdateRole } from "./hooks/useUpdateRole";
 import { PageLoading } from "../../components/common/PageLoading";
+import { useDeleteRole } from "../../hooks/useDeleteRole";
 
 interface ClientCreatePageProps {
   id?: string; // Optional ID for edit mode
@@ -118,6 +119,7 @@ const ClientCreatePage = () => {
     useUpdateClientWithContact(); // Use update mutation
   const { mutate: createRole } = useCreateRole();
   const { mutate: updateRole } = useUpdateRole();
+  const { mutate: deleteRole } = useDeleteRole();
   const [formErrors, setFormErrors] = useState<any>({});
 
   // Set edit mode if ID is provided
@@ -508,7 +510,7 @@ const ClientCreatePage = () => {
         close={close}
         mutationFn={createRole}
         updateMutationFn={updateRole}
-        deleteMutationFn={() => {}}
+        deleteMutationFn={deleteRole}
         dataList={roleData?.data.filter((role: any) => role.name !== "Admin")}
       />
     </Box>

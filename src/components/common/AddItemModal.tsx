@@ -29,6 +29,9 @@ interface MutateProps {
   type_id?: number | null;
   brand_id?: number | null;
 }
+interface RolePayload {
+  name: string;
+}
 interface Props {
   title: string;
   type_group?: any;
@@ -40,7 +43,7 @@ interface Props {
   mutationFn: UseMutateFunction<
     AxiosResponse<any, any> | undefined,
     Error,
-    MutateProps | string,
+    MutateProps | string | RolePayload,
     unknown
   >;
   updateMutationFn: UseMutateFunction<
@@ -102,6 +105,8 @@ export const AddItemModal = ({
   };
 
   const handleDelete = () => {
+    console.log("roleID", deleteItem);
+
     setIsDeleting(true);
     deleteMutationFn(deleteItem, { onSuccess: () => setIsDeleting(false) });
     setDeleteItem(0);
@@ -121,7 +126,8 @@ export const AddItemModal = ({
         { onSuccess: () => setIsSaving(false) }
       );
     } else {
-      mutationFn(name, { onSuccess: () => setIsSaving(false) });
+      const data = { name };
+      mutationFn(data, { onSuccess: () => setIsSaving(false) });
     }
 
     setName("");
@@ -130,6 +136,7 @@ export const AddItemModal = ({
   useEffect(() => {
     if (dataList) setData(dataList);
   }, [dataList]);
+
   return (
     <Modal
       opened={opened}
@@ -162,15 +169,15 @@ export const AddItemModal = ({
                 )}
 
                 <Table.Th fw={"normal"}>{title}</Table.Th>
-                {title !== "Designation" && (
-                  <Table.Th
-                    fw={"normal"}
-                    w={"10%"}
-                    style={{ textAlign: "center" }}
-                  >
-                    Action
-                  </Table.Th>
-                )}
+                {/* {title !== "Designation" && ( */}
+                <Table.Th
+                  fw={"normal"}
+                  w={"10%"}
+                  style={{ textAlign: "center" }}
+                >
+                  Action
+                </Table.Th>
+                {/* )} */}
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -291,17 +298,17 @@ export const AddItemModal = ({
                       )}
                     </Table.Td>
 
-                    {title !== "Designation" && (
-                      <Table.Td style={{ textAlign: "center" }}>
-                        <Button
-                          color="dark"
-                          size="xs"
-                          onClick={() => setDeleteItem(item.id)}
-                        >
-                          Delete
-                        </Button>
-                      </Table.Td>
-                    )}
+                    {/* {title !== "Designation" && ( */}
+                    <Table.Td style={{ textAlign: "center" }}>
+                      <Button
+                        color="dark"
+                        size="xs"
+                        onClick={() => setDeleteItem(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Table.Td>
+                    {/* )} */}
                   </Table.Tr>
                 ))
               ) : (

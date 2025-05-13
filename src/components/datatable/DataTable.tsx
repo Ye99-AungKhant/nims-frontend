@@ -123,7 +123,7 @@ export function DataTable<T extends Record<string, any> = object>({
   return (
     <>
       <MantineReactTable table={table} />
-      <Pagination total={0} totalPage={totalPage} totalCount={totalCount} />
+      <Pagination total={0} totalpage={totalPage} totalcount={totalCount} />
     </>
   );
 }

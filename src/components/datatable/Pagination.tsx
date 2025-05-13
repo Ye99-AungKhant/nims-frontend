@@ -9,8 +9,8 @@ import { useParamsHelper } from "../../hooks/useParamsHelper";
 import { useMemo } from "react";
 
 interface PaginationCustomProps extends PaginationProps {
-  totalPage?: number;
-  totalCount?: number;
+  totalpage?: number;
+  totalcount?: number;
   total: number;
 }
 
@@ -22,7 +22,7 @@ export function Pagination(props: PaginationCustomProps) {
   const theme = useMantineTheme();
 
   const from = (value - 1) * perPage + 1;
-  const to = Math.min(value * perPage, props.totalCount || 0);
+  const to = Math.min(value * perPage, props.totalcount || 0);
 
   const handleChange = (page: number) => {
     setParams({
@@ -35,11 +35,11 @@ export function Pagination(props: PaginationCustomProps) {
   return (
     <Group justify="space-between" mt={20}>
       <Text color={theme.colors.purple[0]}>
-        Showing {from} to {to} of {props.totalCount} entries
+        Showing {from} to {to} of {props.totalcount} entries
       </Text>
       <Pg.Root
         {...props}
-        total={props.totalPage || 0}
+        total={props.totalpage || 0}
         onChange={handleChange}
         value={value}
         color={theme.colors.primary[3]}
