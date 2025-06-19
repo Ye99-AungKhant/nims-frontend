@@ -36,3 +36,7 @@ export const updateClientWithContact = async (params: any) => {
 export const deleteClientWithContact = async (params: any) => {
   return await apiClient.delete(`/client/delete/${params}`);
 };
+
+export const getClientInstalledObject = async (id: any) => {
+  return await apiClient.get(`/client/object?id=${id}`);
+};

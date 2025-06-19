@@ -1,12 +1,9 @@
 import {
-  IconBackhoe,
-  IconCircleArrowDown,
-  IconRouter,
-  IconServer2,
-  IconSmartHome,
-  IconUserCog,
+  IconDownload,
+  IconHome,
   IconUsers,
   IconUsersGroup,
+  IconUserShield,
 } from "@tabler/icons-react";
 import { ReactElement } from "react";
 
@@ -47,18 +44,18 @@ export const MainMenus: MenuItemType[] = [
     id: "1",
     title: "Dashboard",
     url: Routes.DASHBOARD.FULL_PATH,
-    icon: <IconSmartHome stroke={5} width={20} height={20} />,
+    icon: <IconHome />,
   },
   {
     id: "2",
     title: "Objects",
-    icon: <IconCircleArrowDown />,
+    icon: <IconDownload />,
     children: [
       {
         id: "2.1",
         title: "Installed Objects",
         url: Routes.INSTALL.FULL_PATH,
-        icon: <IconCircleArrowDown />,
+        icon: <IconDownload />,
       },
     ],
   },
@@ -66,7 +63,7 @@ export const MainMenus: MenuItemType[] = [
     id: "3",
     title: "Clients",
     url: Routes.CLIENT.FULL_PATH,
-    icon: <IconUsersGroup stroke={3} />,
+    icon: <IconUsersGroup />,
   },
   {
     id: "4",
@@ -83,7 +80,7 @@ export const MainMenus: MenuItemType[] = [
         id: "4.2",
         title: "List All Roles",
         url: "/role",
-        icon: <IconUserCog />,
+        icon: <IconUserShield />,
       },
     ],
   },

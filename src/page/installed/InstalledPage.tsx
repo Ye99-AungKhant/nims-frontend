@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   Group,
+  Menu,
   Paper,
   Select,
   Table,
@@ -15,9 +16,14 @@ import dayjs from "dayjs";
 import {
   IconChevronDown,
   IconCircleArrowDown,
+  IconDotsVertical,
+  IconDownload,
   IconEdit,
   IconEye,
+  IconMenu,
   IconPlus,
+  IconRefresh,
+  IconTool,
   IconTrash,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +31,13 @@ import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
 import { DataTable } from "../../components/datatable/DataTable";
 import { InstalledObjectPageColumns } from "./components/InstalledObjectPageColumns";
-import { DatePickerInput, DatesRangeValue } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 import { useParamsHelper } from "../../hooks/useParamsHelper";
 import PermissionGate from "../../components/middleware/PermissionGate";
+import { useDisclosure } from "@mantine/hooks";
+import RenewalConfirmModal from "../../components/common/RenewalConfirmModal";
+import RepairReplacement from "./components/RepairReplacement";
 
 export const InstalledPage = () => {
   const { data, isLoading } = useGetInstalled("");
@@ -38,6 +47,26 @@ export const InstalledPage = () => {
     [Date | null, Date | null]
   >([null, null]);
   const { setParams, getParam } = useParamsHelper();
+  const [opened, { open: openRenewal, close: closeRenewal }] =
+    useDisclosure(false);
+  const [openedRepair, { open: openRepair, close: closeRepair }] =
+    useDisclosure(false);
+  const [renewalData, SetRenewalData] = useState();
+  const [repairId, setRepairId] = useState<number>();
+
+  const handleRenewalModelOpen = (serverData: any) => {
+    SetRenewalData(serverData);
+    openRenewal();
+  };
+
+  const handleRepairReplacementModelOpen = (id: number) => {
+    setRepairId(id);
+    openRepair();
+  };
+
+  const handleOnSubmit = (value: any) => {
+    console.log(value);
+  };
 
   return (
     <PermissionGate page={"installed_objects"} scope={"view"}>
@@ -46,7 +75,7 @@ export const InstalledPage = () => {
           <Box style={{ borderBottom: "1px solid #dddddd" }}>
             <Flex justify={"space-between"} py="md" px={30}>
               <Group gap={0}>
-                <IconCircleArrowDown size={24} />
+                <IconDownload size={24} />
                 <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
                   Installed Objects
                 </Text>
@@ -96,7 +125,7 @@ export const InstalledPage = () => {
                 ]}
                 onChange={(value) => {
                   setParams({
-                    filter_by: value,
+                    filter_by_date: value,
                   });
                 }}
                 w={170}
@@ -124,6 +153,23 @@ export const InstalledPage = () => {
                   filterDatevalue[0] ? null : <IconChevronDown size={16} />
                 }
               />
+              <Select
+                variant="default"
+                size="sm"
+                clearable
+                placeholder="Filter by Status"
+                data={[
+                  { label: "Active", value: "Active" },
+                  { label: "Expire Soon", value: "ExpireSoon" },
+                  { label: "Expired", value: "Expired" },
+                ]}
+                onChange={(value) => {
+                  setParams({
+                    filter_by: value,
+                  });
+                }}
+                w={170}
+              />
             </Group>
 
             <SearchInput size="sm" leftSection name={"search"} />
@@ -136,61 +182,90 @@ export const InstalledPage = () => {
               totalCount={data?.totalCount}
               enableRowOrdering={false}
               isLoading={isLoading}
+              isDotMenu={true}
               enableRowActions
               renderRowActions={({ row }) => {
                 return (
-                  <Group gap={"xs"} justify="center">
-                    <ActionIcon
-                      color={theme.colors.chocolate[1]}
-                      size={30}
-                      radius="lg"
-                      variant="outline"
-                      onClick={() =>
-                        navigate("detail", {
-                          state: {
-                            id: row.original.id,
-                          },
-                        })
-                      }
-                    >
-                      <IconEye size={18} />
-                    </ActionIcon>
-                    <PermissionGate
-                      page={"installed_objects"}
-                      scope={"update"}
-                      errorProps={{ style: { display: "none" } }}
-                    >
+                  <Menu shadow="md" offset={1}>
+                    <Menu.Target>
                       <ActionIcon
-                        color={theme.colors.purple[1]}
-                        size={30}
-                        radius="lg"
-                        variant="outline"
+                        variant="subtle"
+                        color={theme.colors.chocolate[1]}
+                      >
+                        <IconDotsVertical />
+                      </ActionIcon>
+                    </Menu.Target>
+
+                    <Menu.Dropdown>
+                      <Menu.Item
                         onClick={() =>
-                          navigate("create", { state: { id: row.original.id } })
+                          navigate("detail", {
+                            state: {
+                              id: row.original.id,
+                            },
+                          })
                         }
+                        color={theme.colors.chocolate[1]}
+                      >
+                        <IconEye size={18} />
+                      </Menu.Item>
+                      <Menu.Item
+                        onClick={() =>
+                          navigate("create", {
+                            state: { id: row.original.id },
+                          })
+                        }
+                        color={theme.colors.purple[1]}
                       >
                         <IconEdit size={18} />
-                      </ActionIcon>
-                    </PermissionGate>
+                      </Menu.Item>
 
-                    {/* <PermissionGate
-                      page={"delete_object"}
-                      errorProps={{ style: { display: "none" } }}
-                    >
-                      <ActionIcon
-                        color={theme.colors.chocolate[1]}
-                        radius="lg"
-                        variant="outline"
-                        onClick={() => {}}
+                      {row.original.status !== "Active" && (
+                        <Menu.Item
+                          onClick={() => handleRenewalModelOpen(row.original)}
+                          color={"green"}
+                        >
+                          <IconRefresh size={18} />
+                        </Menu.Item>
+                      )}
+                      <Menu.Item
+                        onClick={() =>
+                          handleRepairReplacementModelOpen(row.original.id)
+                        }
+                        color={"orange"}
                       >
-                        <IconTrash size={18} />
-                      </ActionIcon>
-                    </PermissionGate> */}
-                  </Group>
+                        <IconTool size={18} />
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 );
               }}
             />
           </Box>
+
+          {opened && (
+            <RenewalConfirmModal
+              openedMainModel={opened}
+              onClose={closeRenewal}
+              onClick={handleOnSubmit}
+              title={"Confirm Renewal Object"}
+              description={"Are you sure you want to renew this object?"}
+              data={renewalData}
+              isloading={false}
+            />
+          )}
+
+          {openedRepair && (
+            <RepairReplacement
+              opened={openedRepair}
+              onClose={closeRepair}
+              onClick={handleOnSubmit}
+              title={"Confirm Renewal Object"}
+              description={"Are you sure you want to renew this object?"}
+              id={repairId}
+              isloading={false}
+            />
+          )}
         </Paper>
       </Box>
     </PermissionGate>

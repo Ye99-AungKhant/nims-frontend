@@ -316,6 +316,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       label: "Object-Base Fee *",
       input: (
         <TextInput
+          type="number"
           leftSection={<IconCoinFilled size={18} />}
           withAsterisk
           value={form.values.server.object_base_fee}

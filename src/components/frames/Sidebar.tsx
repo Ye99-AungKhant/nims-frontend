@@ -1,7 +1,16 @@
-import { Box, Center, Image, NavLink, useMantineTheme } from "@mantine/core";
+import {
+  Box,
+  Center,
+  Flex,
+  Image,
+  NavLink,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
 import { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MainMenus, MenuItemType } from "../../config/menu-items";
+import { environment } from "../../config/enviroment/environment";
 
 const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
   title,
@@ -45,9 +54,15 @@ const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
 };
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <>
-      <Box p={"xs"} bg={"#111827"}>
+      <Box
+        p={"xs"}
+        bg={"#111827"}
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      >
         <Center>
           <Image w={"100%"} h={50} src="/wimslogo.png" alt="profile-icon" />
         </Center>
@@ -66,6 +81,9 @@ export const Sidebar = () => {
           <MenuItem key={menu.id} {...menu} />
         ))}
       </Box>
+      <Text m={"md"} c={"gray.5"}>
+        v {environment.App_Version}
+      </Text>
     </>
   );
 };

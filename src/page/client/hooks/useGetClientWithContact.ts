@@ -7,9 +7,8 @@ export const useGetClientsWithContact = () => {
   const { pageIndex, pageSize, search } = useGetRouteParams();
   return useQuery({
     queryKey: ["clientswithcontact", pageIndex, pageSize, search],
-    queryFn: async () => {
-      return await getClientWithContact({ pageIndex, pageSize, search });
-    },
+    queryFn: async () =>
+      await getClientWithContact({ pageIndex, pageSize, search }),
     select: (res) => ({
       totalCount: res?.data?.data.totalCount || 0,
       totalPage: res?.data?.data.totalPages || 0,

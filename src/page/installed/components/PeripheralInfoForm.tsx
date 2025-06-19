@@ -48,8 +48,15 @@ import { useGetModelAll } from "../../../hooks/useGetModelAll";
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
   isEditMode?: boolean;
+  isRowtable?: boolean;
+  disableQty?: boolean; // Optional prop to disable qty input
 }
-const PeripheralInfoForm = ({ form, isEditMode }: VehicleInfoProps) => {
+const PeripheralInfoForm = ({
+  form,
+  isEditMode,
+  isRowtable = false,
+  disableQty = false,
+}: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
@@ -470,6 +477,7 @@ const PeripheralInfoForm = ({ form, isEditMode }: VehicleInfoProps) => {
       input: (
         <MultiSelect
           searchable
+          maxValues={isRowtable ? 1 : undefined}
           comboboxProps={{
             offset: 0,
           }}
@@ -665,16 +673,24 @@ const PeripheralInfoForm = ({ form, isEditMode }: VehicleInfoProps) => {
 
   return (
     <>
-      <FormTable rows={rows} mb={0} />
+      <FormTable rows={rows} mb={0} isRowtable={isRowtable} />
       {form.values.peripheral.map((peri, indexNum) => (
         <React.Fragment key={indexNum}>
-          <FormTable rows={qtyRow(indexNum)} mt={0} mb={0} />
+          {!disableQty && (
+            <FormTable
+              rows={qtyRow(indexNum)}
+              mt={0}
+              mb={0}
+              isRowtable={isRowtable}
+            />
+          )}
           {Array.from({ length: Number(peri.qty) }, (_, index) => (
             <FormTable
               rows={inputList(indexNum, index)}
               mt={0}
               mb={10}
               key={`${indexNum}-${index}`}
+              isRowtable={isRowtable}
             />
           ))}
         </React.Fragment>

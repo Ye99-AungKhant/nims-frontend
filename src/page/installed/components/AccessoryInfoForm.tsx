@@ -36,13 +36,14 @@ import { useGetTypes } from "../../../hooks/useGetTypes";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  isRowtable?: boolean;
 }
 
 interface Operators {
   type_id: string;
   qty: string;
 }
-const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
+const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
@@ -173,9 +174,15 @@ const AccessoryInfoForm = ({ form }: VehicleInfoProps) => {
 
   return (
     <>
-      <FormTable rows={rows} mb={0} />
+      <FormTable rows={rows} mb={0} isRowtable={isRowtable} />
       {form.values.accessory.map((accessory, index) => (
-        <FormTable rows={QtyRows(index)} key={index} mt={0} mb={0} />
+        <FormTable
+          rows={QtyRows(index)}
+          key={index}
+          mt={0}
+          mb={0}
+          isRowtable={isRowtable}
+        />
       ))}
 
       <AddItemModal

@@ -15,6 +15,7 @@ interface TableProps<T extends Record<string, any>> {
   totalCount?: number;
   isLoading?: boolean;
   columns: MRT_ColumnDef<T>[];
+  isDotMenu?: boolean;
 }
 
 export function DataTable<T extends Record<string, any> = object>({
@@ -23,6 +24,7 @@ export function DataTable<T extends Record<string, any> = object>({
   totalPage = 0,
   totalCount = 0,
   isLoading,
+  isDotMenu = false,
   ...props
 }: TableProps<T> & MRT_TableOptions<T>) {
   const { isMobile } = useViewPort();
@@ -99,7 +101,7 @@ export function DataTable<T extends Record<string, any> = object>({
     displayColumnDefOptions: {
       "mrt-row-actions": {
         header: "",
-        size: 150,
+        size: isDotMenu ? 10 : 150,
       },
     },
     defaultColumn: {

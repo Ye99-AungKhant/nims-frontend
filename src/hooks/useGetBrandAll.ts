@@ -6,11 +6,17 @@ import { FormValues } from "../utils/types";
 export const useGetBrandAll = (
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>
 ) => {
+  const allTypeIds = form.values.peripheral
+    .flatMap((p) => p.sensor_type_id)
+    .filter(Boolean);
+
+  const uniqueTypeIds = Array.from(new Set(allTypeIds));
+
   const result = useQueries({
-    queries: form.values.peripheral.map((p: any) => ({
-      queryKey: ["brands", p.sensor_type_id],
+    queries: uniqueTypeIds.map((typeId: any) => ({
+      queryKey: ["brands", typeId],
       queryFn: async () => {
-        return await getBrand("Sensor", p.sensor_type_id);
+        return await getBrand("Sensor", typeId);
       }, // replace with actual function
     })),
   });
@@ -18,7 +24,5 @@ export const useGetBrandAll = (
   const allPeriBrand = result
     .map((q) => q.data?.data?.data)
     .flatMap((obj) => Object.values(obj || {}));
-
-  console.log("useQuery", allPeriBrand);
   return allPeriBrand;
 };

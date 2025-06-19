@@ -78,10 +78,10 @@ export const InstalledObjectPageColumns: MRT_ColumnDef<any>[] = [
         style={{
           backgroundColor: `${
             cell.getValue<string>() === "Active"
-              ? "#ABC37B"
+              ? "#239e57"
               : cell.getValue<string>() === "ExpireSoon"
               ? "#cea836"
-              : "#F15D60"
+              : "#EC1F24"
           } `,
           color: "white",
           padding: "3px 10px",

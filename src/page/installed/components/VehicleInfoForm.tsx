@@ -10,7 +10,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormValues } from "../../../utils/types";
 import {
   IconBuildings,
@@ -44,8 +44,9 @@ import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  isRowtable?: boolean;
 }
-const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
+const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { data: clientData } = useGetClients();
@@ -75,6 +76,10 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
     setModalType(name);
     open();
   };
+
+  form.watch("vehicleType", ({ value }) => {
+    form.setValues({ vehicleBrand: undefined, vehicleModel: undefined });
+  });
 
   const rows = [
     {
@@ -121,7 +126,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Type *",
+      label: "Type",
       input: (
         <Select
           searchable
@@ -164,7 +169,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Brand *",
+      label: "Brand",
       input: (
         <Select
           searchable
@@ -207,7 +212,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Model *",
+      label: "Model",
       input: (
         <Select
           searchable
@@ -250,9 +255,10 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Year *",
+      label: "Year",
       input: (
         <TextInput
+          type="number"
           {...form.getInputProps("vehicleYear")}
           leftSection={<IconCalendarWeek size={18} />}
         />
@@ -268,9 +274,10 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
       ),
     },
     {
-      label: "Odometer/Engine Hour *",
+      label: "Odometer/Engine Hour",
       input: (
         <TextInput
+          type="number"
           {...form.getInputProps("vehicleOdometer")}
           leftSection={<IconEngine size={16} />}
         />
@@ -280,7 +287,7 @@ const VehicleInfoForm = ({ form }: VehicleInfoProps) => {
 
   return (
     <>
-      <FormTable rows={rows} />
+      <FormTable rows={rows} isRowtable={isRowtable} />
       {modalType == "Type" && (
         <AddItemModal
           title="Vehicle Type"

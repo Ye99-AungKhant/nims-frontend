@@ -10,7 +10,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormValues } from "../../../utils/types";
 import {
   IconChevronDown,
@@ -31,17 +31,25 @@ import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  isRowtable?: boolean;
+  disableDual?: boolean;
 }
 
 interface Operators {
   operator: string;
   phone_no: string;
 }
-const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
+const SimCardInfoForm = ({
+  form,
+  isRowtable = false,
+  disableDual = false,
+}: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedSim, setSelectedSim] = useState("SINGLE");
+  const [selectedSim, setSelectedSim] = useState(
+    form.values.operators.length === 1 ? "SINGLE" : "DUAL"
+  );
   const { data: brandData } = useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
   const { mutate: updateBrand } = useUpdateBrand();
@@ -64,25 +72,29 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
 
   const rows = [
     {
-      label: "Mode *",
+      label: `${!disableDual ? "Mode *" : ""}`,
       input: (
         <Group>
-          <Checkbox
-            label="SINGLE SIM"
-            size="sm"
-            radius={"sm"}
-            checked={selectedSim === "SINGLE"}
-            onChange={() => setSelectedSim("SINGLE")}
-            color={theme.colors.purple[1]}
-          />
-          <Checkbox
-            label="DUAL SIM"
-            size="sm"
-            radius={"sm"}
-            checked={selectedSim === "DUAL"}
-            onChange={() => setSelectedSim("DUAL")}
-            color={theme.colors.purple[1]}
-          />
+          {!disableDual && (
+            <>
+              <Checkbox
+                label="SINGLE SIM"
+                size="sm"
+                radius={"sm"}
+                checked={selectedSim === "SINGLE"}
+                onChange={() => setSelectedSim("SINGLE")}
+                color={theme.colors.purple[1]}
+              />
+              <Checkbox
+                label="DUAL SIM"
+                size="sm"
+                radius={"sm"}
+                checked={selectedSim === "DUAL"}
+                onChange={() => setSelectedSim("DUAL")}
+                color={theme.colors.purple[1]}
+              />
+            </>
+          )}
         </Group>
       ),
     },
@@ -218,7 +230,7 @@ const SimCardInfoForm = ({ form }: VehicleInfoProps) => {
 
   return (
     <>
-      <FormTable rows={rowFilter} />
+      <FormTable rows={rowFilter} isRowtable={isRowtable} />
       <AddItemModal
         title="Operator"
         opened={opened}

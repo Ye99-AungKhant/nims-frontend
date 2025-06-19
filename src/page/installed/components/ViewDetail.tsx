@@ -1,23 +1,23 @@
 import { Box, Divider, Group, Paper, Table, Text } from "@mantine/core";
-import { IconAddressBook } from "@tabler/icons-react";
+import { ReactNode } from "react";
 
 interface Props {
   isList?: boolean;
   title: string;
-  data: any;
+  data?: any;
+  children?: ReactNode | ReactNode[];
+  Icon: any;
 }
 
-const ViewDetail = ({ isList = false, title, data }: Props) => {
-  console.log(data);
-
+const ViewDetail = ({ isList = false, title, data, children, Icon }: Props) => {
   return (
-    <Paper shadow="sm" style={{ flex: 1 }}>
+    <Paper shadow="sm" style={{ flex: 1, width: "70%" }}>
       <Group
         style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
         py="md"
         gap={0}
       >
-        <IconAddressBook size={24} />
+        <Icon size={24} />
         <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
           {title}
         </Text>
@@ -44,14 +44,14 @@ const ViewDetail = ({ isList = false, title, data }: Props) => {
                       color: "#707070",
                     }}
                   >
-                    {item.field}
+                    {item.field || "-"}
                   </Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>
           </Table>
         )}
-        {isList && data}
+        {isList && children}
       </Box>
     </Paper>
   );

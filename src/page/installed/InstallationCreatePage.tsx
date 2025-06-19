@@ -13,6 +13,7 @@ import { useForm } from "@mantine/form";
 import {
   IconCircleArrowDown,
   IconDeviceSim,
+  IconDownload,
   IconGitCompare,
   IconPaperclip,
   IconRouter,
@@ -41,6 +42,7 @@ import { useCreateInstallObject } from "../../hooks/useCreatInstallObject";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetInstalledDetail } from "./hooks/useGetInstalled";
 import { useUpdateInstalledObject } from "../../hooks/useUpdateInstalledObject";
+import ImageInfo from "./components/ImageInfo";
 
 const InstallationCreatePage = () => {
   const param = useLocation();
@@ -97,6 +99,7 @@ const InstallationCreatePage = () => {
         object_base_fee: "",
       },
       installationEngineer: [{ user_id: "" }],
+      installImage: [],
     },
   });
 
@@ -118,6 +121,7 @@ const InstallationCreatePage = () => {
         server: ServerSchema,
         installationEngineer: InstallationEngineerSchema,
       });
+    } else if (activeTab === "installImageInfo") {
     }
 
     if (!schema) return;
@@ -142,6 +146,7 @@ const InstallationCreatePage = () => {
       "peripheralInfo",
       "accessoryInfo",
       "serverInfo",
+      "installImageInfo",
     ];
 
     const currentIndex = tabOrder.indexOf(activeTab || "vehicleInfo");
@@ -158,6 +163,18 @@ const InstallationCreatePage = () => {
 
   const handleSubmit = () => {
     const newValues = { ...form.values };
+
+    const formData = new FormData();
+
+    // Append all installImage files (Blobs)
+    form.values.installImage?.forEach((imgFile) => {
+      console.log(imgFile);
+
+      if (imgFile.file) {
+        formData.append("installImage", imgFile.file, imgFile.file.name);
+      }
+    });
+
     if (
       newValues.peripheral.length === 1 &&
       newValues.peripheral[0].sensor_type_id === ""
@@ -165,13 +182,15 @@ const InstallationCreatePage = () => {
       newValues.peripheral = [];
     }
 
+    formData.append("data", JSON.stringify(newValues));
+
     if (isEditMode) {
-      console.log("object update submit", form.values);
-      updateObjectMutate(newValues, {
+      console.log("object update submit", formData);
+      updateObjectMutate(formData, {
         onSuccess: () => navigate("/installed"),
       });
     } else {
-      mutate(newValues, {
+      mutate(formData, {
         onSuccess: () => navigate("/installed"),
       });
     }
@@ -223,7 +242,7 @@ const InstallationCreatePage = () => {
         vehicleType: String(data.type_id),
         vehicleBrand: String(data.brand_id),
         vehicleModel: String(data.model_id),
-        vehicleYear: String(data.year),
+        vehicleYear: data.year ? String(data.year) : "",
         vehiclePlateNo: data.plate_number,
         vehicleOdometer: String(data?.odometer),
         gpsId: data?.device[0]?.id,
@@ -250,6 +269,7 @@ const InstallationCreatePage = () => {
           object_base_fee: String(data?.device[0]?.server[0].object_base_fee),
         },
         installationEngineer: transformedInstallEng,
+        installImage: data?.device[0]?.server[0].install_image,
       });
     }
   }, [id, isEditMode, isLoading]);
@@ -259,7 +279,7 @@ const InstallationCreatePage = () => {
       <Paper shadow="sm" radius="md">
         <Box style={{ borderBottom: "1px solid #dddddd" }} py="md" px={30}>
           <Group gap={0} h={36}>
-            <IconCircleArrowDown size={24} />
+            <IconDownload size={24} />
             <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
               {isEditMode ? "Edit" : "New"} Installation
             </Text>
@@ -284,7 +304,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Vehicle Info
+                Vehicle
               </Tabs.Tab>
               <Tabs.Tab
                 value="gpsInfo"
@@ -339,7 +359,18 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Server Info
+                Server
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="installImageInfo"
+                leftSection={<IconServer2 size={20} />}
+                style={
+                  activeTab === "installImageInfo"
+                    ? { color: theme.colors.purple[0] }
+                    : { color: "" }
+                }
+              >
+                Install Images
               </Tabs.Tab>
             </TabsList>
 
@@ -361,13 +392,16 @@ const InstallationCreatePage = () => {
             <TabsPanel value="serverInfo">
               <ServerInfoForm form={form} />
             </TabsPanel>
+            <TabsPanel value="installImageInfo">
+              <ImageInfo form={form} isEditMode={isEditMode} />
+            </TabsPanel>
           </Tabs>
         </Box>
         <Box style={{ borderTop: "1px solid #dddddd" }} p="md">
           <Group justify="center">
             <Button
               onClick={
-                activeTab !== "serverInfo" ? handleContinue : handleSubmit
+                activeTab !== "installImageInfo" ? handleContinue : handleSubmit
               }
               radius={"lg"}
               size="sm"
@@ -376,7 +410,7 @@ const InstallationCreatePage = () => {
               loading={isPending || updateObjectIsLoading}
               fw={500}
             >
-              {activeTab !== "serverInfo" ? "Continue" : "Save"}
+              {activeTab !== "installImageInfo" ? "Continue" : "Save"}
             </Button>
           </Group>
         </Box>

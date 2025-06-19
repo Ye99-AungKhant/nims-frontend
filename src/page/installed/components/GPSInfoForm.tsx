@@ -40,8 +40,9 @@ import WarrantyPlan from "../../../components/common/WarrantyPlan";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  isRowtable?: boolean;
 }
-const GPSInfoForm = ({ form }: VehicleInfoProps) => {
+const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
@@ -224,7 +225,7 @@ const GPSInfoForm = ({ form }: VehicleInfoProps) => {
 
   return (
     <>
-      <FormTable rows={rows} />
+      <FormTable rows={rows} isRowtable={isRowtable} />
       {modalType == "Brand" && (
         <AddItemModal
           title="GPS Brand"

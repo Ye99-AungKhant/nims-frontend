@@ -14,6 +14,8 @@ import {
   useMantineTheme,
   Flex,
   LoadingOverlay,
+  Grid,
+  ThemeIcon,
 } from "@mantine/core";
 import {
   IconUser,
@@ -22,6 +24,8 @@ import {
   IconTrash,
   IconAddressBook,
   IconUsersGroup,
+  IconDownload,
+  IconCircleFilled,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -31,6 +35,7 @@ import { useDeleteContact } from "./hooks/useDeleteContact";
 import { useDisclosure } from "@mantine/hooks";
 import { PageLoading } from "../../components/common/PageLoading";
 import PermissionGate from "../../components/middleware/PermissionGate";
+import { useGetClientInstalledObject } from "./hooks/useGetClientInstalledObject";
 
 export function ViewClient({ data }: any) {
   console.log("data", data);
@@ -100,7 +105,7 @@ export function ViewClient({ data }: any) {
                     color: "#707070",
                   }}
                 >
-                  {data.contact_person[0]?.role.name}
+                  {data.contact_person[0]?.role?.name}
                 </Table.Td>
               </Table.Tr>
 
@@ -220,7 +225,7 @@ export function ContactPerson({ data }: any) {
                     {person.email}
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
-                    {person.role.name}
+                    {person?.role?.name}
                   </Table.Td>
                   <Table.Td>
                     <ActionIcon
@@ -266,6 +271,91 @@ export function ContactPerson({ data }: any) {
           </Button>
         </Group>
       </Modal>
+    </Paper>
+  );
+}
+
+export function ViewObject({ id, theme }: any) {
+  const { data, isLoading } = useGetClientInstalledObject(id);
+  const navigate = useNavigate();
+
+  const summaryData = [
+    {
+      icon: IconDownload,
+      label: "Total Installed Objects",
+      value: data?.items?.totalObjects,
+      color: theme.colors.purple[1],
+      url: `/installed?client_id=${id}`,
+    },
+    {
+      icon: IconCircleFilled,
+      label: "Active Objects",
+      value: data?.items?.totalActiveObjects,
+      color: theme.colors.success[6],
+      url: `/installed?filter_by=Active&client_id=${id}`,
+    },
+    {
+      icon: IconCircleFilled,
+      label: "Expire Soon Objects",
+      value: data?.items?.totalExpireSoonObjects,
+      color: theme.colors.warning[6],
+      url: `/installed?filter_by=ExpireSoon&client_id=${id}`,
+    },
+    {
+      icon: IconCircleFilled,
+      label: "Expired Objects",
+      value: data?.items?.totalExpiredObjects,
+      color: theme.colors.error[6],
+      url: `/installed?filter_by=Expired&client_id=${id}`,
+    },
+  ];
+
+  return (
+    <Paper shadow="sm" style={{ flex: 1 }}>
+      <Group
+        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
+        py="md"
+        gap={0}
+      >
+        <IconAddressBook size={24} />
+        <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
+          View Client Installed Objects
+        </Text>
+      </Group>
+
+      <Box px={30} mt={30} pb={10}>
+        <Grid>
+          {summaryData.map((item, index) => (
+            <Grid.Col
+              span={{ base: 12, md: 4 }}
+              key={index}
+              onClick={() => navigate(item.url)}
+              style={{ cursor: "pointer" }}
+            >
+              <Card radius="md" shadow="sm">
+                <Group>
+                  <ThemeIcon
+                    size="lg"
+                    radius="md"
+                    variant="light"
+                    color={item.color}
+                  >
+                    <item.icon />
+                  </ThemeIcon>
+                  <div>
+                    <Text size="lg" fw={700}>
+                      {item.value}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {item.label}
+                    </Text>
+                  </div>
+                </Group>
+              </Card>
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Box>
     </Paper>
   );
 }
@@ -354,6 +444,21 @@ export default function ClientDetailPage() {
               <Text className="text">Contact Persons</Text>
             </Group>
 
+            <Group
+              onClick={() => handleMenuBtn("installedObject")}
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${
+                menuBtn === "installedObject" ? "active" : ""
+              }`}
+              style={{
+                borderBottom: "1px solid #dddddd",
+              }}
+            >
+              <IconUsersGroup size={20} className="textIcon" />
+              <Text className="text">Installed Objects</Text>
+            </Group>
+
             <PermissionGate
               page={"clients"}
               scope={"update"}
@@ -384,7 +489,7 @@ export default function ClientDetailPage() {
       ) : menuBtn == "contactPaerson" ? (
         <ContactPerson data={clientData?.items.contact_person} />
       ) : (
-        <></>
+        <ViewObject id={param.state.id} theme={theme} />
       )}
     </Box>
   );

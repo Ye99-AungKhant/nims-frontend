@@ -7,7 +7,9 @@ import {
   IconDeviceSim,
   IconEdit,
   IconGitCompare,
+  IconHistory,
   IconPaperclip,
+  IconPhoto,
   IconRouter,
   IconServer2,
   IconTruckFilled,
@@ -16,39 +18,43 @@ import {
 import { PageLoading } from "../../components/common/PageLoading";
 import ViewDetail from "./components/ViewDetail";
 import {
-  accessoryData,
+  AccessoryData,
   clientData,
-  contactPersonData,
-  gpsDeviceData,
-  peripheralData,
-  serverData,
-  simCardData,
+  ContactPersonData,
+  GPSDeviceData,
+  HistoryData,
+  PeripheralData,
+  ServerData,
+  SimCardData,
   vehicleData,
 } from "./components/ViewDetailData";
 import PermissionGate from "../../components/middleware/PermissionGate";
+import { InstallImageGallary } from "./components/InstallImageGallary";
 
 const InstallationDetailPage = () => {
   const theme = useMantineTheme();
   const [menuBtn, setMenuBtn] = useState<string>("client");
   const param = useLocation();
   const navigate = useNavigate();
-  const { data: installedObject, isLoading } = useGetInstalledDetail(
-    param.state.id
-  );
+  const {
+    data: installedObject,
+    isLoading,
+    isFetched,
+  } = useGetInstalledDetail(param.state.id);
   console.log(param.state.id, installedObject);
 
   const handleMenuBtn = (name: string) => {
     setMenuBtn(name);
   };
 
-  if (isLoading) {
+  if (isLoading || !isFetched || installedObject?.items == undefined) {
     return <PageLoading />;
   }
 
   return (
     <Box style={{ display: "flex", gap: "30px" }} p="30px">
       {!isLoading && (
-        <Paper shadow="sm" style={{ width: "31%" }}>
+        <Paper shadow="sm" style={{ width: "30%" }}>
           <Flex
             p="lg"
             pb={0}
@@ -157,7 +163,7 @@ const InstallationDetailPage = () => {
               }}
             >
               <IconGitCompare size={20} className="textIcon" />
-              <Text className="text">Peripheral</Text>
+              <Text className="text">Peripherals</Text>
             </Group>
 
             <Group
@@ -172,7 +178,7 @@ const InstallationDetailPage = () => {
               }}
             >
               <IconPaperclip size={20} className="textIcon" />
-              <Text className="text">Accessory</Text>
+              <Text className="text">Accessories</Text>
             </Group>
 
             <Group
@@ -188,6 +194,36 @@ const InstallationDetailPage = () => {
             >
               <IconServer2 size={20} className="textIcon" />
               <Text className="text">Server</Text>
+            </Group>
+
+            <Group
+              onClick={() => handleMenuBtn("installImageInfo")}
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${
+                menuBtn === "installImageInfo" ? "active" : ""
+              }`}
+              style={{
+                borderBottom: "1px solid #dddddd",
+              }}
+            >
+              <IconPhoto size={20} className="textIcon" />
+              <Text className="text">Photos</Text>
+            </Group>
+
+            <Group
+              onClick={() => handleMenuBtn("historyInfo")}
+              p={"xs"}
+              gap={0}
+              className={`menu-item ${
+                menuBtn === "historyInfo" ? "active" : ""
+              }`}
+              style={{
+                borderBottom: "1px solid #dddddd",
+              }}
+            >
+              <IconHistory size={20} className="textIcon" />
+              <Text className="text">History</Text>
             </Group>
 
             <PermissionGate
@@ -220,47 +256,66 @@ const InstallationDetailPage = () => {
         <ViewDetail
           title={"View Client"}
           data={clientData(installedObject?.items.client)}
+          Icon={IconAddressBook}
         />
       ) : menuBtn == "contactPerson" ? (
         <ViewDetail
           isList={true}
           title="View Contact Person"
-          data={contactPersonData(installedObject?.items.client.contact_person)}
-        />
+          Icon={IconUsersGroup}
+        >
+          <ContactPersonData
+            data={installedObject?.items.client.contact_person}
+          />
+        </ViewDetail>
       ) : menuBtn == "vehicleInfo" ? (
         <ViewDetail
           title={"View Vehicle Information"}
           data={vehicleData(installedObject?.items)}
+          Icon={IconTruckFilled}
         />
       ) : menuBtn == "gpsInfo" ? (
-        <ViewDetail
-          isList={true}
-          title={"View GPS Device"}
-          data={gpsDeviceData(installedObject?.items.device[0])}
-        />
+        <ViewDetail isList={true} title={"View GPS Device"} Icon={IconRouter}>
+          <GPSDeviceData data={installedObject?.items.device[0]} />
+        </ViewDetail>
       ) : menuBtn == "simInfo" ? (
         <ViewDetail
           isList={true}
           title={"View SIM Card Information"}
-          data={simCardData(installedObject?.items.device[0].simcard)}
-        />
+          Icon={IconDeviceSim}
+        >
+          <SimCardData gpsDeviceId={installedObject?.items.device[0].id} />
+        </ViewDetail>
       ) : menuBtn == "peripheralInfo" ? (
         <ViewDetail
           isList={true}
           title={"View Peropheral Information"}
-          data={peripheralData(installedObject?.items.device[0].peripheral)}
-        />
+          Icon={IconGitCompare}
+        >
+          <PeripheralData gpsDeviceId={installedObject?.items.device[0].id} />
+        </ViewDetail>
       ) : menuBtn == "accessoryInfo" ? (
         <ViewDetail
           isList={true}
           title={"View Accessory Information"}
-          data={accessoryData(installedObject?.items.device[0].accessory)}
-        />
-      ) : (
+          Icon={IconPaperclip}
+        >
+          <AccessoryData gpsDeviceId={installedObject?.items.device[0].id} />
+        </ViewDetail>
+      ) : menuBtn == "serverInfo" ? (
         <ViewDetail
+          isList={true}
           title={"View Server Information"}
-          data={serverData(installedObject?.items.device[0].server[0])}
-        />
+          Icon={IconServer2}
+        >
+          <ServerData data={installedObject?.items.device[0].server[0]} />
+        </ViewDetail>
+      ) : menuBtn == "installImageInfo" ? (
+        <InstallImageGallary data={installedObject?.items?.install_image} />
+      ) : (
+        <ViewDetail isList={true} title={"History"} Icon={IconHistory}>
+          <HistoryData gpsDeviceId={installedObject?.items.device[0].id} />
+        </ViewDetail>
       )}
     </Box>
   );

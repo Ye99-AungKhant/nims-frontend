@@ -93,6 +93,7 @@ export interface FormValues {
   accessory: Accessory[];
   server: Server;
   installationEngineer: InstallationEngineer[];
+  installImage?: any[];
 }
 
 export interface PermissionType {

@@ -6,8 +6,7 @@ export const useCreateInstallationEngineer = () => {
   return useMutation({
     mutationFn: async (params: any) => {
       try {
-        const data = { name: params };
-        return await createInstallationEngineer(data);
+        return await createInstallationEngineer(params);
       } catch (error) {
         console.log("create install engineer error", error);
       }

@@ -43,12 +43,15 @@ export const InstallationEngineerSchema = z
 
 export const VehicleSchema = z.object({
   client: z.string().min(1, { message: "Client is required" }),
-  vehicleType: z.string().min(1, { message: "Vehicle type is required" }),
-  vehicleBrand: z.string().min(1, { message: "Vehicle brand is required" }),
-  vehicleModel: z.string().min(1, { message: "Vehicle model is required" }),
-  vehicleYear: z.string().min(1, { message: "Vehicle year is required" }),
+  vehicleType: z.string().nullable().optional(),
+  vehicleBrand: z.string().nullable().optional(),
+  vehicleModel: z.string().nullable().optional(),
+  vehicleYear: z.coerce
+    .number({ message: "Please enter number" })
+    .nullable()
+    .optional(),
   vehiclePlateNo: z.string().min(1, { message: "Plate No. is required" }),
-  vehicleOdometer: z.string().min(1, { message: "Odometer is required" }),
+  vehicleOdometer: z.string().nullable().optional(),
 });
 
 export const GpsSchema = z.object({
@@ -76,4 +79,14 @@ export const PeripheralSchema = z.object({
       })
     )
     .optional(),
+});
+
+export const renewalformSchema = z.object({
+  id: z.any(), // or z.string() / z.number() depending on your actual type
+  renewalDate: z.date(),
+  expireDate: z.date({ message: "Expire data is required" }),
+  subscriptionPlan: z.string().nonempty("Subscription plan is required"),
+  type: z.string().nonempty("Type is required"),
+  domain: z.string().nonempty("Domain is required"),
+  invoiceNo: z.string().nonempty("Invoice number is required"),
 });

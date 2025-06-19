@@ -7,14 +7,15 @@ interface Props {
   opened: boolean;
   onClose: () => void;
   title: string;
-  mutationFn: UseMutateFunction<
+  mutationFn?: UseMutateFunction<
     AxiosResponse<any, any> | undefined,
     Error,
-    number | string,
+    number | string | any,
     unknown
   >;
+  onDelete?: () => void;
   isloading: boolean;
-  id: number | string;
+  id: number;
 }
 
 const DeleteConfirmModal = ({
@@ -22,18 +23,24 @@ const DeleteConfirmModal = ({
   onClose,
   title,
   mutationFn,
+  onDelete,
   isloading,
   id,
 }: Props) => {
   const navigate = useNavigate();
   const handleDelete = () => {
     // setIsDeleting(true);
-    mutationFn(id, {
-      onSuccess: () => {
-        onClose();
-        title === "Role" && navigate("/role");
-      },
-    });
+    if (mutationFn) {
+      mutationFn(id, {
+        onSuccess: () => {
+          onClose();
+          title === "Role" && navigate("/role");
+        },
+      });
+    } else if (onDelete) {
+      onDelete();
+    }
+
     // setDeleteItem(0);
   };
 

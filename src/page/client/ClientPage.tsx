@@ -10,7 +10,7 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useGetClientsWithContact } from "./hooks/useGetClientWithContact";
 import {

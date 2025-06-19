@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   Box,
   Button,
   Divider,
@@ -11,13 +10,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  IconCloudDown,
-  IconEye,
-  IconPlus,
-  IconUserCog,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconPlus, IconUserShield } from "@tabler/icons-react";
 import { PageSizeSelect } from "../../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../../components/common/SearchInput";
 import { useNavigate } from "react-router-dom";
@@ -62,7 +55,7 @@ const RolePage = () => {
           <Box style={{ borderBottom: "1px solid #dddddd" }}>
             <Flex justify={"space-between"} py="md" px={30}>
               <Group gap={0}>
-                <IconUserCog size={24} />
+                <IconUserShield size={24} />
                 <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
                   Roles
                 </Text>
