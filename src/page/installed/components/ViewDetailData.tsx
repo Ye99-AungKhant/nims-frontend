@@ -34,6 +34,7 @@ import SimCardInfoForm from "./SimCardInfoForm";
 import { useUpdateSimCardReplacement } from "../../../hooks/repairReplacement/useUpdateSimCardReplacement";
 import AccessoryInfoForm from "./AccessoryInfoForm";
 import { useUpdateAccessoryReplacement } from "../../../hooks/repairReplacement/useUpdateAccessoryReplacement";
+import { useGetVehicleActivity } from "../../../hooks/useGetVehicleActivity";
 
 export const clientData = (data: any) => [
   { label: "Company", field: data.name },
@@ -48,8 +49,6 @@ export const clientData = (data: any) => [
 ];
 
 export const ContactPersonData = ({ data }: any) => {
-  console.log("ContactPersonData", data);
-
   return (
     <Table striped highlightOnHover withRowBorders>
       <Table.Thead h={50}>
@@ -86,22 +85,102 @@ export const ContactPersonData = ({ data }: any) => {
   );
 };
 
-export const vehicleData = (data: any) => [
-  { label: "Type", field: data?.type?.name },
-  { label: "Brand", field: data?.brand?.name },
-  { label: "Model", field: data?.model?.name },
-  { label: "Year", field: data?.year },
-  { label: "Plate No.", field: data.plate_number },
-  { label: "Odometer/Engine Hour", field: data?.odometer },
-];
+export const VehicleData = ({ vehicleId }: any) => {
+  const { data: vehicleActivity, isLoading } = useGetVehicleActivity(vehicleId);
 
-// export const gpsDeviceData = (data: any) => [
-//   { label: "Brand", field: data.brand.name },
-//   { label: "Model", field: data.brand.model[0].name },
-//   { label: "IMEI/UID", field: data.imei },
-//   { label: "Serial No.", field: data.serial_no },
-//   { label: "Warranty", field: data.warranty_plan.name },
-// ];
+  return (
+    <>
+      <Table.ScrollContainer minWidth={500}>
+        <Table striped highlightOnHover withRowBorders mb={"md"}>
+          <Table.Thead h={50}>
+            <Table.Tr>
+              <Table.Th style={{ color: "#474747" }}>Type</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Brand</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Model</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Year</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Plate No.</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Odometer</Table.Th>
+              <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+                Change Date
+              </Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Reason</Table.Th>
+              <Table.Th style={{ color: "#474747" }}>Status</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {!isLoading ? (
+              vehicleActivity?.data?.map((item: any, index: number) => (
+                <Table.Tr key={index}>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.type?.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.brand?.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.model?.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>{item.year}</Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.plate_number}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.odometer ?? "---"}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.changed_date
+                      ? dayjs(item.changed_date).format("DD-MM-YYYY")
+                      : "---"}
+                  </Table.Td>
+                  <Table.Td
+                    style={{
+                      color: "#474747",
+                    }}
+                    maw={300}
+                  >
+                    <Tooltip
+                      label={item.reason}
+                      maw={400}
+                      position="top-start"
+                      withArrow
+                      multiline
+                      arrowOffset={30}
+                      arrowSize={6}
+                    >
+                      <Text truncate="end">{item.reason ?? "---"}</Text>
+                    </Tooltip>
+                  </Table.Td>
+                  <Table.Td>
+                    <span
+                      style={{
+                        backgroundColor: `${
+                          item?.changed_date ? "#474747" : "#239e57"
+                        }`,
+                        color: "white",
+                        padding: "3px 5px",
+                        borderRadius: 20,
+                      }}
+                    >
+                      {item?.changed_date ? "Changed" : "Active"}
+                    </span>
+                  </Table.Td>
+                </Table.Tr>
+              ))
+            ) : (
+              <Table.Tr>
+                <Table.Td colSpan={9}>
+                  <Center py={"md"}>
+                    <Text color="dimmed">NO DATA FOUND!!!</Text>
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+    </>
+  );
+};
 
 export const GPSDeviceData = ({ data }: any) => {
   const { data: gpsReplacementHistory, isLoading } =
@@ -206,6 +285,39 @@ export const GPSDeviceData = ({ data }: any) => {
                     </span>
                   </Table.Td>
                 </Table.Tr>
+                {gspList.extra_gps_device.length > 0 &&
+                  gspList.extra_gps_device.map((extraGps: any) => (
+                    <Table.Tr>
+                      <Table.Td style={{ color: "#474747" }}>
+                        {extraGps.brand.name}
+                      </Table.Td>
+                      <Table.Td style={{ color: "#474747" }}>
+                        {extraGps.model.name}
+                      </Table.Td>
+                      <Table.Td style={{ color: "#474747" }}>
+                        {extraGps.imei}
+                      </Table.Td>
+                      <Table.Td style={{ color: "#474747" }}>
+                        {extraGps.serial_no}
+                      </Table.Td>
+                      <Table.Td style={{ color: "#474747" }}>
+                        {extraGps.warranty_plan.name}
+                      </Table.Td>
+                      <Table.Td>
+                        <span
+                          style={{
+                            backgroundColor: "#474747",
+                            color: "white",
+                            padding: "3px 5px",
+                            borderRadius: 20,
+                          }}
+                        >
+                          Extra
+                        </span>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+
                 {gspList.replacements.length != 0 &&
                   gspList.replacements.map(
                     (replacedList: any) =>
@@ -663,7 +775,8 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
                   </Table.Td>
 
                   <Table.Td style={{ color: "#474747" }}>
-                    {dayjs(item?.replacement_date).format("DD-MM-YYYY")}
+                    {item?.replacement_date &&
+                      dayjs(item?.replacement_date).format("DD-MM-YYYY")}
                   </Table.Td>
                   <Table.Td
                     style={{
@@ -793,8 +906,9 @@ export const ServerData = ({ data }: any) => {
         </Table.Thead>
         <Table.Tbody>
           {data ? (
-            data.server_activity.length > 0 ? (
-              data.server_activity.map((item: any) => (
+            <>
+              {/* List of server_activity rows */}
+              {data.server_activity?.map((item: any) => (
                 <Table.Tr key={item.id}>
                   <Table.Td style={{ color: "#474747" }}>
                     {item.type.name}
@@ -811,13 +925,12 @@ export const ServerData = ({ data }: any) => {
                   <Table.Td style={{ color: "#474747" }}>
                     <span
                       style={{
-                        backgroundColor: `${
+                        backgroundColor:
                           item.status === "Active"
                             ? "#239e57"
                             : item.status === "ExpireSoon"
                             ? "#cea836"
-                            : "#EC1F24"
-                        } `,
+                            : "#EC1F24",
                         color: "white",
                         padding: "1px 5px",
                         borderRadius: 20,
@@ -843,7 +956,7 @@ export const ServerData = ({ data }: any) => {
                         {dayjs(item.renewal_date).format("DD-MM-YYYY")}
                       </span>
                     ) : (
-                      <Text ta={"center"}>---</Text>
+                      <Text ta="center">---</Text>
                     )}
                   </Table.Td>
                   <Table.Td>
@@ -863,8 +976,9 @@ export const ServerData = ({ data }: any) => {
                     {item.warranty_plan.name}
                   </Table.Td>
                 </Table.Tr>
-              ))
-            ) : (
+              ))}
+
+              {/* Single fallback row (summary row or current item) */}
               <Table.Tr>
                 <Table.Td style={{ color: "#474747" }}>
                   {data.type.name}
@@ -881,13 +995,12 @@ export const ServerData = ({ data }: any) => {
                 <Table.Td style={{ color: "#474747" }}>
                   <span
                     style={{
-                      backgroundColor: `${
+                      backgroundColor:
                         data.status === "Active"
                           ? "#239e57"
                           : data.status === "ExpireSoon"
                           ? "#cea836"
-                          : "#EC1F24"
-                      } `,
+                          : "#EC1F24",
                       color: "white",
                       padding: "1px 5px",
                       borderRadius: 20,
@@ -900,7 +1013,21 @@ export const ServerData = ({ data }: any) => {
                   {dayjs(data.installed_date).format("DD-MM-YYYY")}
                 </Table.Td>
                 <Table.Td>
-                  <Text ta={"center"}>---</Text>
+                  {data.renewal_date ? (
+                    <span
+                      style={{
+                        backgroundColor: "#239e57",
+                        color: "white",
+                        padding: "0px 5px",
+                        borderRadius: 20,
+                        fontSize: 12,
+                      }}
+                    >
+                      {dayjs(data.renewal_date).format("DD-MM-YYYY")}
+                    </span>
+                  ) : (
+                    <Text ta="center">---</Text>
+                  )}
                 </Table.Td>
                 <Table.Td>
                   <span
@@ -919,11 +1046,11 @@ export const ServerData = ({ data }: any) => {
                   {data.warranty_plan.name}
                 </Table.Td>
               </Table.Tr>
-            )
+            </>
           ) : (
             <Table.Tr>
               <Table.Td colSpan={9}>
-                <Center py={"md"}>
+                <Center py="md">
                   <Text color="dimmed">NO DATA FOUND!!!</Text>
                 </Center>
               </Table.Td>

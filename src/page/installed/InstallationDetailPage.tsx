@@ -26,7 +26,7 @@ import {
   PeripheralData,
   ServerData,
   SimCardData,
-  vehicleData,
+  VehicleData,
 } from "./components/ViewDetailData";
 import PermissionGate from "../../components/middleware/PermissionGate";
 import { InstallImageGallary } from "./components/InstallImageGallary";
@@ -270,10 +270,12 @@ const InstallationDetailPage = () => {
         </ViewDetail>
       ) : menuBtn == "vehicleInfo" ? (
         <ViewDetail
+          isList={true}
           title={"View Vehicle Information"}
-          data={vehicleData(installedObject?.items)}
           Icon={IconTruckFilled}
-        />
+        >
+          <VehicleData vehicleId={installedObject?.items.id} />
+        </ViewDetail>
       ) : menuBtn == "gpsInfo" ? (
         <ViewDetail isList={true} title={"View GPS Device"} Icon={IconRouter}>
           <GPSDeviceData data={installedObject?.items.device[0]} />
@@ -289,7 +291,7 @@ const InstallationDetailPage = () => {
       ) : menuBtn == "peripheralInfo" ? (
         <ViewDetail
           isList={true}
-          title={"View Peropheral Information"}
+          title={"View Peripheral Information"}
           Icon={IconGitCompare}
         >
           <PeripheralData gpsDeviceId={installedObject?.items.device[0].id} />

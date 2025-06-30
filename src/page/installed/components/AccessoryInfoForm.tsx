@@ -1,38 +1,25 @@
 import {
   ActionIcon,
-  Button,
-  Flex,
-  Grid,
-  Group,
   MultiSelect,
-  Select,
-  Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
 import { FormValues } from "../../../utils/types";
 import {
+  IconCalendarWeek,
   IconChevronDown,
   IconDeviceSim,
   IconPhoneFilled,
-  IconPlus,
-  IconSquareLetterMFilled,
-  IconUser,
 } from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
-import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
-import { useCreateBrand } from "../../../hooks/useCreateBrand";
-import { useGetBrands } from "../../../hooks/useGetBrands";
 import FormTable from "../../../components/common/FormTable";
-import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
-import { useDeleteBrand } from "../../../hooks/useDeleteBrand";
 import { useCreateType } from "../../../hooks/useCreateType";
 import { useUpdateType } from "../../../hooks/useUpdateType";
 import { useDeleteType } from "../../../hooks/useDeleteType";
 import { useGetTypes } from "../../../hooks/useGetTypes";
+import { DateInput } from "@mantine/dates";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -42,12 +29,11 @@ interface VehicleInfoProps {
 interface Operators {
   type_id: string;
   qty: string;
+  installed_date?: Date;
 }
 const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [simMode, setSimMode] = useState<string | null>("Single");
   const { data: accessoryTypeData } = useGetTypes("Accessory");
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
@@ -58,12 +44,18 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
     field: keyof Operators,
     value: any
   ) => {
-    const updatedAccessory = [...form.values.accessory];
-    if (!updatedAccessory[index]) {
-      updatedAccessory[index] = { type_id: "", qty: "" };
+    let updatedAccessory = [...form.values.accessory][index];
+    if (!updatedAccessory) {
+      updatedAccessory = { type_id: "", qty: "" };
     }
-    updatedAccessory[index][field] = value;
-    form.setFieldValue("accessory", updatedAccessory);
+    updatedAccessory[field] = value;
+
+    if (!isRowtable) {
+      form.setFieldValue(`accessory.${index}`, updatedAccessory);
+    } else {
+      let replaecementAccessory = { is_replacement: true, ...updatedAccessory };
+      form.setFieldValue(`accessory.${index}`, replaecementAccessory);
+    }
   };
 
   // console.log("clientData", form.values);
@@ -161,12 +153,24 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
           type="number"
           leftSection={<IconPhoneFilled size={18} />}
           // value={form.values.accessory[index].qty}
-          // onChange={(e) =>
-          //   handleAccessoryQtyChange(index, "qty", e.target.value)
-          // }
+          {...form.getInputProps(`accessory.${index}.qty`)}
+          onChange={(e) =>
+            handleAccessoryQtyChange(index, "qty", e.target.value)
+          }
           // error={form.errors[`accessory.${index}.qty`]}
           // {...form.getInputProps(`accessory.${index}.qty`).onChange}
-          {...form.getInputProps(`accessory.${index}.qty`)}
+        />
+      ),
+    },
+    {
+      label: `${getShortName(index)} Installation Date`,
+      input: (
+        <DateInput
+          leftSection={<IconCalendarWeek size={18} />}
+          {...form.getInputProps(`accessory.${index}.installed_date`)}
+          onChange={(date) =>
+            handleAccessoryQtyChange(index, "installed_date", date)
+          }
         />
       ),
     },

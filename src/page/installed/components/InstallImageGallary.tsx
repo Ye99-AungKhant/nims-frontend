@@ -18,6 +18,7 @@ interface Props {
     installed: any[];
     replacement: any[];
     repair: any[];
+    vehicleChange: any[];
   };
 }
 
@@ -56,6 +57,8 @@ const renderPhotoGroup = (title: string, photos: any[]) => {
 };
 
 export const InstallImageGallary = ({ data }: Props) => {
+  console.log(data);
+
   useEffect(() => {
     Fancybox.bind("[data-fancybox]", {
       Toolbar: {
@@ -89,6 +92,7 @@ export const InstallImageGallary = ({ data }: Props) => {
         {renderPhotoGroup("Installed Photos", data.installed)}
         {renderPhotoGroup("Replacement Photos", data.replacement)}
         {renderPhotoGroup("Repair Photos", data.repair)}
+        {renderPhotoGroup("Vehicle Changed Photos", data.vehicleChange)}
       </Box>
     </Paper>
   );

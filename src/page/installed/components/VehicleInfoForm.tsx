@@ -83,7 +83,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
 
   const rows = [
     {
-      label: "Company Name *",
+      label: `${isRowtable ? "" : "Company Name *"}`,
       input: (
         <Select
           searchable
@@ -122,6 +122,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          display={isRowtable ? "none" : "block"}
         />
       ),
     },

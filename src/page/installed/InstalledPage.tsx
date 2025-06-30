@@ -52,15 +52,18 @@ export const InstalledPage = () => {
   const [openedRepair, { open: openRepair, close: closeRepair }] =
     useDisclosure(false);
   const [renewalData, SetRenewalData] = useState();
-  const [repairId, setRepairId] = useState<number>();
+  const [repairId, setRepairId] = useState({
+    id: 0,
+    serverId: 0,
+  });
 
   const handleRenewalModelOpen = (serverData: any) => {
     SetRenewalData(serverData);
     openRenewal();
   };
 
-  const handleRepairReplacementModelOpen = (id: number) => {
-    setRepairId(id);
+  const handleRepairReplacementModelOpen = (id: number, serverId: number) => {
+    setRepairId({ id, serverId });
     openRepair();
   };
 
@@ -230,7 +233,10 @@ export const InstalledPage = () => {
                       )}
                       <Menu.Item
                         onClick={() =>
-                          handleRepairReplacementModelOpen(row.original.id)
+                          handleRepairReplacementModelOpen(
+                            row.original.id,
+                            row.original.server_id
+                          )
                         }
                         color={"orange"}
                       >
@@ -262,7 +268,7 @@ export const InstalledPage = () => {
               onClick={handleOnSubmit}
               title={"Confirm Renewal Object"}
               description={"Are you sure you want to renew this object?"}
-              id={repairId}
+              ids={repairId}
               isloading={false}
             />
           )}

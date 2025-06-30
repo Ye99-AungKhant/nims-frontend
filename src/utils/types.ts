@@ -49,12 +49,14 @@ export interface Peripheral {
   sensor_type_id: string;
   qty: string;
   detail: PeripheralDetail[];
+  installed_date?: Date;
 }
 
 interface Accessory {
   id?: number;
   type_id: string;
   qty: string;
+  installed_date?: Date;
 }
 
 interface Server {
@@ -88,6 +90,7 @@ export interface FormValues {
   imei: string;
   gpsSerial: string;
   warranty: string;
+  extraGPS?: any[];
   operators: Operator[];
   peripheral: Peripheral[];
   accessory: Accessory[];

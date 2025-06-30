@@ -1,4 +1,3 @@
-import { useGetInstalled } from "../installed/hooks/useGetInstalled";
 import useUserStore from "../../store/useUserStore";
 
 import {
@@ -24,14 +23,23 @@ import {
   IconDownload,
   IconCircleFilled,
   IconChevronDown,
+  IconRouter,
+  IconGitCompare,
+  IconPaperclip,
+  IconDeviceSim,
 } from "@tabler/icons-react";
-import { BarChart, DonutChart } from "@mantine/charts";
+import { BarChart, DonutChart, PieChart } from "@mantine/charts";
 import { useGetDashboardData } from "./hooks/useGetDashboardData";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { YearPickerInput } from "@mantine/dates";
 import { useParamsHelper } from "../../hooks/useParamsHelper";
+import AccessoryModal from "./components/AccessoryModal";
+import { useDisclosure } from "@mantine/hooks";
+import SimcardModal from "./components/SimcardModal";
+import GPSModal from "./components/GPSModal";
+import PeripheralModal from "./components/PeripheralModal";
 
 export const DashboardPage = () => {
   // const { data } = useGetInstalled(true);
@@ -39,9 +47,24 @@ export const DashboardPage = () => {
   const theme = useMantineTheme();
   const { setParams, getParam } = useParamsHelper();
   const { data: DashboardData, isLoading } = useGetDashboardData();
-  const [barCharData, setBarChartData] = useState<any[]>([]);
+  const [barChartData, setBarChartData] = useState<any[]>([]);
+  const [serverChartData, setServerChartData] = useState<any[]>([]);
   const navigate = useNavigate();
   const currentYear = getParam("year");
+  const [
+    openedAccessoryModal,
+    { open: openAccessoryModal, close: closeAccessoryModal },
+  ] = useDisclosure(false);
+  const [
+    openedSimcardModal,
+    { open: openSimcardModal, close: closeSimcardModal },
+  ] = useDisclosure(false);
+  const [openedGPSModal, { open: openGPSModal, close: closeGPSModal }] =
+    useDisclosure(false);
+  const [
+    openedPeripheralModal,
+    { open: openPeripheralModal, close: closePeripheralModal },
+  ] = useDisclosure(false);
 
   const summaryData = [
     {
@@ -79,16 +102,43 @@ export const DashboardPage = () => {
       color: theme.colors.purple[1],
       url: "/client",
     },
+    {
+      icon: IconPaperclip,
+      label: "Total Accessories",
+      value: DashboardData?.accessoryCount,
+      color: theme.colors.purple[1],
+      url: "",
+      onClick: openAccessoryModal,
+    },
+    {
+      icon: IconDeviceSim,
+      label: "Total SIM Cards",
+      value: DashboardData?.simCardCount,
+      color: theme.colors.purple[1],
+      url: "",
+      onClick: openSimcardModal,
+    },
   ];
+
+  const colors = [
+    theme.colors.purple[1],
+    theme.colors.warning[6],
+    theme.colors.success[6],
+    theme.colors.grape[6],
+  ];
+
+  // Prepare chart data
 
   const generateDefaultMonths = (year: string) => {
     return Array.from({ length: 12 }, (_, i) => {
       const date = dayjs(`${year}-${i + 1}-01`);
       return {
         month: date.format("MMM YYYY"),
-        InstallObject: 0,
-        ExpiredObject: 0,
-        RenewalObject: 0,
+        Installed: 0,
+        Expired: 0,
+        Renewal: 0,
+        Repair: 0,
+        Replacement: 0,
       };
     });
   };
@@ -105,6 +155,15 @@ export const DashboardPage = () => {
       return match ? match : monthData;
     });
     setBarChartData(merged);
+
+    const donutChartData = DashboardData?.usedServer.map(
+      (server: any, index: number) => ({
+        name: server.domain_name,
+        value: server.count,
+        color: colors[index % colors.length], // Cycle through colors
+      })
+    );
+    setServerChartData(donutChartData);
   }, [isLoading, currentYear]);
 
   return (
@@ -115,7 +174,7 @@ export const DashboardPage = () => {
             <Grid.Col
               span={{ base: 6, md: 3 }}
               key={index}
-              onClick={() => navigate(item.url)}
+              onClick={() => (item.url ? navigate(item.url) : item.onClick?.())}
               style={{ cursor: "pointer" }}
             >
               <Card radius="md" shadow="sm">
@@ -140,6 +199,75 @@ export const DashboardPage = () => {
               </Card>
             </Grid.Col>
           ))}
+          <Grid.Col
+            span={{ base: 6, md: 3 }}
+            style={{ cursor: "pointer" }}
+            onClick={openGPSModal}
+          >
+            <Card radius="md" shadow="sm">
+              <Group>
+                <ThemeIcon size="lg" radius="md" variant="light">
+                  <IconRouter />
+                </ThemeIcon>
+
+                <div>
+                  <Text size="lg" fw={700}>
+                    {DashboardData?.gpsBrandCount}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    GPS Brand
+                  </Text>
+                </div>
+                <div>
+                  <Text size="lg" fw={700}>
+                    {DashboardData?.gpsModelCount}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Model
+                  </Text>
+                </div>
+              </Group>
+            </Card>
+          </Grid.Col>
+
+          <Grid.Col
+            span={{ base: 6, md: 4 }}
+            style={{ cursor: "pointer" }}
+            onClick={openPeripheralModal}
+          >
+            <Card radius="md" shadow="sm">
+              <Group>
+                <ThemeIcon size="lg" radius="md" variant="light">
+                  <IconGitCompare />
+                </ThemeIcon>
+
+                <div>
+                  <Text size="lg" fw={700}>
+                    {DashboardData?.peripheralCount?.type ?? 0}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Peripheral Type
+                  </Text>
+                </div>
+                <div>
+                  <Text size="lg" fw={700}>
+                    {DashboardData?.peripheralCount?.brand ?? 0}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Brand
+                  </Text>
+                </div>
+                <div>
+                  <Text size="lg" fw={700}>
+                    {DashboardData?.peripheralCount?.model ?? 0}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Model
+                  </Text>
+                </div>
+              </Group>
+            </Card>
+          </Grid.Col>
         </Grid>
 
         <Grid>
@@ -147,32 +275,26 @@ export const DashboardPage = () => {
             <Card withBorder radius="md">
               <Flex direction={"column"} align={"center"} gap={"lg"}>
                 <Text size="xl" fw={"bold"}>
-                  Something Data
+                  Installed objects by server
                 </Text>
-                <RingProgress
+                <DonutChart
                   size={120}
-                  thickness={12}
-                  label={<Text ta="center">28%</Text>}
-                  sections={[
-                    { value: 28, color: theme.colors.success[6] },
-                    { value: 72, color: theme.colors.warning[6] },
-                  ]}
+                  thickness={20}
+                  labelsType="value"
+                  withLabels
+                  data={serverChartData || []}
                 />
               </Flex>
-              <Group justify="center" mt={90} gap="xs">
-                <Group gap={5}>
-                  <IconCircleFilled size={16} color={theme.colors.success[6]} />
-                  <Text size="sm" c={theme.colors.success[6]}>
-                    Active
-                  </Text>
-                </Group>
-
-                <Group gap={5}>
-                  <IconCircleFilled size={16} color={theme.colors.warning[6]} />
-                  <Text size="sm" c={theme.colors.warning[6]}>
-                    ExpireSoon
-                  </Text>
-                </Group>
+              <Group justify="center" mt="sm" gap="xs">
+                {serverChartData &&
+                  serverChartData?.map((item: any, index: number) => (
+                    <Group key={index} gap={5}>
+                      <IconCircleFilled size={16} color={item.color} />
+                      <Text size="sm" c={item.color}>
+                        {item.name}
+                      </Text>
+                    </Group>
+                  ))}
               </Group>
             </Card>
           </Grid.Col>
@@ -261,21 +383,33 @@ export const DashboardPage = () => {
               </Group>
               <BarChart
                 h={250}
-                data={barCharData}
+                data={barChartData}
                 dataKey="month"
                 withLegend
                 legendProps={{ verticalAlign: "bottom" }}
                 barProps={{ radius: [10, 10, 0, 0], barSize: 8 }}
                 series={[
-                  { name: "InstallObject", color: theme.colors.purple[1] },
-                  { name: "ExpiredObject", color: theme.colors.error[6] },
-                  { name: "RenewalObject", color: theme.colors.success[6] },
+                  { name: "Installed", color: theme.colors.purple[1] },
+                  { name: "Expired", color: theme.colors.error[6] },
+                  { name: "Renewal", color: theme.colors.success[6] },
+                  { name: "Repair", color: theme.colors.grape[6] },
+                  { name: "Replacement", color: theme.colors.orange[6] },
                 ]}
               />
             </Paper>
           </Grid.Col>
         </Grid>
       </Stack>
+      <AccessoryModal
+        opened={openedAccessoryModal}
+        onClose={closeAccessoryModal}
+      />
+      <SimcardModal opened={openedSimcardModal} onClose={closeSimcardModal} />
+      <GPSModal opened={openedGPSModal} onClose={closeGPSModal} />
+      <PeripheralModal
+        opened={openedPeripheralModal}
+        onClose={closePeripheralModal}
+      />
     </Box>
   );
 };

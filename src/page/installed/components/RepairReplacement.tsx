@@ -33,6 +33,7 @@ import useUserStore from "../../../store/useUserStore";
 import { useReplacement } from "../../../hooks/repairReplacement/useReplacement";
 import { useCreateRepair } from "../../../hooks/repairReplacement/useCreateRepair";
 import VehicleInfoForm from "./VehicleInfoForm";
+import { useVehicleChange } from "../../../hooks/repairReplacement/useVehicleChange";
 
 interface Props {
   opened: boolean;
@@ -41,7 +42,7 @@ interface Props {
   title: string;
   description: string;
   isloading: boolean;
-  id: any;
+  ids: { id: number; serverId: number };
 }
 
 const RepairReplacement = ({
@@ -51,11 +52,11 @@ const RepairReplacement = ({
   title,
   description,
   isloading,
-  id,
+  ids,
 }: Props) => {
   const param = useLocation();
   const { user } = useUserStore();
-  const { data: installedObject, isLoading } = useGetInstalledDetail(id);
+  const { data: installedObject, isLoading } = useGetInstalledDetail(ids.id);
   const theme = useMantineTheme();
   const [openedInstallEng, { open: openInstallEng, close: closeInstallEng }] =
     useDisclosure(false);
@@ -72,6 +73,9 @@ const RepairReplacement = ({
   const { mutate, isPending } = useReplacement();
   const { mutate: RepairMutate, isPending: isRepaiLoading } = useCreateRepair();
 
+  const { mutate: vehicleChangeMutate, isPending: isVehicleChangeLoading } =
+    useVehicleChange();
+
   const form = useForm<any>({
     initialValues: {
       gpsBrand: "",
@@ -86,6 +90,7 @@ const RepairReplacement = ({
       operators: [{ operator: "", phone_no: "" }],
       peripheral: [
         {
+          is_replacement: false,
           sensor_type_id: "",
           qty: "",
           detail: [
@@ -98,7 +103,8 @@ const RepairReplacement = ({
           ],
         },
       ],
-      accessory: [{ type_id: "", qty: "" }],
+      accessory: [{ is_replacement: false, type_id: "", qty: "" }],
+      installationEngineer: [],
       installImage: [],
       user_false: "",
     },
@@ -106,13 +112,16 @@ const RepairReplacement = ({
 
   const vehicleForm = useForm<any>({
     initialValues: {
-      id: "",
       vehicleType: "",
       vehicleBrand: "",
       vehicleModel: "",
       vehicleYear: "",
       vehiclePlateNo: "",
       vehicleOdometer: "",
+      changeDate: "",
+      reason: "",
+      installationEngineer: [],
+      installImage: [],
     },
   });
 
@@ -158,8 +167,29 @@ const RepairReplacement = ({
     }
   };
 
+  const handleVehicleChangeSubmit = () => {
+    const data = installedObject?.items;
+    const vehicleData = {
+      id: data?.id,
+      serverId: ids.serverId,
+      ...vehicleForm.values,
+    };
+
+    const formData = new FormData();
+    vehicleForm.values.installImage?.forEach((imgFile: any) => {
+      if (imgFile.file) {
+        formData.append("installImage", imgFile.file, imgFile.file.name);
+      }
+    });
+    formData.append("data", JSON.stringify(vehicleData));
+
+    vehicleChangeMutate(formData, {
+      onSuccess: () => onClose(),
+    });
+  };
+
   useEffect(() => {
-    if (id && installedObject) {
+    if (ids && installedObject) {
       const data = installedObject.items;
       const transformedPeripheral = data?.device[0]?.peripheral?.map(
         (p: any) => ({
@@ -207,7 +237,21 @@ const RepairReplacement = ({
         installationEngineer: transformedInstallEng,
       });
     }
-  }, [id, installedObject]);
+  }, [ids, installedObject]);
+
+  const handleInstallionEngChange = (selectedEng: string[]) => {
+    const updatedEng = selectedEng.map((user_id, index) => ({
+      user_id,
+    }));
+
+    console.log("updatedEng", updatedEng);
+
+    if (selectedRepairType !== "VehicleChange") {
+      form.setFieldValue("installationEngineer", updatedEng);
+    } else {
+      vehicleForm.setFieldValue("installationEngineer", updatedEng);
+    }
+  };
 
   return (
     <>
@@ -255,7 +299,7 @@ const RepairReplacement = ({
           <Box p={"lg"}>
             <DateInput
               leftSection={<IconCalendarWeek size={18} />}
-              label="Replacement Date"
+              label={`${selectedRepairType} Date`}
               withAsterisk
               {...form.getInputProps("repair_replacement_date")}
             />
@@ -274,6 +318,10 @@ const RepairReplacement = ({
                   label: data.name,
                 })) || []
               }
+              value={form.values.installationEngineer
+                .map((eng: any) => eng.user_id)
+                .filter((eng: any) => eng !== "")}
+              onChange={(value) => handleInstallionEngChange(value)}
               rightSectionPointerEvents="all"
               rightSectionWidth={90}
               rightSection={
@@ -381,7 +429,7 @@ const RepairReplacement = ({
               </>
             )}
             <TextInput
-              label="Repair Reason"
+              label={`${selectedRepairType} Reason`}
               withAsterisk
               {...form.getInputProps("reason")}
             />
@@ -393,22 +441,92 @@ const RepairReplacement = ({
           </Box>
         ) : (
           <Box p={"lg"}>
-            <VehicleInfoForm form={vehicleForm} isRowtable />
+            <DateInput
+              leftSection={<IconCalendarWeek size={18} />}
+              label="Changed Date"
+              withAsterisk
+              {...vehicleForm.getInputProps("changeDate")}
+            />
+
+            <MultiSelect
+              py={"sm"}
+              label="Engineer"
+              withAsterisk
+              searchable
+              comboboxProps={{
+                offset: 0,
+              }}
+              data={
+                installationEngineerData?.data?.data?.map((data: any) => ({
+                  value: String(data.id),
+                  label: data.name,
+                })) || []
+              }
+              value={vehicleForm.values.installationEngineer
+                .map((eng: any) => eng.user_id)
+                .filter((eng: any) => eng !== "")}
+              onChange={(value) => handleInstallionEngChange(value)}
+              rightSectionPointerEvents="all"
+              rightSectionWidth={90}
+              rightSection={
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <IconChevronDown size={16} style={{ marginRight: 20 }} />
+                  <ActionIcon
+                    color={theme.colors.purple[1]}
+                    style={{
+                      height: 42,
+                      width: 60,
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                      fontSize: " var(--mantine-font-size-sm)",
+                    }}
+                    fw={500}
+                    onClick={openInstallEng}
+                  >
+                    Add
+                  </ActionIcon>
+                </div>
+              }
+            />
+
+            <TextInput
+              label="Reason"
+              withAsterisk
+              {...vehicleForm.getInputProps("reason")}
+            />
+            <Box mt="md">
+              <VehicleInfoForm form={vehicleForm} isRowtable />
+            </Box>
+
+            <ImageDropZone
+              setFieldValue={vehicleForm.setFieldValue}
+              data={vehicleForm.values.installImage}
+              isEditMode={false}
+            />
           </Box>
         )}
 
         <Divider />
         <Group m="md" gap="md" justify="right">
-          <Button radius={"lg"} size="sm" color="gray">
+          <Button radius={"lg"} size="sm" color="gray" onClick={onClose}>
             Close
           </Button>
           <Button
             radius={"lg"}
             size="sm"
-            loading={isPending || isRepaiLoading}
+            loading={isPending || isRepaiLoading || isVehicleChangeLoading}
             type="submit"
             color={theme.colors.purple[1]}
-            onClick={handleSubmit}
+            onClick={
+              selectedRepairType !== "VehicleChange"
+                ? handleSubmit
+                : handleVehicleChangeSubmit
+            }
           >
             Save
           </Button>

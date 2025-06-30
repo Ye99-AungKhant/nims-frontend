@@ -73,11 +73,13 @@ const InstallationCreatePage = () => {
       imei: "",
       gpsSerial: "",
       warranty: "",
+      extraGPS: [],
       operators: [{ operator: "", phone_no: "" }],
       peripheral: [
         {
           sensor_type_id: "",
           qty: "",
+          installed_date: new Date(),
           detail: [
             {
               brand_id: "",
@@ -88,7 +90,7 @@ const InstallationCreatePage = () => {
           ],
         },
       ],
-      accessory: [{ type_id: "", qty: "" }],
+      accessory: [{ type_id: "", qty: "", installed_date: new Date() }],
       server: {
         type_id: "",
         domain: "",

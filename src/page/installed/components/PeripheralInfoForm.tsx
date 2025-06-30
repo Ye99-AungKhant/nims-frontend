@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { FormValues, Peripheral, PeripheralDetail } from "../../../utils/types";
 import {
   IconAlignBoxCenterMiddleFilled,
+  IconCalendarWeek,
   IconChevronDown,
   IconListNumbers,
   IconShieldCheckFilled,
@@ -44,6 +45,7 @@ import { useDeleteModel } from "../../../hooks/useDeleteModel";
 import WarrantyPlan from "../../../components/common/WarrantyPlan";
 import { useGetBrandAll } from "../../../hooks/useGetBrandAll";
 import { useGetModelAll } from "../../../hooks/useGetModelAll";
+import { DateInput } from "@mantine/dates";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -71,8 +73,8 @@ const PeripheralInfoForm = ({
   const { data: typeData } = useGetTypes("Sensor");
   const { data: brandData } = useGetBrands("Sensor", selectedTypeId);
   // const { data: modelData } = useGetModels("Sensor", selectedBrandId);
-  const getAllBrandData = useGetBrandAll(form);
-  const getAllModelData = useGetModelAll(form);
+  const getAllBrandData = useGetBrandAll("Sensor", form);
+  const getAllModelData = useGetModelAll("Sensor", form);
   const { data: warrantyData } = useGetWarrantyPlans();
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
@@ -161,6 +163,7 @@ const PeripheralInfoForm = ({
 
       // Create a new peripheral entry if not existing
       return {
+        is_replacement: true,
         sensor_type_id: typeId,
         qty: "",
         detail: [
@@ -241,6 +244,7 @@ const PeripheralInfoForm = ({
           });
           // Return a new peripheral object with the updated detail array
           return {
+            is_replacement: true,
             ...peri,
             detail: updatedDetail,
           };
@@ -550,6 +554,29 @@ const PeripheralInfoForm = ({
           value={form.values.peripheral[index]?.qty}
           leftSection={<IconListNumbers size={18} />}
           rightSection={<IconChevronDown size={16} />}
+        />
+      ),
+    },
+    {
+      label: `${
+        form.values.peripheral.length > 1
+          ? typeData?.data?.data
+              .find(
+                (typeItem: any) =>
+                  typeItem.id ===
+                  Number(form.values.peripheral[index].sensor_type_id)
+              )
+              ?.name?.split(" ")
+              ?.map((part: any) => part[0])
+              ?.join("")
+              .toUpperCase()
+          : ""
+      } Installation Date`,
+      input: (
+        <DateInput
+          leftSection={<IconCalendarWeek size={18} />}
+          {...form.getInputProps(`peripheral.${index}.installed_date`)}
+          onChange={(date) => handleFieldChange(index, "installed_date", date)}
         />
       ),
     },

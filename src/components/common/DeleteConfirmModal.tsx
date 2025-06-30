@@ -15,7 +15,7 @@ interface Props {
   >;
   onDelete?: () => void;
   isloading: boolean;
-  id: number;
+  id: number  | string;
 }
 
 const DeleteConfirmModal = ({

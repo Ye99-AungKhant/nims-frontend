@@ -37,6 +37,8 @@ import { useCreateWarrantyPlan } from "../../../hooks/useCreateWarrantyPlan";
 import { useUpdateWarrantyPlan } from "./../../../hooks/useUpdateWarrantyPlan";
 import { useDeleteWarrantyPlan } from "../../../hooks/useDeleteWarrantyPlan";
 import WarrantyPlan from "../../../components/common/WarrantyPlan";
+import { useGetBrandAll } from "../../../hooks/useGetBrandAll";
+import { useGetModelAll } from "../../../hooks/useGetModelAll";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
@@ -47,8 +49,11 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
+  // Remove extraGPSCount state, use form.values.extraGPS instead
   const { data: brandData } = useGetBrands("GPS");
   const { data: modelData } = useGetModels("GPS", Number(form.values.gpsBrand));
+
+  const getAllModelData = useGetModelAll("GPS", form);
   const { data: warrantyData } = useGetWarrantyPlans();
 
   const { mutate: createBrand } = useCreateBrand();
@@ -65,6 +70,25 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const handleModal = (name: string) => {
     setModalType(name);
     open();
+  };
+
+  // Add Extra GPS handler
+  const handleAddExtraGPS = () => {
+    const newExtra = {
+      gpsBrand: "",
+      gpsModel: "",
+      imei: "",
+      gpsSerial: "",
+      warranty: "",
+    };
+    form.setFieldValue("extraGPS", [...(form.values.extraGPS || []), newExtra]);
+  };
+
+  // Delete Extra GPS handler
+  const handleDeleteExtraGPS = (index: number) => {
+    const updated = [...(form.values.extraGPS || [])];
+    updated.splice(index, 1);
+    form.setFieldValue("extraGPS", updated);
   };
 
   const rows = [
@@ -223,9 +247,197 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
     },
   ];
 
+  const extraGPSRows = (index: number) => [
+    {
+      label: "Brand *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{
+            offset: 0,
+          }}
+          data={
+            brandData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps(`extraGPS.${index}.gpsBrand`)}
+          leftSection={<IconSquareLetterBFilled size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: " var(--mantine-font-size-sm)",
+                }}
+                fw={500}
+                onClick={() => handleModal("Brand")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "Model *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{
+            offset: 0,
+          }}
+          data={
+            getAllModelData
+              ?.filter(
+                (model: any) =>
+                  model.brand_id ===
+                  Number(form.values?.extraGPS?.[index]?.gpsBrand)
+              )
+              .map((data: any) => ({
+                value: String(data.id),
+                label: data.name,
+                brand_id: String(data.brand_id),
+              })) || []
+          }
+          {...form.getInputProps(`extraGPS.${index}.gpsModel`)}
+          leftSection={<IconSquareLetterMFilled size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: " var(--mantine-font-size-sm)",
+                }}
+                fw={500}
+                onClick={() => handleModal("Model")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      label: "IMEI/UID *",
+      input: (
+        <TextInput
+          leftSection={<IconAlignBoxCenterMiddleFilled size={18} />}
+          {...form.getInputProps(`extraGPS.${index}.imei`)}
+        />
+      ),
+    },
+    {
+      label: "Serial *",
+      input: (
+        <TextInput
+          leftSection={<IconAlignBoxCenterMiddleFilled size={18} />}
+          {...form.getInputProps(`extraGPS.${index}.gpsSerial`)}
+        />
+      ),
+    },
+    {
+      label: "Warranty *",
+      input: (
+        <Select
+          searchable
+          comboboxProps={{
+            offset: 0,
+          }}
+          data={
+            warrantyData?.data.data.map((data: any) => ({
+              value: String(data.id),
+              label: data.name,
+            })) || []
+          }
+          {...form.getInputProps(`extraGPS.${index}.warranty`)}
+          leftSection={<IconShieldCheckFilled size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              <ActionIcon
+                color={theme.colors.purple[1]}
+                style={{
+                  height: 42,
+                  width: 60,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  fontSize: " var(--mantine-font-size-sm)",
+                }}
+                fw={500}
+                onClick={() => handleModal("Warranty")}
+              >
+                Add
+              </ActionIcon>
+            </div>
+          }
+        />
+      ),
+    },
+  ];
+
   return (
     <>
       <FormTable rows={rows} isRowtable={isRowtable} />
+      {(form.values.extraGPS || []).map((_, idx) => (
+        <div key={idx} style={{ position: "relative", marginBottom: 16 }}>
+          <FormTable rows={extraGPSRows(idx)} isRowtable={isRowtable} />
+          <Button
+            color="red"
+            size="xs"
+            variant="light"
+            style={{ position: "absolute", bottom: 0, left: 0, zIndex: 2 }}
+            onClick={() => handleDeleteExtraGPS(idx)}
+          >
+            Delete
+          </Button>
+        </div>
+      ))}
+      <Group my="md">
+        <Button
+          onClick={handleAddExtraGPS}
+          bg={theme.colors.purple[1]}
+          radius={"lg"}
+          size="sm"
+        >
+          Add Extra GPS
+        </Button>
+      </Group>
+
       {modalType == "Brand" && (
         <AddItemModal
           title="GPS Brand"

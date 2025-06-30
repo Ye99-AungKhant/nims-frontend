@@ -4,6 +4,7 @@ import { UseFormReturnType } from "@mantine/form";
 import { FormValues } from "../utils/types";
 
 export const useGetBrandAll = (
+  brandType: string,
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>
 ) => {
   const allTypeIds = form.values.peripheral
@@ -14,9 +15,9 @@ export const useGetBrandAll = (
 
   const result = useQueries({
     queries: uniqueTypeIds.map((typeId: any) => ({
-      queryKey: ["brands", typeId],
+      queryKey: [brandType, typeId],
       queryFn: async () => {
-        return await getBrand("Sensor", typeId);
+        return await getBrand(brandType, typeId);
       }, // replace with actual function
     })),
   });
