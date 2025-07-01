@@ -28,7 +28,15 @@ import {
   IconPaperclip,
   IconDeviceSim,
 } from "@tabler/icons-react";
-import { BarChart, DonutChart, PieChart } from "@mantine/charts";
+import { DonutChart } from "@mantine/charts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { useGetDashboardData } from "./hooks/useGetDashboardData";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
@@ -381,7 +389,7 @@ export const DashboardPage = () => {
                   }}
                 />
               </Group>
-              <BarChart
+              {/* <BarChart
                 h={250}
                 data={barChartData}
                 dataKey="month"
@@ -395,7 +403,37 @@ export const DashboardPage = () => {
                   { name: "Repair", color: theme.colors.grape[6] },
                   { name: "Replacement", color: theme.colors.orange[6] },
                 ]}
-              />
+                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  // If your chart library provides a way to get bar data from the event, use it here
+                  // Example: const bar = getBarDataFromEvent(event);
+                  // navigate(`/installed?month=${bar.month}`);
+                }}
+              /> */}
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={barChartData}>
+                  <XAxis dataKey="month" />
+                  <YAxis/>
+                  <Tooltip />
+                  <Bar
+                    dataKey="Installed"
+                    fill="#7c3aed"
+                    radius={[10, 10, 0, 0]}
+                    onClick={(data, index) => {
+                      console.log("Clicked bar data:", data); // You get month, value, etc.
+                      // navigate(`/installed?month=${data.month}`);
+                    }}
+                  />
+                  <Bar
+                    dataKey="Expired"
+                    fill="#f44336"
+                    radius={[10, 10, 0, 0]}
+                    onClick={(data, index) => {
+                      console.log("Expired bar data:", data);
+                      // navigate(`/expired?month=${data.month}`);
+                    }}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </Paper>
           </Grid.Col>
         </Grid>
