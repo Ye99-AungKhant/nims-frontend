@@ -216,6 +216,7 @@ const InstallationCreatePage = () => {
           sensor_type_id: String(p.sensor_type_id) || "",
           qty: String(p.qty) || "",
           detail: p.peripheralDetail.map((d: any) => ({
+            id: d.id,
             brand_id: String(d.brand_id) || "",
             model_id: String(d.model_id) || "",
             serial_no: d.serial_no || "",

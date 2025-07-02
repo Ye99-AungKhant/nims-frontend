@@ -427,7 +427,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
           </Button>
         </div>
       ))}
-      <Group my="md">
+      {/* <Group my="md">
         <Button
           onClick={handleAddExtraGPS}
           bg={theme.colors.purple[1]}
@@ -436,7 +436,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
         >
           Add Extra GPS
         </Button>
-      </Group>
+      </Group> */}
 
       {modalType == "Brand" && (
         <AddItemModal

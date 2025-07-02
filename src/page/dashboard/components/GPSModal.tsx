@@ -17,7 +17,7 @@ const GPSModal = ({ opened, onClose }: Props) => {
     >
       <Box m="md">
         {!isLoading &&
-          data.map((gpsBrand: any) => (
+          data?.map((gpsBrand: any) => (
             <Box key={gpsBrand.brandId}>
               <Grid my="md">
                 <Grid.Col span={12}>

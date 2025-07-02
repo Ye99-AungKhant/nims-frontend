@@ -418,6 +418,7 @@ export const DashboardPage = () => {
                     dataKey="Installed"
                     fill="#7c3aed"
                     radius={[10, 10, 0, 0]}
+                    barSize={8}
                     onClick={(data, index) => {
                       console.log("Clicked bar data:", data); // You get month, value, etc.
                       // navigate(`/installed?month=${data.month}`);
@@ -427,11 +428,44 @@ export const DashboardPage = () => {
                     dataKey="Expired"
                     fill="#f44336"
                     radius={[10, 10, 0, 0]}
+                    barSize={8}
                     onClick={(data, index) => {
                       console.log("Expired bar data:", data);
                       // navigate(`/expired?month=${data.month}`);
                     }}
                   />
+                  <Bar
+                    dataKey="Renewal"
+                    fill="#4caf50"
+                    radius={[10, 10, 0, 0]}
+                    barSize={8}
+                    onClick={(data, index) => {
+                      console.log("Renewal bar data:", data);
+                      // navigate(`/renewal?month=${data.month}`);
+                    }}
+                  />
+
+                  <Bar
+                    dataKey="Repair"
+                    fill="#9c27b0"
+                    radius={[10, 10, 0, 0]}
+                    barSize={8}
+                    onClick={(data, index) => {
+                      console.log("Repair bar data:", data);
+                      // navigate(`/repair?month=${data.month}`);
+                    }}
+                  />
+                  <Bar
+                    dataKey="Replacement"
+                    fill="#ff9800"
+                    radius={[10, 10, 0, 0]}
+                    barSize={8}
+                    onClick={(data, index) => {
+                      console.log("Replacement bar data:", data);
+                      // navigate(`/replacement?month=${data.month}`);
+                    }}
+                  />
+                  
                 </BarChart>
               </ResponsiveContainer>
             </Paper>

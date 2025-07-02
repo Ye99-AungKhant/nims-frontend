@@ -1261,40 +1261,79 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
         </Table.Thead>
         <Table.Tbody>
           {!isLoading ? (
-            fullHistoryData.replacements.map((item: any) => (
-              <Table.Tr key={item.id}>
-                <Table.Td style={{ color: "#474747" }}>{item.type}</Table.Td>
-                <Table.Td style={{ color: "#474747" }}>
-                  {item.replacement_device_type}
-                </Table.Td>
-                <Table.Td style={{ color: "#474747" }}>
-                  {dayjs(item?.repair_replacement_date).format("DD-MM-YYYY")}
-                </Table.Td>
-                <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
-                  {item.install_engineer?.map((eng: any, index: number) => (
-                    <span key={`eng-${index}`}>{eng.user?.name}, </span>
-                  ))}
-                </Table.Td>
-                <Table.Td
-                  style={{
-                    color: "#474747",
-                  }}
-                  maw={300}
-                >
-                  <Tooltip
-                    label={item?.reason}
-                    maw={400}
-                    position="top-start"
-                    withArrow
-                    multiline
-                    arrowOffset={30}
-                    arrowSize={6}
+            <>
+              {fullHistoryData.replacements.map((item: any) => (
+                <Table.Tr key={item.id}>
+                  <Table.Td style={{ color: "#474747" }}>{item.type}</Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.replacement_device_type}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {dayjs(item?.repair_replacement_date).format("DD-MM-YYYY")}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
+                    {item.install_engineer?.map((eng: any, index: number) => (
+                      <span key={`eng-${index}`}>{eng.user?.name}, </span>
+                    ))}
+                  </Table.Td>
+                  <Table.Td
+                    style={{
+                      color: "#474747",
+                    }}
+                    maw={300}
                   >
-                    <Text truncate="end">{item?.reason}</Text>
-                  </Tooltip>
-                </Table.Td>
-              </Table.Tr>
-            ))
+                    <Tooltip
+                      label={item?.reason}
+                      maw={400}
+                      position="top-start"
+                      withArrow
+                      multiline
+                      arrowOffset={30}
+                      arrowSize={6}
+                    >
+                      <Text truncate="end">{item?.reason}</Text>
+                    </Tooltip>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+
+              {fullHistoryData.vehicleChange.map((item: any) => (
+                <Table.Tr key={item.id}>
+                  <Table.Td style={{ color: "#474747" }}>
+                    Vehicle Changed
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.plate_number}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {dayjs(item?.changed_date).format("DD-MM-YYYY")}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
+                    {item?.install_engineer?.map((eng: any, index: number) => (
+                      <span key={`eng-${index}`}>{eng.user?.name}, </span>
+                    ))}
+                  </Table.Td>
+                  <Table.Td
+                    style={{
+                      color: "#474747",
+                    }}
+                    maw={300}
+                  >
+                    <Tooltip
+                      label={item?.reason}
+                      maw={400}
+                      position="top-start"
+                      withArrow
+                      multiline
+                      arrowOffset={30}
+                      arrowSize={6}
+                    >
+                      <Text truncate="end">{item?.reason}</Text>
+                    </Tooltip>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </>
           ) : (
             <Table.Tr>
               <Table.Td colSpan={2}>

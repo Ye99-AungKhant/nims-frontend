@@ -549,7 +549,7 @@ const PeripheralInfoForm = ({
           comboboxProps={{
             offset: 0,
           }}
-          data={["1", "2", "3", "4"]}
+          data={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]}
           onChange={(value: any) => handleFieldChange(index, "qty", value)}
           value={form.values.peripheral[index]?.qty}
           leftSection={<IconListNumbers size={18} />}
