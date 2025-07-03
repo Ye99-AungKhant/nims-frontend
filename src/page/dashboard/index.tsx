@@ -48,6 +48,7 @@ import { useDisclosure } from "@mantine/hooks";
 import SimcardModal from "./components/SimcardModal";
 import GPSModal from "./components/GPSModal";
 import PeripheralModal from "./components/PeripheralModal";
+import { getMonthRange } from "../../utils/helper";
 
 export const DashboardPage = () => {
   // const { data } = useGetInstalled(true);
@@ -173,6 +174,13 @@ export const DashboardPage = () => {
     );
     setServerChartData(donutChartData);
   }, [isLoading, currentYear]);
+
+  const handleBarClick = (status: string, filterDate: string, data: any) => {
+    const monthRange = getMonthRange(data.month);
+    navigate(
+      `/${status}?filter_by_date=${filterDate}&fromDate=${monthRange.start}&toDate=${monthRange.end}`
+    );
+  };
 
   return (
     <Box p="30px">
@@ -412,7 +420,7 @@ export const DashboardPage = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={barChartData}>
                   <XAxis dataKey="month" />
-                  <YAxis/>
+                  <YAxis />
                   <Tooltip />
                   <Bar
                     dataKey="Installed"
@@ -420,9 +428,10 @@ export const DashboardPage = () => {
                     radius={[10, 10, 0, 0]}
                     barSize={8}
                     onClick={(data, index) => {
-                      console.log("Clicked bar data:", data); // You get month, value, etc.
-                      // navigate(`/installed?month=${data.month}`);
+                      console.log("Installed bar data:", data);
+                      handleBarClick("installed", "installed_date", data);
                     }}
+                    cursor={"pointer"}
                   />
                   <Bar
                     dataKey="Expired"
@@ -431,8 +440,9 @@ export const DashboardPage = () => {
                     barSize={8}
                     onClick={(data, index) => {
                       console.log("Expired bar data:", data);
-                      // navigate(`/expired?month=${data.month}`);
+                      handleBarClick("installed", "expire_date", data);
                     }}
+                    cursor={"pointer"}
                   />
                   <Bar
                     dataKey="Renewal"
@@ -441,8 +451,9 @@ export const DashboardPage = () => {
                     barSize={8}
                     onClick={(data, index) => {
                       console.log("Renewal bar data:", data);
-                      // navigate(`/renewal?month=${data.month}`);
+                      handleBarClick("installed", "renewal_date", data);
                     }}
+                    cursor={"pointer"}
                   />
 
                   <Bar
@@ -452,8 +463,13 @@ export const DashboardPage = () => {
                     barSize={8}
                     onClick={(data, index) => {
                       console.log("Repair bar data:", data);
-                      // navigate(`/repair?month=${data.month}`);
+                      handleBarClick(
+                        "installed",
+                        "repair_replacement_date",
+                        data
+                      );
                     }}
+                    cursor={"pointer"}
                   />
                   <Bar
                     dataKey="Replacement"
@@ -462,10 +478,14 @@ export const DashboardPage = () => {
                     barSize={8}
                     onClick={(data, index) => {
                       console.log("Replacement bar data:", data);
-                      // navigate(`/replacement?month=${data.month}`);
+                      handleBarClick(
+                        "installed",
+                        "repair_replacement_date",
+                        data
+                      );
                     }}
+                    cursor={"pointer"}
                   />
-                  
                 </BarChart>
               </ResponsiveContainer>
             </Paper>
