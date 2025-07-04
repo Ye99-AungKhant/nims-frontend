@@ -21,7 +21,7 @@ export const useGetModelAll = (
 
   const result = useQueries({
     queries: uniqueBrandIds.map((brandId) => ({
-      queryKey: [modelType, brandId],
+      queryKey: ["models", modelType, brandId],
       queryFn: async () => {
         return await getModel(modelType, Number(brandId));
       },

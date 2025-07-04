@@ -15,7 +15,7 @@ export const useGetBrandAll = (
 
   const result = useQueries({
     queries: uniqueTypeIds.map((typeId: any) => ({
-      queryKey: [brandType, typeId],
+      queryKey: ["brands", brandType, typeId],
       queryFn: async () => {
         return await getBrand(brandType, typeId);
       }, // replace with actual function

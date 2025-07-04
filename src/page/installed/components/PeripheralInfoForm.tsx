@@ -1,16 +1,11 @@
 import {
   ActionIcon,
-  Button,
-  Flex,
-  Grid,
-  Group,
   MultiSelect,
   Select,
-  Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FormValues, Peripheral, PeripheralDetail } from "../../../utils/types";
 import {
   IconAlignBoxCenterMiddleFilled,
@@ -21,19 +16,14 @@ import {
   IconSquareLetterBFilled,
   IconSquareLetterMFilled,
   IconSquareLetterTFilled,
-  IconUser,
 } from "@tabler/icons-react";
 import { UseFormReturnType } from "@mantine/form";
-import { useGetClients } from "../../../hooks/useGetClients";
-import { useNavigate } from "react-router-dom";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useGetTypes } from "../../../hooks/useGetTypes";
 import { useCreateType } from "../../../hooks/useCreateType";
 import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
-import { useGetBrands } from "../../../hooks/useGetBrands";
-import { useGetModels } from "../../../hooks/useGetModels";
 import FormTable from "../../../components/common/FormTable";
 import { useGetWarrantyPlans } from "../../../hooks/useGetWarrantyPlans";
 import { useUpdateType } from "../../../hooks/useUpdateType";
@@ -55,24 +45,13 @@ interface VehicleInfoProps {
 }
 const PeripheralInfoForm = ({
   form,
-  isEditMode,
   isRowtable = false,
   disableQty = false,
 }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
-  const [selectedBrandId, setSelectedBrandId] = useState(0);
-  const [selectedTypeId, setSelectedTypeId] = useState(0);
-  const [periTypeQTY, setPeriTypeQTY] = useState([
-    {
-      type: "",
-      typeName: "",
-    },
-  ]);
   const { data: typeData } = useGetTypes("Sensor");
-  const { data: brandData } = useGetBrands("Sensor", selectedTypeId);
-  // const { data: modelData } = useGetModels("Sensor", selectedBrandId);
   const getAllBrandData = useGetBrandAll("Sensor", form);
   const getAllModelData = useGetModelAll("Sensor", form);
   const { data: warrantyData } = useGetWarrantyPlans();
@@ -85,9 +64,6 @@ const PeripheralInfoForm = ({
   const { mutate: createModel } = useCreateModel();
   const { mutate: updateModel } = useUpdateModel();
   const { mutate: deleteModel } = useDeleteModel();
-
-  const [storeBrandData, setStoreBrandData] = useState<any[]>([]);
-  const [storeModelData, setStoreModelData] = useState<any[]>([]);
 
   const handleModal = (name: string) => {
     setModalType(name);
@@ -151,7 +127,7 @@ const PeripheralInfoForm = ({
   const handlePeripheralChange = (selectedTypes: string[]) => {
     const existingPeripherals = form.values.peripheral || [];
 
-    const updatedPeripherals = selectedTypes.map((typeId, index) => {
+    const updatedPeripherals = selectedTypes.map((typeId) => {
       // Check if this typeId already exists in peripheral
       const existing = existingPeripherals.find(
         (p) => p.sensor_type_id === typeId
@@ -175,10 +151,6 @@ const PeripheralInfoForm = ({
           },
         ],
       };
-    });
-
-    selectedTypes.forEach((typeId) => {
-      setSelectedTypeId(Number(typeId));
     });
 
     form.setFieldValue("peripheral", updatedPeripherals);
@@ -209,14 +181,6 @@ const PeripheralInfoForm = ({
       // If qty changed, adjust the detail array size
       if (field === "qty") {
         addNewPeripheralDetail(peripheralIndex, Number(value));
-        // Optionally update selectedTypeIdForFetching if needed when qty changes (though unlikely)
-        // setSelectedTypeIdForFetching(Number(updatedPeripherals[peripheralIndex].sensor_type_id));
-      }
-      // If sensor_type_id changed, update the ID used for fetching brands/models
-      if (field === "sensor_type_id") {
-        setSelectedTypeId(Number(value));
-        // Clear dependent fields when type changes?
-        // Consider resetting brand/model/serial/warranty for the affected peripheral
       }
 
       // --- Update nested 'detail' fields ---
@@ -254,15 +218,6 @@ const PeripheralInfoForm = ({
       });
 
       form.setFieldValue("peripheral", updatedPeripherals);
-
-      // Update the brand ID used for fetching models if the brand_id changed
-      if (detailField === "brand_id") {
-        setSelectedBrandId(Number(value));
-      }
-      // Potentially update type ID for fetching if relevant (though usually set by sensor_type_id change)
-      // if (detailField === 'brand_id' || detailField === 'model_id') {
-      //     setSelectedTypeIdForFetching(Number(currentPeripherals[peripheralIndex].sensor_type_id));
-      // }
     }
   };
 

@@ -1254,6 +1254,9 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
               Repair/Replacement Date
             </Table.Th>
             <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+              User Fault
+            </Table.Th>
+            <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
               Engineer
             </Table.Th>
             <Table.Th style={{ color: "#474747" }}>Reason</Table.Th>
@@ -1270,6 +1273,9 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
                     {dayjs(item?.repair_replacement_date).format("DD-MM-YYYY")}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.user_false ?? "---"}
                   </Table.Td>
                   <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
                     {item.install_engineer?.map((eng: any, index: number) => (

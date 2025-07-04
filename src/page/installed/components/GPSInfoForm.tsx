@@ -62,9 +62,6 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const { mutate: createModel } = useCreateModel();
   const { mutate: updateModel } = useUpdateModel();
   const { mutate: deleteModel } = useDeleteModel();
-  const { mutate: createWarrantyPlan } = useCreateWarrantyPlan();
-  const { mutate: updateWarrantyPlan } = useUpdateWarrantyPlan();
-  const { mutate: deleteWarrantyPlan } = useDeleteWarrantyPlan();
 
   console.log("clientData", form.values);
   const handleModal = (name: string) => {
