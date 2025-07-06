@@ -21,7 +21,9 @@ export const AccessorySchema = z.object({
 
 export const ServerSchema = z.object({
   type_id: z.string().min(1, { message: "Server Type is required" }),
-  domain: z.string().min(1, { message: "Domain is required" }),
+  domain: z
+    .array(z.string().min(1, { message: "Domain is required" }))
+    .min(1, { message: "At least one domain is required" }),
   installed_date: z.date(),
   subscription_plan_id: z
     .string()
@@ -87,6 +89,8 @@ export const renewalformSchema = z.object({
   expireDate: z.date({ message: "Expire data is required" }),
   subscriptionPlan: z.string().nonempty("Subscription plan is required"),
   type: z.string().nonempty("Type is required"),
-  domain: z.string().nonempty("Domain is required"),
+  domain: z
+    .array(z.string().min(1, { message: "Domain is required" }))
+    .min(1, { message: "At least one domain is required" }),
   invoiceNo: z.string().nonempty("Invoice number is required"),
 });

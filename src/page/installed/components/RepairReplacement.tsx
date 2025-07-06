@@ -13,7 +13,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { IconCalendarWeek, IconChevronDown } from "@tabler/icons-react";
+import { IconCalendarWeek, IconChevronDown, IconClipboardDataFilled } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
 import { useGetInstallationEngineers } from "../../../hooks/useGetInstallationEngineer";
 import { AddItemModal } from "../../../components/common/AddItemModal";
@@ -107,6 +107,7 @@ const RepairReplacement = ({
       installationEngineer: [],
       installImage: [],
       user_false: "",
+      invoice_no:""
     },
   });
 
@@ -122,6 +123,7 @@ const RepairReplacement = ({
       reason: "",
       installationEngineer: [],
       installImage: [],
+      invoice_no:""
     },
   });
 
@@ -154,6 +156,7 @@ const RepairReplacement = ({
         installationEngineer: form.values.installationEngineer,
         user_false: form.values.user_false,
         reason: form.values.reason,
+        invoice_no:form.values.invoice_no,
         repair_replacement_by_user_id: user?.id,
         repair_replacement_date: form.values.repair_replacement_date,
         isRepair: true,
@@ -350,8 +353,16 @@ const RepairReplacement = ({
               }
             />
 
+            <TextInput
+            label="Invoice No"
+          leftSection={<IconClipboardDataFilled size={18} />}
+          withAsterisk
+          {...form.getInputProps("invoice_no")}
+        />
+
             {selectedRepairType == "Replacement" ? (
               <>
+
                 <MultiSelect
                   label="Replacement Type"
                   withAsterisk
@@ -495,9 +506,17 @@ const RepairReplacement = ({
             />
 
             <TextInput
+            label="Invoice No"
+          leftSection={<IconClipboardDataFilled size={18} />}
+          withAsterisk
+          {...vehicleForm.getInputProps("invoice_no")}
+        />
+
+            <TextInput
               label="Reason"
               withAsterisk
               {...vehicleForm.getInputProps("reason")}
+              mt="md"
             />
             <Box mt="md">
               <VehicleInfoForm form={vehicleForm} isRowtable />

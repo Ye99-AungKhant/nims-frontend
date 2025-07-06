@@ -215,6 +215,7 @@ const InstallationCreatePage = () => {
           id: p.id,
           sensor_type_id: String(p.sensor_type_id) || "",
           qty: String(p.qty) || "",
+          installed_date: p.installed_date ? new Date(p.installed_date) : "",
           detail: p.peripheralDetail.map((d: any) => ({
             id: d.id,
             brand_id: String(d.brand_id) || "",
@@ -230,6 +231,9 @@ const InstallationCreatePage = () => {
           id: acc.id,
           type_id: String(acc.type_id),
           qty: String(acc.qty),
+          installed_date: acc.installed_date
+            ? new Date(acc.installed_date)
+            : "",
         })
       );
 
@@ -260,7 +264,11 @@ const InstallationCreatePage = () => {
         server: {
           id: data?.device[0]?.server[0].id,
           type_id: String(data?.device[0]?.server[0].type_id),
-          domain: String(data?.device[0]?.server[0].domain_id),
+          domain: [
+            String(data?.device[0]?.server[0].domain_id),
+            data?.device[0]?.server[0]?.extra_server[0]?.domain_id &&
+              String(data?.device[0]?.server[0]?.extra_server[0]?.domain_id),
+          ],
           installed_date:
             new Date(data?.device[0]?.server[0].installed_date) || new Date(),
           subscription_plan_id: String(
@@ -270,6 +278,7 @@ const InstallationCreatePage = () => {
             new Date(data?.device[0]?.server[0].expire_date) || new Date(),
           invoice_no: data?.device[0]?.server[0].invoice_no,
           object_base_fee: String(data?.device[0]?.server[0].object_base_fee),
+          extra_server_id: data?.device[0]?.server[0]?.extra_server[0]?.id,
         },
         installationEngineer: transformedInstallEng,
         installImage: data?.device[0]?.server[0].install_image,

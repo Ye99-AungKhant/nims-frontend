@@ -130,6 +130,10 @@ export const VehicleData = ({ vehicleId }: any) => {
                   <Table.Td style={{ color: "#474747" }}>
                     {item?.changed_date
                       ? dayjs(item.changed_date).format("DD-MM-YYYY")
+                      : vehicleActivity?.data[index - 1]?.changed_date
+                      ? dayjs(
+                          vehicleActivity?.data[index - 1]?.changed_date
+                        ).format("DD-MM-YYYY")
                       : "---"}
                   </Table.Td>
                   <Table.Td
@@ -714,6 +718,9 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
               <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
                 Replacement Date
               </Table.Th>
+              <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+                Installed Date
+              </Table.Th>
               <Table.Th style={{ color: "#474747" }}>Reason</Table.Th>
               <Table.Th></Table.Th>
             </Table.Tr>
@@ -775,8 +782,14 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
                   </Table.Td>
 
                   <Table.Td style={{ color: "#474747" }}>
-                    {item?.replacement_date &&
-                      dayjs(item?.replacement_date).format("DD-MM-YYYY")}
+                    {item?.replacement_date
+                      ? dayjs(item?.replacement_date).format("DD-MM-YYYY")
+                      : "---"}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.installed_date
+                      ? dayjs(item?.installed_date).format("DD-MM-YYYY")
+                      : "---"}
                   </Table.Td>
                   <Table.Td
                     style={{
@@ -1046,6 +1059,75 @@ export const ServerData = ({ data }: any) => {
                   {data.warranty_plan.name}
                 </Table.Td>
               </Table.Tr>
+              {data.extra_server?.map((extraServer: any) => (
+                <Table.Tr>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {extraServer.type.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {extraServer.domain.name}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {data.object_base_fee}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {data.invoice_no}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    <span
+                      style={{
+                        backgroundColor:
+                          data.status === "Active"
+                            ? "#239e57"
+                            : data.status === "ExpireSoon"
+                            ? "#cea836"
+                            : "#EC1F24",
+                        color: "white",
+                        padding: "1px 5px",
+                        borderRadius: 20,
+                      }}
+                    >
+                      {data.status}
+                    </span>
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {dayjs(data.installed_date).format("DD-MM-YYYY")}
+                  </Table.Td>
+                  <Table.Td>
+                    {data.renewal_date ? (
+                      <span
+                        style={{
+                          backgroundColor: "#239e57",
+                          color: "white",
+                          padding: "0px 5px",
+                          borderRadius: 20,
+                          fontSize: 12,
+                        }}
+                      >
+                        {dayjs(data.renewal_date).format("DD-MM-YYYY")}
+                      </span>
+                    ) : (
+                      <Text ta="center">---</Text>
+                    )}
+                  </Table.Td>
+                  <Table.Td>
+                    <span
+                      style={{
+                        backgroundColor: "#474747",
+                        color: "white",
+                        padding: "0px 5px",
+                        borderRadius: 20,
+                        fontSize: 12,
+                      }}
+                    >
+                      {dayjs(data.expire_date).format("DD-MM-YYYY")}
+                    </span>
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {data.warranty_plan.name}
+                  </Table.Td>
+                </Table.Tr>
+              ))}
             </>
           ) : (
             <Table.Tr>
@@ -1115,6 +1197,9 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
               <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
                 Replacement Date
               </Table.Th>
+              <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+                Installed Date
+              </Table.Th>
               <Table.Th style={{ color: "#474747" }}>Reason</Table.Th>
               <Table.Th></Table.Th>
             </Table.Tr>
@@ -1142,7 +1227,14 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
                     </span>
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
-                    {dayjs(item?.replacement_date).format("DD-MM-YYYY")}
+                    {item?.replacement_date
+                      ? dayjs(item?.replacement_date).format("DD-MM-YYYY")
+                      : "---"}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item?.installed_date
+                      ? dayjs(item?.installed_date).format("DD-MM-YYYY")
+                      : "---"}
                   </Table.Td>
                   <Table.Td
                     style={{
@@ -1257,6 +1349,9 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
               User Fault
             </Table.Th>
             <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+              Invoice No.
+            </Table.Th>
+            <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
               Engineer
             </Table.Th>
             <Table.Th style={{ color: "#474747" }}>Reason</Table.Th>
@@ -1276,6 +1371,9 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
                     {item.user_false ?? "---"}
+                  </Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.invoice_no ?? "---"}
                   </Table.Td>
                   <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
                     {item.install_engineer?.map((eng: any, index: number) => (
@@ -1313,6 +1411,10 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
                     {dayjs(item?.changed_date).format("DD-MM-YYYY")}
+                  </Table.Td>
+                  <Table.Td></Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>
+                    {item.invoice_no ?? "---"}
                   </Table.Td>
                   <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
                     {item?.install_engineer?.map((eng: any, index: number) => (

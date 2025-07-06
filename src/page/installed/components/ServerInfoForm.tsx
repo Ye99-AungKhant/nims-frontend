@@ -10,7 +10,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormValues } from "../../../utils/types";
 import {
   IconBellFilled,
@@ -52,6 +52,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState<any[]>([]);
   const { data: typeData } = useGetTypes("Server");
   const { data: domainData } = useGetBrands(
     "Server",
@@ -85,6 +86,9 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       ...form.values.server,
       [field]: value,
     });
+    if(field === "domain") {
+      setSelectedDomain(value);
+    }
   };
 
   const handleInstallionEngChange = (selectedEng: string[]) => {
@@ -94,6 +98,12 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
 
     form.setFieldValue("installationEngineer", updatedEng);
   };
+
+  useEffect(() => {
+    if (form.values.server.domain) {
+      setSelectedDomain(form.values.server.domain);
+    }
+  }, [form.values.server.domain]);
 
   const rows = [
     {
@@ -138,32 +148,41 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                 Add
               </ActionIcon>
             </div>
-          }
-          error={form.errors[`server.type_id`]}
-        />
-      ),
-    },
-    {
-      label: "Domain *",
-      input: (
-        <Select
-          searchable
-          comboboxProps={{
+            }
+            error={form.errors[`server.type_id`]}
+          />
+          ),
+        },
+        {
+          label: "Domain *",
+          input: (
+          <MultiSelect
+            searchable
+            comboboxProps={{
             offset: 0,
-          }}
-          data={
+            }}
+            maxValues={
+            (() => {
+              const selectedType = typeData?.data.data.find(
+              (serverType: any) => String(serverType.id) === form.values.server.type_id
+              );
+              return selectedType?.name.includes("Dual") ? 2 : 1;
+            })()
+            }
+            data={
             domainData?.data.data.map((data: any) => ({
               value: String(data.id),
-              label: data.name,
+              label: `${data.name} (${data.type.name})`,
               type_id: String(data.type_id),
             })) || []
-          }
-          value={form.values.server.domain}
-          onChange={(value: any) => handleServerChange("domain", value)}
-          leftSection={<IconWorld size={18} />}
-          rightSectionPointerEvents="all"
-          rightSectionWidth={90}
-          rightSection={
+            }
+            value={selectedDomain?.map((domain:any) => domain)
+            .filter((domain:any) => domain !== undefined)}
+            onChange={(value: any) => handleServerChange("domain", value)}
+            leftSection={<IconWorld size={18} />}
+            rightSectionPointerEvents="all"
+            rightSectionWidth={90}
+            rightSection={
             <div
               style={{
                 display: "flex",

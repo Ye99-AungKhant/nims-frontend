@@ -531,7 +531,7 @@ const PeripheralInfoForm = ({
         <DateInput
           leftSection={<IconCalendarWeek size={18} />}
           {...form.getInputProps(`peripheral.${index}.installed_date`)}
-          onChange={(date) => handleFieldChange(index, "installed_date", date)}
+          // onChange={(date) => handleFieldChange(index, "installed_date", date)}
         />
       ),
     },

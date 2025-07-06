@@ -20,5 +20,9 @@ export const mapInstalledObjectListToEntity = (param: any): any => {
     type_id: param.device[0]?.server[0]?.type_id,
     domain_id: param.device[0]?.server[0]?.domain_id,
     object_base_fee: param.device[0]?.server[0]?.object_base_fee,
+    extra_server: param.device[0]?.server[0]?.extra_server?.map((extraDomain: any) => ({
+      id: extraDomain.id,
+      domain_id: extraDomain.domain_id,
+    })),
   };
 };

@@ -7,6 +7,7 @@ import {
   Flex,
   Group,
   Modal,
+  MultiSelect,
   Select,
   Text,
   TextInput,
@@ -66,7 +67,7 @@ const RenewalConfirmModal = ({
   const [modalType, setModalType] = useState("confirm-page");
   const [opened, { open, close }] = useDisclosure(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
-
+  
   const form = useForm({
     initialValues: {
       id: data.server_id,
@@ -75,7 +76,7 @@ const RenewalConfirmModal = ({
       subscriptionPlan: String(data.subscription_plan_id),
       objectBaseFee: data.object_base_fee,
       type: String(data.type_id),
-      domain: String(data.domain_id),
+      domain: [String(data.domain_id), String(data?.extra_server[0]?.domain_id)],
       invoiceNo: "",
     },
     validate: zodResolver(renewalformSchema),
@@ -95,7 +96,8 @@ const RenewalConfirmModal = ({
   const { mutate: deleteBrand } = useDeleteBrand();
 
   const handleSubmit = (values: any) => {
-    mutate(values, {
+    const payloadData = {...values, extra_server_id: data?.extra_server[0]?.id}
+    mutate(payloadData, {
       onSuccess: () => {
         onClose();
       },
@@ -115,6 +117,9 @@ const RenewalConfirmModal = ({
   form.watch("type", ({ value }) => {
     form.setValues({ domain: undefined });
   });
+
+  console.log("form values", form.values);
+  
 
   return (
     <>
@@ -270,13 +275,21 @@ const RenewalConfirmModal = ({
               }
             />
 
-            <Select
+            <MultiSelect
               label="Domain"
               withAsterisk
               searchable
               comboboxProps={{
                 offset: 0,
               }}
+              maxValues={
+            (() => {
+              const selectedType = typeData?.data.data.find(
+              (serverType: any) => String(serverType.id) === form.values.type
+              );
+              return selectedType?.name.includes("Dual") ? 2 : 1;
+            })()
+            }
               data={
                 domainData?.data.data.map((data: any) => ({
                   value: String(data.id),

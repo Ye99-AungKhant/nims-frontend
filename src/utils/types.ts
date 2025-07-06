@@ -62,12 +62,13 @@ interface Accessory {
 interface Server {
   id?: number;
   type_id: string;
-  domain: string;
+  domain: any;
   installed_date: Date;
   subscription_plan_id: string;
   expire_date: Date;
   invoice_no: string;
   object_base_fee: string;
+  extra_server_id?: any;
 }
 
 interface InstallationEngineer {
