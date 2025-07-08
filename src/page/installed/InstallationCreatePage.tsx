@@ -266,8 +266,9 @@ const InstallationCreatePage = () => {
           type_id: String(data?.device[0]?.server[0].type_id),
           domain: [
             String(data?.device[0]?.server[0].domain_id),
-            data?.device[0]?.server[0]?.extra_server[0]?.domain_id &&
-              String(data?.device[0]?.server[0]?.extra_server[0]?.domain_id),
+            ...(data?.device[0]?.server[0]?.extra_server[0]?.domain_id != null
+              ? [String(data?.device[0]?.server[0]?.extra_server[0]?.domain_id)]
+              : []),
           ],
           installed_date:
             new Date(data?.device[0]?.server[0].installed_date) || new Date(),
