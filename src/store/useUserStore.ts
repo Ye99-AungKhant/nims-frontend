@@ -8,7 +8,7 @@ interface UserStore {
   clearUser: () => void;
   hasPermission: (
     permission: string,
-    scope: "view" | "create" | "update" | "delete"
+    scope: "view" | "create" | "update" | "delete" | "renewal" | "repair"
   ) => boolean;
 }
 
@@ -23,7 +23,7 @@ const useUserStore = create<UserStore>()(
 
       hasPermission: (
         permission: string,
-        scope: "view" | "create" | "update" | "delete"
+        scope: "view" | "create" | "update" | "delete" | "renewal" | "repair"
       ) => {
         const user = get().user;
         return (

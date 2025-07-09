@@ -36,6 +36,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import { useGetDashboardData } from "./hooks/useGetDashboardData";
 import { useNavigate } from "react-router-dom";
@@ -419,9 +420,18 @@ export const DashboardPage = () => {
               /> */}
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={barChartData}>
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #eee",
+                      borderRadius: 4,
+                      marginLeft: 20,
+                      marginRight: 20,
+                    }}
+                  />
                   <Bar
                     dataKey="Installed"
                     fill="#7c3aed"
@@ -462,12 +472,7 @@ export const DashboardPage = () => {
                     radius={[10, 10, 0, 0]}
                     barSize={8}
                     onClick={(data, index) => {
-                      console.log("Repair bar data:", data);
-                      handleBarClick(
-                        "installed",
-                        "repair_replacement_date",
-                        data
-                      );
+                      handleBarClick("installed", "repair_date", data);
                     }}
                     cursor={"pointer"}
                   />
@@ -478,11 +483,7 @@ export const DashboardPage = () => {
                     barSize={8}
                     onClick={(data, index) => {
                       console.log("Replacement bar data:", data);
-                      handleBarClick(
-                        "installed",
-                        "repair_replacement_date",
-                        data
-                      );
+                      handleBarClick("installed", "replacement_date", data);
                     }}
                     cursor={"pointer"}
                   />

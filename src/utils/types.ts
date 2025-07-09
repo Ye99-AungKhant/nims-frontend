@@ -107,6 +107,8 @@ export interface PermissionType {
   create: boolean;
   update: boolean;
   delete: boolean;
+  renewal: boolean;
+  repair: boolean;
 }
 
 export interface RoleType {

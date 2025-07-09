@@ -200,48 +200,74 @@ export const InstalledPage = () => {
                     </Menu.Target>
 
                     <Menu.Dropdown>
-                      <Menu.Item
-                        onClick={() =>
-                          navigate("detail", {
-                            state: {
-                              id: row.original.id,
-                            },
-                          })
-                        }
-                        color={theme.colors.chocolate[1]}
+                      <PermissionGate
+                        page={"installed_objects"}
+                        scope={"view"}
+                        errorProps={{ style: { display: "none" } }}
                       >
-                        <IconEye size={18} />
-                      </Menu.Item>
-                      <Menu.Item
-                        onClick={() =>
-                          navigate("create", {
-                            state: { id: row.original.id },
-                          })
-                        }
-                        color={theme.colors.purple[1]}
+                        <Menu.Item
+                          onClick={() =>
+                            navigate("detail", {
+                              state: {
+                                id: row.original.id,
+                              },
+                            })
+                          }
+                          color={theme.colors.chocolate[1]}
+                        >
+                          <IconEye size={18} />
+                        </Menu.Item>
+                      </PermissionGate>
+
+                      <PermissionGate
+                        page={"installed_objects"}
+                        scope={"update"}
+                        errorProps={{ style: { display: "none" } }}
                       >
-                        <IconEdit size={18} />
-                      </Menu.Item>
+                        <Menu.Item
+                          onClick={() =>
+                            navigate("create", {
+                              state: { id: row.original.id },
+                            })
+                          }
+                          color={theme.colors.purple[1]}
+                        >
+                          <IconEdit size={18} />
+                        </Menu.Item>
+                      </PermissionGate>
 
                       {row.original.status !== "Active" && (
-                        <Menu.Item
-                          onClick={() => handleRenewalModelOpen(row.original)}
-                          color={"green"}
+                        <PermissionGate
+                          page={"installed_objects"}
+                          scope={"renewal"}
+                          errorProps={{ style: { display: "none" } }}
                         >
-                          <IconRefresh size={18} />
-                        </Menu.Item>
+                          <Menu.Item
+                            onClick={() => handleRenewalModelOpen(row.original)}
+                            color={"green"}
+                          >
+                            <IconRefresh size={18} />
+                          </Menu.Item>
+                        </PermissionGate>
                       )}
-                      <Menu.Item
-                        onClick={() =>
-                          handleRepairReplacementModelOpen(
-                            row.original.id,
-                            row.original.server_id
-                          )
-                        }
-                        color={"orange"}
+
+                      <PermissionGate
+                        page={"installed_objects"}
+                        scope={"repair"}
+                        errorProps={{ style: { display: "none" } }}
                       >
-                        <IconTool size={18} />
-                      </Menu.Item>
+                        <Menu.Item
+                          onClick={() =>
+                            handleRepairReplacementModelOpen(
+                              row.original.id,
+                              row.original.server_id
+                            )
+                          }
+                          color={"orange"}
+                        >
+                          <IconTool size={18} />
+                        </Menu.Item>
+                      </PermissionGate>
                     </Menu.Dropdown>
                   </Menu>
                 );

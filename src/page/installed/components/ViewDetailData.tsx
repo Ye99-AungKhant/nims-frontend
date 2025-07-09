@@ -158,14 +158,14 @@ export const VehicleData = ({ vehicleId }: any) => {
                     <span
                       style={{
                         backgroundColor: `${
-                          item?.changed_date ? "#474747" : "#239e57"
+                          item?.status ? "#239e57" : "#474747"
                         }`,
                         color: "white",
                         padding: "3px 5px",
                         borderRadius: 20,
                       }}
                     >
-                      {item?.changed_date ? "Changed" : "Active"}
+                      {item?.status ? item.status : "Changed"}
                     </span>
                   </Table.Td>
                 </Table.Tr>

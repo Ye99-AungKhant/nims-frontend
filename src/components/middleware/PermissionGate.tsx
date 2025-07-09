@@ -5,7 +5,7 @@ import useUserStore from "../../store/useUserStore";
 interface PageProps {
   children: ReactElement;
   page: string; // Page name
-  scope: "view" | "create" | "update" | "delete";
+  scope: "view" | "create" | "update" | "delete" | "renewal" | "repair";
   errorProps?: any;
   RenderError?: () => ReactElement;
 }
@@ -19,8 +19,6 @@ const PermissionGate = ({
 }: PageProps) => {
   const { hasPermission } = useUserStore();
   const permissionGranted = hasPermission(page, scope);
-
-  console.log("permissionGranted", permissionGranted);
 
   if (!permissionGranted && !errorProps) return <RenderError />;
   if (!permissionGranted && errorProps)

@@ -27,6 +27,8 @@ type PermissionSection = {
   create: boolean;
   update: boolean;
   delete: boolean;
+  renewal: boolean;
+  repair: boolean;
 };
 
 type PermissionFormValues = Record<string, PermissionSection>;
@@ -61,6 +63,8 @@ const RoleDetailPage = () => {
           create: false,
           update: false,
           delete: false,
+          renewal: false,
+          repair: false,
         };
       });
     } else {
@@ -70,6 +74,8 @@ const RoleDetailPage = () => {
           create: item.create || false,
           update: item.update || false,
           delete: item.delete || false,
+          renewal: item.renewal || false,
+          repair: item.repair || false,
         };
       });
     }
@@ -91,6 +97,8 @@ const RoleDetailPage = () => {
       create: perms.create || false,
       update: perms.update || false,
       delete: perms.delete || false,
+      renewal: perms.renewal || false,
+      repair: perms.repair || false,
     }));
   };
 
@@ -184,6 +192,22 @@ const RoleDetailPage = () => {
             //   )
             // }
             {...form.getInputProps("permissions.installed_objects.update")}
+          />
+          <Checkbox
+            size="xs"
+            radius={"sm"}
+            label="Repair/Replacement Objects"
+            color={theme.colors.purple[1]}
+            checked={form.values.permissions.installed_objects.repair}
+            {...form.getInputProps("permissions.installed_objects.repair")}
+          />
+          <Checkbox
+            size="xs"
+            radius={"sm"}
+            label="Renewal Objects"
+            color={theme.colors.purple[1]}
+            checked={form.values.permissions.installed_objects.renewal}
+            {...form.getInputProps("permissions.installed_objects.renewal")}
           />
         </Group>
 
