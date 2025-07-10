@@ -1,10 +1,12 @@
 import {
   ActionIcon,
+  Box,
   Button,
   Checkbox,
   Flex,
   Grid,
   Group,
+  Loader,
   Select,
   Text,
   TextInput,
@@ -50,7 +52,8 @@ const SimCardInfoForm = ({
   const [selectedSim, setSelectedSim] = useState(
     form.values.operators.length === 1 ? "SINGLE" : "DUAL"
   );
-  const { data: brandData } = useGetBrands("Operator");
+  const { data: brandData, isLoading: isBrandLoading } =
+    useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
   const { mutate: updateBrand } = useUpdateBrand();
   const { mutate: deleteBrand } = useDeleteBrand();
@@ -126,7 +129,13 @@ const SimCardInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -189,7 +198,13 @@ const SimCardInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{

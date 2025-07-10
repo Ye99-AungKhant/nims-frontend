@@ -1,9 +1,11 @@
 import {
   ActionIcon,
+  Box,
   Button,
   Flex,
   Grid,
   Group,
+  Loader,
   Select,
   Table,
   Text,
@@ -49,15 +51,16 @@ interface VehicleInfoProps {
 const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data: clientData } = useGetClients();
+  const { data: clientData, isLoading: isClientLoading } = useGetClients();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
-  const { data: vehicleTypeData } = useGetTypes("Vehicle");
-  const { data: vehicleBrandData } = useGetBrands(
+  const { data: vehicleTypeData, isLoading: isTypeLoading } =
+    useGetTypes("Vehicle");
+  const { data: vehicleBrandData, isLoading: isBrandLoading } = useGetBrands(
     "Vehicle",
     Number(form.values.vehicleType)
   );
-  const { data: vehicleModelData } = useGetModels(
+  const { data: vehicleModelData, isLoading: isModelLoading } = useGetModels(
     "Vehicle",
     Number(form.values.vehicleBrand)
   );
@@ -87,6 +90,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{ offset: 0 }}
           data={
             clientData?.data.data.map((data: any) => ({
@@ -105,7 +109,13 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isClientLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={"sm"} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -131,6 +141,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{ offset: 0 }}
           data={
             vehicleTypeData?.data.data.map((data: any) => ({
@@ -149,7 +160,13 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isTypeLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -174,6 +191,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{ offset: 0 }}
           data={
             vehicleBrandData?.data.data.map((data: any) => ({
@@ -192,7 +210,13 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -217,6 +241,7 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{ offset: 0 }}
           data={
             vehicleModelData?.data.data.map((data: any) => ({
@@ -235,7 +260,13 @@ const VehicleInfoForm = ({ form, isRowtable }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isModelLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{

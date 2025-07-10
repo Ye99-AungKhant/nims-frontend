@@ -1,5 +1,7 @@
 import {
   ActionIcon,
+  Box,
+  Loader,
   MultiSelect,
   Select,
   TextInput,
@@ -51,10 +53,13 @@ const PeripheralInfoForm = ({
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
-  const { data: typeData } = useGetTypes("Sensor");
-  const getAllBrandData = useGetBrandAll("Sensor", form);
-  const getAllModelData = useGetModelAll("Sensor", form);
-  const { data: warrantyData } = useGetWarrantyPlans();
+  const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Sensor");
+  const { allPeriBrand: getAllBrandData, isLoading: isBrandLoading } =
+    useGetBrandAll("Sensor", form);
+  const { allPeriModel: getAllModelData, isLoading: isModelLoading } =
+    useGetModelAll("Sensor", form);
+  const { data: warrantyData, isLoading: isWarrantyLoading } =
+    useGetWarrantyPlans();
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
@@ -245,6 +250,7 @@ const PeripheralInfoForm = ({
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -277,7 +283,14 @@ const PeripheralInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
+
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -302,6 +315,7 @@ const PeripheralInfoForm = ({
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -334,7 +348,13 @@ const PeripheralInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isModelLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -377,6 +397,7 @@ const PeripheralInfoForm = ({
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -408,7 +429,13 @@ const PeripheralInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isWarrantyLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -436,7 +463,7 @@ const PeripheralInfoForm = ({
       input: (
         <MultiSelect
           searchable
-          maxValues={isRowtable ? 1 : undefined}
+          // maxValues={isRowtable ? 1 : undefined}
           comboboxProps={{
             offset: 0,
           }}
@@ -460,7 +487,13 @@ const PeripheralInfoForm = ({
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isTypeLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -501,6 +534,7 @@ const PeripheralInfoForm = ({
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}

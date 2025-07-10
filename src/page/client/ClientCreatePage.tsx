@@ -4,6 +4,7 @@ import {
   Box,
   Flex,
   Grid,
+  Loader,
   Paper,
   Select,
   Table,
@@ -279,6 +280,7 @@ const ClientCreatePage = () => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -303,7 +305,13 @@ const ClientCreatePage = () => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isRoleLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{

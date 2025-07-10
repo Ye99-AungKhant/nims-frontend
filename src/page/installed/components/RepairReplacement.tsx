@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   Group,
+  Loader,
   Modal,
   MultiSelect,
   Radio,
@@ -13,7 +14,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { IconCalendarWeek, IconChevronDown, IconClipboardDataFilled } from "@tabler/icons-react";
+import {
+  IconCalendarWeek,
+  IconChevronDown,
+  IconClipboardDataFilled,
+} from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
 import { useGetInstallationEngineers } from "../../../hooks/useGetInstallationEngineer";
 import { AddItemModal } from "../../../components/common/AddItemModal";
@@ -54,7 +59,6 @@ const RepairReplacement = ({
   isloading,
   ids,
 }: Props) => {
-  const param = useLocation();
   const { user } = useUserStore();
   const { data: installedObject, isLoading } = useGetInstalledDetail(ids.id);
   const theme = useMantineTheme();
@@ -64,7 +68,8 @@ const RepairReplacement = ({
   const [selectedRepairType, setSelectedRepairType] = useState("Replacement");
   const [selectedReplacementType, setSelectedReplacementType] =
     useState<string[]>();
-  const { data: installationEngineerData } = useGetInstallationEngineers();
+  const { data: installationEngineerData, isLoading: isInstallEngLoading } =
+    useGetInstallationEngineers();
   const { mutate: createInstallationEngineer } =
     useCreateInstallationEngineer();
 
@@ -107,7 +112,7 @@ const RepairReplacement = ({
       installationEngineer: [],
       installImage: [],
       user_false: "",
-      invoice_no:""
+      invoice_no: "",
     },
   });
 
@@ -123,7 +128,7 @@ const RepairReplacement = ({
       reason: "",
       installationEngineer: [],
       installImage: [],
-      invoice_no:""
+      invoice_no: "",
     },
   });
 
@@ -156,7 +161,7 @@ const RepairReplacement = ({
         installationEngineer: form.values.installationEngineer,
         user_false: form.values.user_false,
         reason: form.values.reason,
-        invoice_no:form.values.invoice_no,
+        invoice_no: form.values.invoice_no,
         repair_replacement_by_user_id: user?.id,
         repair_replacement_date: form.values.repair_replacement_date,
         isRepair: true,
@@ -310,6 +315,7 @@ const RepairReplacement = ({
             <MultiSelect
               py={"sm"}
               label="Engineer"
+              nothingFoundMessage="Nothing found..."
               withAsterisk
               searchable
               comboboxProps={{
@@ -334,7 +340,13 @@ const RepairReplacement = ({
                     alignItems: "center",
                   }}
                 >
-                  <IconChevronDown size={16} style={{ marginRight: 20 }} />
+                  {isInstallEngLoading ? (
+                    <Box mr={20} mt={"xs"}>
+                      <Loader size={16} />
+                    </Box>
+                  ) : (
+                    <IconChevronDown size={16} style={{ marginRight: 20 }} />
+                  )}
                   <ActionIcon
                     color={theme.colors.purple[1]}
                     style={{
@@ -354,15 +366,14 @@ const RepairReplacement = ({
             />
 
             <TextInput
-            label="Invoice No"
-          leftSection={<IconClipboardDataFilled size={18} />}
-          withAsterisk
-          {...form.getInputProps("invoice_no")}
-        />
+              label="Invoice No"
+              leftSection={<IconClipboardDataFilled size={18} />}
+              withAsterisk
+              {...form.getInputProps("invoice_no")}
+            />
 
             {selectedRepairType == "Replacement" ? (
               <>
-
                 <MultiSelect
                   label="Replacement Type"
                   withAsterisk
@@ -462,6 +473,7 @@ const RepairReplacement = ({
             <MultiSelect
               py={"sm"}
               label="Engineer"
+              nothingFoundMessage="Nothing found..."
               withAsterisk
               searchable
               comboboxProps={{
@@ -486,7 +498,13 @@ const RepairReplacement = ({
                     alignItems: "center",
                   }}
                 >
-                  <IconChevronDown size={16} style={{ marginRight: 20 }} />
+                  {isInstallEngLoading ? (
+                    <Box mr={20} mt={"xs"}>
+                      <Loader size={16} />
+                    </Box>
+                  ) : (
+                    <IconChevronDown size={16} style={{ marginRight: 20 }} />
+                  )}
                   <ActionIcon
                     color={theme.colors.purple[1]}
                     style={{
@@ -506,11 +524,11 @@ const RepairReplacement = ({
             />
 
             <TextInput
-            label="Invoice No"
-          leftSection={<IconClipboardDataFilled size={18} />}
-          withAsterisk
-          {...vehicleForm.getInputProps("invoice_no")}
-        />
+              label="Invoice No"
+              leftSection={<IconClipboardDataFilled size={18} />}
+              withAsterisk
+              {...vehicleForm.getInputProps("invoice_no")}
+            />
 
             <TextInput
               label="Reason"

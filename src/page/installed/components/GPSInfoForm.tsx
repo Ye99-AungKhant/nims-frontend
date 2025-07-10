@@ -27,6 +27,7 @@ import { useCreateModel } from "../../../hooks/useCreateModel";
 import { useCreateBrand } from "../../../hooks/useCreateBrand";
 import { useGetBrands } from "../../../hooks/useGetBrands";
 import { useGetModels } from "../../../hooks/useGetModels";
+import { Box, Loader } from "@mantine/core";
 import FormTable from "../../../components/common/FormTable";
 import { useUpdateBrand } from "../../../hooks/useUpdateBrand";
 import { useDeleteBrand } from "./../../../hooks/useDeleteBrand";
@@ -50,11 +51,16 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   // Remove extraGPSCount state, use form.values.extraGPS instead
-  const { data: brandData } = useGetBrands("GPS");
-  const { data: modelData } = useGetModels("GPS", Number(form.values.gpsBrand));
+  const { data: brandData, isLoading: isBrandLoading } = useGetBrands("GPS");
+  const { data: modelData, isLoading: isModelLoading } = useGetModels(
+    "GPS",
+    Number(form.values.gpsBrand)
+  );
 
-  const getAllModelData = useGetModelAll("GPS", form);
-  const { data: warrantyData } = useGetWarrantyPlans();
+  const { allPeriModel: getAllModelData, isLoading: isGPSAllModelLoading } =
+    useGetModelAll("GPS", form);
+  const { data: warrantyData, isLoading: isWarrantyLoading } =
+    useGetWarrantyPlans();
 
   const { mutate: createBrand } = useCreateBrand();
   const { mutate: updateBrand } = useUpdateBrand();
@@ -94,6 +100,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -114,7 +121,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -131,6 +144,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isBrandLoading}
         />
       ),
     },
@@ -139,6 +153,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -159,7 +174,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isModelLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -176,6 +197,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isModelLoading}
         />
       ),
     },
@@ -202,6 +224,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -222,7 +245,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isWarrantyLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -239,6 +268,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isWarrantyLoading}
         />
       ),
     },
@@ -250,6 +280,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -270,7 +301,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isBrandLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -287,6 +324,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isBrandLoading}
         />
       ),
     },
@@ -295,6 +333,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -322,7 +361,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isModelLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -339,6 +384,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isModelLoading}
         />
       ),
     },
@@ -385,7 +431,13 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isWarrantyLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -402,6 +454,7 @@ const GPSInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
               </ActionIcon>
             </div>
           }
+          // loading={isWarrantyLoading}
         />
       ),
     },

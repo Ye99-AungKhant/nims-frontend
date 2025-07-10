@@ -25,5 +25,10 @@ export const useGetBrandAll = (
   const allPeriBrand = result
     .map((q) => q.data?.data?.data)
     .flatMap((obj) => Object.values(obj || {}));
-  return allPeriBrand;
+  return {
+    allPeriBrand,
+    isLoading: result.some((q) => q.isLoading),
+    error: result.find((q) => q.isError)?.error,
+    isSuccess: result.every((q) => q.isSuccess),
+  };
 };

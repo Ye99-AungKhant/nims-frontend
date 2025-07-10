@@ -9,6 +9,8 @@ import {
   Text,
   TextInput,
   useMantineTheme,
+  Box,
+  Loader,
 } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { FormValues } from "../../../utils/types";
@@ -53,12 +55,13 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
   const [selectedDomain, setSelectedDomain] = useState<any[]>([]);
-  const { data: typeData } = useGetTypes("Server");
-  const { data: domainData } = useGetBrands(
+  const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Server");
+  const { data: domainData, isLoading: isDomainLoading } = useGetBrands(
     "Server",
     Number(form.values.server.type_id)
   );
-  const { data: warrantyData } = useGetWarrantyPlans();
+  const { data: warrantyData, isLoading: isWarrantyLoading } =
+    useGetWarrantyPlans();
 
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
@@ -68,7 +71,8 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
   const { mutate: updateBrand } = useUpdateBrand();
   const { mutate: deleteBrand } = useDeleteBrand();
 
-  const { data: installationEngineerData } = useGetInstallationEngineers();
+  const { data: installationEngineerData, isLoading: isInstallEngLoading } =
+    useGetInstallationEngineers();
   const { mutate: createInstallationEngineer } =
     useCreateInstallationEngineer();
 
@@ -86,7 +90,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       ...form.values.server,
       [field]: value,
     });
-    if(field === "domain") {
+    if (field === "domain") {
       setSelectedDomain(value);
     }
   };
@@ -111,6 +115,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -132,7 +137,13 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isTypeLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -148,48 +159,55 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                 Add
               </ActionIcon>
             </div>
-            }
-            error={form.errors[`server.type_id`]}
-          />
-          ),
-        },
-        {
-          label: "Domain *",
-          input: (
-          <MultiSelect
-            searchable
-            comboboxProps={{
+          }
+          error={form.errors[`server.type_id`]}
+        />
+      ),
+    },
+    {
+      label: "Domain *",
+      input: (
+        <MultiSelect
+          searchable
+          nothingFoundMessage="Nothing found..."
+          comboboxProps={{
             offset: 0,
-            }}
-            maxValues={
-            (() => {
-              const selectedType = typeData?.data.data.find(
-              (serverType: any) => String(serverType.id) === form.values.server.type_id
-              );
-              return selectedType?.name.includes("Dual") ? 2 : 1;
-            })()
-            }
-            data={
+          }}
+          maxValues={(() => {
+            const selectedType = typeData?.data.data.find(
+              (serverType: any) =>
+                String(serverType.id) === form.values.server.type_id
+            );
+            return selectedType?.name.includes("Dual") ? 2 : 1;
+          })()}
+          data={
             domainData?.data.data.map((data: any) => ({
               value: String(data.id),
               label: `${data.name} (${data.type.name})`,
               type_id: String(data.type_id),
             })) || []
-            }
-            value={selectedDomain?.map((domain:any) => domain)
-            .filter((domain:any) => domain !== undefined)}
-            onChange={(value: any) => handleServerChange("domain", value)}
-            leftSection={<IconWorld size={18} />}
-            rightSectionPointerEvents="all"
-            rightSectionWidth={90}
-            rightSection={
+          }
+          value={selectedDomain
+            ?.map((domain: any) => domain)
+            .filter((domain: any) => domain !== undefined)}
+          onChange={(value: any) => handleServerChange("domain", value)}
+          leftSection={<IconWorld size={18} />}
+          rightSectionPointerEvents="all"
+          rightSectionWidth={90}
+          rightSection={
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isDomainLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -215,6 +233,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       input: (
         <MultiSelect
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -238,7 +257,13 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isInstallEngLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{
@@ -275,6 +300,7 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
       input: (
         <Select
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -298,7 +324,13 @@ const ServerInfoForm = ({ form }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isWarrantyLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{

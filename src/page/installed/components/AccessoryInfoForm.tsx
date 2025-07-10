@@ -3,6 +3,8 @@ import {
   MultiSelect,
   TextInput,
   useMantineTheme,
+  Box,
+  Loader,
 } from "@mantine/core";
 import { FormValues } from "../../../utils/types";
 import {
@@ -34,7 +36,8 @@ interface Operators {
 const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
-  const { data: accessoryTypeData } = useGetTypes("Accessory");
+  const { data: accessoryTypeData, isLoading: isTypeLoading } =
+    useGetTypes("Accessory");
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
@@ -100,6 +103,7 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <MultiSelect
           searchable
+          nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
           }}
@@ -123,7 +127,13 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
                 alignItems: "center",
               }}
             >
-              <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              {isTypeLoading ? (
+                <Box mr={20} mt={"xs"}>
+                  <Loader size={16} />
+                </Box>
+              ) : (
+                <IconChevronDown size={16} style={{ marginRight: 20 }} />
+              )}
               <ActionIcon
                 color={theme.colors.purple[1]}
                 style={{

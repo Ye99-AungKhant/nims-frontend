@@ -34,5 +34,10 @@ export const useGetModelAll = (
     .flatMap((obj) => Object.values(obj || {}));
 
   console.log("useQuery", allPeriModel);
-  return allPeriModel;
+  return {
+    allPeriModel,
+    isLoading: result.some((q) => q.isLoading),
+    error: result.find((q) => q.isError)?.error,
+    isSuccess: result.every((q) => q.isSuccess),
+  };
 };
