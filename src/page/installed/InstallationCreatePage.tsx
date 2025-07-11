@@ -187,14 +187,9 @@ const InstallationCreatePage = () => {
     formData.append("data", JSON.stringify(newValues));
 
     if (isEditMode) {
-      console.log("object update submit", formData);
-      updateObjectMutate(formData, {
-        onSuccess: () => navigate("/installed"),
-      });
+      updateObjectMutate(formData);
     } else {
-      mutate(formData, {
-        onSuccess: () => navigate("/installed"),
-      });
+      mutate(formData);
     }
   };
 
@@ -237,6 +232,8 @@ const InstallationCreatePage = () => {
         })
       );
 
+      const transformedActiveGPS = data?.device?.[data?.device?.length - 1];
+
       const transformedInstallEng =
         data?.device[0]?.server[0]?.installation_engineer.map((eng: any) => ({
           id: eng.id,
@@ -252,12 +249,12 @@ const InstallationCreatePage = () => {
         vehicleYear: data.year ? String(data.year) : "",
         vehiclePlateNo: data.plate_number,
         vehicleOdometer: String(data?.odometer),
-        gpsId: data?.device[0]?.id,
-        gpsBrand: String(data?.device[0]?.brand_id),
-        gpsModel: String(data?.device[0]?.model_id),
-        imei: data?.device[0]?.imei,
-        gpsSerial: data?.device[0]?.serial_no,
-        warranty: String(data?.device[0]?.warranty_plan_id),
+        gpsId: transformedActiveGPS?.id,
+        gpsBrand: String(transformedActiveGPS?.brand_id),
+        gpsModel: String(transformedActiveGPS?.model_id),
+        imei: transformedActiveGPS?.imei,
+        gpsSerial: transformedActiveGPS?.serial_no,
+        warranty: String(transformedActiveGPS?.warranty_plan_id),
         operators: data?.device[0]?.simcard,
         peripheral: transformedPeripheral,
         accessory: transformedAccessory,
