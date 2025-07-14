@@ -19,7 +19,7 @@ import {
   IconChevronDown,
   IconClipboardDataFilled,
 } from "@tabler/icons-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetInstallationEngineers } from "../../../hooks/useGetInstallationEngineer";
 import { AddItemModal } from "../../../components/common/AddItemModal";
 import { useCreateInstallationEngineer } from "../../../hooks/useCreateInstallEngineer";
@@ -80,6 +80,9 @@ const RepairReplacement = ({
 
   const { mutate: vehicleChangeMutate, isPending: isVehicleChangeLoading } =
     useVehicleChange();
+
+  const [peripheralLength, setPeripheralLength] = useState(0);
+  const [accessoryLength, setAccessoryLength] = useState(0);
 
   const form = useForm<any>({
     initialValues: {
@@ -199,7 +202,9 @@ const RepairReplacement = ({
   useEffect(() => {
     if (ids && installedObject) {
       const data = installedObject.items;
-      const transformedPeripheral = data?.device[0]?.peripheral?.map(
+      const transformedActiveGPS = data?.device?.[data?.device?.length - 1];
+
+      const transformedPeripheral = transformedActiveGPS?.peripheral?.map(
         (p: any) => ({
           id: p.id,
           sensor_type_id: String(p.sensor_type_id) || "",
@@ -213,7 +218,7 @@ const RepairReplacement = ({
         })
       );
 
-      const transformedAccessory = data?.device[0]?.accessory?.map(
+      const transformedAccessory = transformedActiveGPS?.accessory?.map(
         (acc: any) => ({
           id: acc.id,
           type_id: String(acc.type_id),
@@ -229,14 +234,14 @@ const RepairReplacement = ({
 
       form.setValues({
         vehicleId: data.id,
-
-        gpsId: data?.device[0]?.id,
-        gpsBrand: String(data?.device[0]?.brand_id),
-        gpsModel: String(data?.device[0]?.model_id),
-        imei: data?.device[0]?.imei,
-        gpsSerial: data?.device[0]?.serial_no,
-        warranty: String(data?.device[0]?.warranty_plan_id),
-        operators: data?.device[0]?.simcard,
+        gpsId: data?.device[0]?.id, //original GPS ID
+        gpsId_replaced: transformedActiveGPS?.id, //replaced GPS ID
+        gpsBrand: String(transformedActiveGPS?.brand_id),
+        gpsModel: String(transformedActiveGPS?.model_id),
+        imei: transformedActiveGPS?.imei,
+        gpsSerial: transformedActiveGPS?.serial_no,
+        warranty: String(transformedActiveGPS?.warranty_plan_id),
+        operators: transformedActiveGPS?.simcard,
         peripheral: transformedPeripheral,
         accessory: transformedAccessory,
         server: {
@@ -244,8 +249,20 @@ const RepairReplacement = ({
         },
         installationEngineer: transformedInstallEng,
       });
+
+      setPeripheralLength(transformedPeripheral?.length ?? 0);
+      setAccessoryLength(transformedAccessory?.length ?? 0);
     }
   }, [ids, installedObject]);
+
+  // const initialPeripheralLength = useMemo(
+  //   () => form.values.peripheral?.length ?? 0,
+  //   [installedObject?.items?.id]
+  // );
+  // const initialAccessoryLength = useMemo(
+  //   () => form.values.accessory?.length ?? 0,
+  //   [installedObject?.items?.id]
+  // );
 
   const handleInstallionEngChange = (selectedEng: string[]) => {
     const updatedEng = selectedEng.map((user_id, index) => ({
@@ -260,6 +277,10 @@ const RepairReplacement = ({
       vehicleForm.setFieldValue("installationEngineer", updatedEng);
     }
   };
+
+  console.log("form values", form.values);
+  console.log("peripheralLength", peripheralLength);
+  console.log("accessoryLength", accessoryLength);
 
   return (
     <>
@@ -412,7 +433,11 @@ const RepairReplacement = ({
                     <Text fw={"bold"} mt={"md"}>
                       Peripheral
                     </Text>
-                    <PeripheralInfoForm form={form} isRowtable />
+                    <PeripheralInfoForm
+                      form={form}
+                      isRowtable
+                      maxSize={peripheralLength}
+                    />
                   </>
                 )}
                 {selectedReplacementType?.includes("Accessories") && (
@@ -420,7 +445,11 @@ const RepairReplacement = ({
                     <Text fw={"bold"} mt={"md"}>
                       Accessories
                     </Text>
-                    <AccessoryInfoForm form={form} isRowtable />
+                    <AccessoryInfoForm
+                      form={form}
+                      isRowtable
+                      maxSize={accessoryLength}
+                    />
                   </>
                 )}
               </>

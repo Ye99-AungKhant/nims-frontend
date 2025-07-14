@@ -205,7 +205,9 @@ const InstallationCreatePage = () => {
     console.log("edit data", installedObject);
     if (id && installedObject) {
       const data = installedObject.items;
-      const transformedPeripheral = data?.device[0]?.peripheral?.map(
+      const transformedActiveGPS = data?.device?.[data?.device?.length - 1];
+
+      const transformedPeripheral = transformedActiveGPS?.peripheral?.map(
         (p: any) => ({
           id: p.id,
           sensor_type_id: String(p.sensor_type_id) || "",
@@ -221,7 +223,7 @@ const InstallationCreatePage = () => {
         })
       );
 
-      const transformedAccessory = data?.device[0]?.accessory.map(
+      const transformedAccessory = transformedActiveGPS?.accessory?.map(
         (acc: any) => ({
           id: acc.id,
           type_id: String(acc.type_id),
@@ -231,8 +233,6 @@ const InstallationCreatePage = () => {
             : "",
         })
       );
-
-      const transformedActiveGPS = data?.device?.[data?.device?.length - 1];
 
       const transformedInstallEng =
         data?.device[0]?.server[0]?.installation_engineer.map((eng: any) => ({
@@ -255,7 +255,7 @@ const InstallationCreatePage = () => {
         imei: transformedActiveGPS?.imei,
         gpsSerial: transformedActiveGPS?.serial_no,
         warranty: String(transformedActiveGPS?.warranty_plan_id),
-        operators: data?.device[0]?.simcard,
+        operators: transformedActiveGPS?.simcard,
         peripheral: transformedPeripheral,
         accessory: transformedAccessory,
         server: {

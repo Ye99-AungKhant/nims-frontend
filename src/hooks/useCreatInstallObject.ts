@@ -17,25 +17,25 @@ export const useCreateInstallObject = () => {
       if (data?.status === 200 || data?.status === 201) {
         navigate("/installed");
 
-        notifications.show({
-          title: "Success",
-          message: data.data.message,
-          color: "green",
-        });
+        // notifications.show({
+        //   title: "Success",
+        //   message: data.data.message,
+        //   color: "green",
+        // });
       } else {
-        notifications.show({
-          title: "Failed",
-          message: "Failed to create install object.",
-          color: "red",
-        });
+        // notifications.show({
+        //   title: "Failed",
+        //   message: "Failed to create install object.",
+        //   color: "red",
+        // });
       }
     },
     onError: () => {
-      notifications.show({
-        title: "Failed",
-        message: "Failed to create install object.",
-        color: "red",
-      });
+      // notifications.show({
+      //   title: "Failed",
+      //   message: "Failed to create install object.",
+      //   color: "red",
+      // });
     },
   });
 };

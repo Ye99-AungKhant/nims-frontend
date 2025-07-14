@@ -68,9 +68,23 @@ const SimCardInfoForm = ({
       updatedOperators[index] = { operator: "", phone_no: "" };
     }
     updatedOperators[index][field] = value;
-    form.setFieldValue("operators", updatedOperators);
-  };
 
+    if (!isRowtable) {
+      form.setFieldValue("operators", updatedOperators);
+    } else {
+      const opt = updatedOperators.map((item, i) => {
+        if (index == i) {
+          return {
+            ...item,
+            is_replacement: true,
+          };
+        }
+        return item;
+      });
+
+      form.setFieldValue("operators", opt);
+    }
+  };
   console.log("clientData", form.values);
 
   const rows = [

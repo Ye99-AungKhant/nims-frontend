@@ -7,7 +7,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormValues, Peripheral, PeripheralDetail } from "../../../utils/types";
 import {
   IconAlignBoxCenterMiddleFilled,
@@ -44,15 +44,18 @@ interface VehicleInfoProps {
   isEditMode?: boolean;
   isRowtable?: boolean;
   disableQty?: boolean; // Optional prop to disable qty input
+  maxSize?: number; // Optional prop to set max size
 }
 const PeripheralInfoForm = ({
   form,
   isRowtable = false,
   disableQty = false,
+  maxSize,
 }: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [modalType, setModalType] = useState("");
+  const [oldPeripheral, setOldPeripheral] = useState<any[] | null>(null);
   const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Sensor");
   const { allPeriBrand: getAllBrandData, isLoading: isBrandLoading } =
     useGetBrandAll("Sensor", form);
@@ -132,10 +135,18 @@ const PeripheralInfoForm = ({
   const handlePeripheralChange = (selectedTypes: string[]) => {
     const existingPeripherals = form.values.peripheral || [];
 
+    // Find the old peripheral that was replaced (if any)
+
     const updatedPeripherals = selectedTypes.map((typeId) => {
       // Check if this typeId already exists in peripheral
       const existing = existingPeripherals.find(
         (p) => p.sensor_type_id === typeId
+      );
+
+      const oldPeripheralId = oldPeripheral?.find(
+        (peri) =>
+          peri.sensor_type_id !== typeId &&
+          !selectedTypes.includes(peri.sensor_type_id)
       );
 
       if (existing) {
@@ -145,6 +156,7 @@ const PeripheralInfoForm = ({
       // Create a new peripheral entry if not existing
       return {
         is_replacement: true,
+        replaced_id: oldPeripheralId ? oldPeripheralId.id : "", // set replaced_id to old type id
         sensor_type_id: typeId,
         qty: "",
         detail: [
@@ -463,7 +475,7 @@ const PeripheralInfoForm = ({
       input: (
         <MultiSelect
           searchable
-          // maxValues={isRowtable ? 1 : undefined}
+          maxValues={maxSize ? maxSize : undefined}
           comboboxProps={{
             offset: 0,
           }}
@@ -570,6 +582,11 @@ const PeripheralInfoForm = ({
       ),
     },
   ];
+
+  useEffect(() => {
+    const currentPeripherals = form.values.peripheral;
+    setOldPeripheral(currentPeripherals || null);
+  }, []);
 
   return (
     <>

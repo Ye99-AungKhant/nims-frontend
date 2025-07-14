@@ -17,27 +17,27 @@ export const useUpdateInstalledObject = () => {
     },
     onSuccess: (data: any) => {
       if (data?.status === 200 || data?.status === 201) {
-        notifications.show({
-          title: "Success",
-          message: "Install object updated successfully.",
-          color: "green",
-        });
+        // notifications.show({
+        //   title: "Success",
+        //   message: "Install object updated successfully.",
+        //   color: "green",
+        // });
         queryClient.invalidateQueries({ queryKey: ["getInstalled"] });
         navigate("/installed");
       } else {
-        notifications.show({
-          title: "Failed",
-          message: "Failed to update install object.",
-          color: "red",
-        });
+        // notifications.show({
+        //   title: "Failed",
+        //   message: "Failed to update install object.",
+        //   color: "red",
+        // });
       }
     },
     onError: () => {
-      notifications.show({
-        title: "Failed",
-        message: "Failed to update install object.",
-        color: "red",
-      });
+      // notifications.show({
+      //   title: "Failed",
+      //   message: "Failed to update install object.",
+      //   color: "red",
+      // });
     },
   });
 };

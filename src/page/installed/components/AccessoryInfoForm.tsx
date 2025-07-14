@@ -22,10 +22,12 @@ import { useUpdateType } from "../../../hooks/useUpdateType";
 import { useDeleteType } from "../../../hooks/useDeleteType";
 import { useGetTypes } from "../../../hooks/useGetTypes";
 import { DateInput } from "@mantine/dates";
+import { useEffect, useState } from "react";
 
 interface VehicleInfoProps {
   form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
   isRowtable?: boolean;
+  maxSize?: number; // Optional prop to set max size
 }
 
 interface Operators {
@@ -33,7 +35,11 @@ interface Operators {
   qty: string;
   installed_date?: Date;
 }
-const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
+const AccessoryInfoForm = ({
+  form,
+  isRowtable = false,
+  maxSize,
+}: VehicleInfoProps) => {
   const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: accessoryTypeData, isLoading: isTypeLoading } =
@@ -41,6 +47,7 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
   const { mutate: createType } = useCreateType();
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
+  const [oldAccessory, setOldAccessory] = useState<any[] | null>(null);
 
   const handleAccessoryQtyChange = (
     index: number,
@@ -73,14 +80,41 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
 
     // Find new selected types that are not yet in the form
     const existingTypeIds = updatedAccessories.map((acc) => acc.type_id);
-    const newAccessories = selectedTypes
-      .filter((typeId) => !existingTypeIds.includes(typeId))
-      .map((typeId) => ({
-        type_id: typeId,
-        qty: "", // new item with empty qty
-      }));
 
-    form.setFieldValue("accessory", [...updatedAccessories, ...newAccessories]);
+    if (!isRowtable) {
+      const newAccessories = selectedTypes
+        .filter((typeId) => !existingTypeIds.includes(typeId))
+        .map((typeId) => ({
+          type_id: typeId,
+          qty: "", // new item with empty qty
+        }));
+
+      form.setFieldValue("accessory", [
+        ...updatedAccessories,
+        ...newAccessories,
+      ]);
+    } else {
+      const newAccessories = selectedTypes
+        .filter((typeId) => !existingTypeIds.includes(typeId))
+        .map((typeId) => {
+          // Find the old accessory that was replaced (if any)
+          const oldAccessoryId = oldAccessory?.find(
+            (acc) =>
+              acc.type_id !== typeId && !selectedTypes.includes(acc.type_id)
+          );
+          return {
+            type_id: typeId,
+            qty: "",
+            is_replacement: true,
+            replaced_id: oldAccessoryId ? oldAccessoryId.id : "", // set replaced_type_id to old type id
+          };
+        });
+
+      form.setFieldValue("accessory", [
+        ...updatedAccessories,
+        ...newAccessories,
+      ]);
+    }
   };
 
   const getShortName = (index: number) => {
@@ -103,6 +137,7 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       input: (
         <MultiSelect
           searchable
+          maxValues={maxSize ? maxSize : undefined}
           nothingFoundMessage="Nothing found..."
           comboboxProps={{
             offset: 0,
@@ -185,6 +220,11 @@ const AccessoryInfoForm = ({ form, isRowtable = false }: VehicleInfoProps) => {
       ),
     },
   ];
+
+  useEffect(() => {
+    const currentAccessories = form.values.accessory;
+    setOldAccessory(currentAccessories || null);
+  }, []);
 
   return (
     <>

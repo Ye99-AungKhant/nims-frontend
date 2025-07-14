@@ -682,6 +682,8 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
 
     form.setValues({
       replacementId: replacementData.replacement_id,
+      replacement_component_id: replacementData.replacement_component_id,
+
       peripheral: [
         {
           id: replacementData.id,
@@ -810,17 +812,13 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
                     </Tooltip>
                   </Table.Td>
                   <Table.Td>
-                    {item?.replacement_of.length > 0 && (
+                    {item?.replacement_id ? (
                       <Group wrap="nowrap" gap={5}>
                         <ActionIcon
                           color={theme.colors.chocolate[1]}
                           radius="lg"
                           variant="outline"
-                          onClick={() =>
-                            mutate(
-                              item?.replacement_of[0]?.device_replacement_id
-                            )
-                          }
+                          onClick={() => mutate(item?.replacement_id)}
                         >
                           <IconTrash size={18} />
                         </ActionIcon>
@@ -834,6 +832,8 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
                           <IconEdit size={18} />
                         </ActionIcon>
                       </Group>
+                    ) : (
+                      <></>
                     )}
                   </Table.Td>
                 </Table.Tr>
@@ -1165,7 +1165,8 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
 
   const handleEdit = (replacementData: any) => {
     form.setValues({
-      replacement_component_id: replacementData.replacement_of[0].id,
+      replacementId: replacementData.replacement_id,
+      replacement_component_id: replacementData.replacement_component_id,
       accessory: [
         {
           id: replacementData.id,
@@ -1206,24 +1207,24 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
           </Table.Thead>
           <Table.Tbody>
             {!isLoading ? (
-              accessoryReplacementHistoryData.map((item: any) => (
-                <Table.Tr key={item.id}>
+              accessoryReplacementHistoryData?.map((item: any) => (
+                <Table.Tr key={item?.id}>
                   <Table.Td style={{ color: "#474747" }}>
-                    {item.type?.name}
+                    {item?.type?.name}
                   </Table.Td>
-                  <Table.Td style={{ color: "#474747" }}>{item.qty}</Table.Td>
+                  <Table.Td style={{ color: "#474747" }}>{item?.qty}</Table.Td>
                   <Table.Td>
                     <span
                       style={{
                         backgroundColor: `${
-                          item.status === "Active" ? "#239e57" : "#474747"
+                          item?.status === "Active" ? "#239e57" : "#474747"
                         }`,
                         color: "white",
                         padding: "3px 5px",
                         borderRadius: 20,
                       }}
                     >
-                      {item.status}
+                      {item?.status}
                     </span>
                   </Table.Td>
                   <Table.Td style={{ color: "#474747" }}>
@@ -1255,17 +1256,13 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
                     </Tooltip>
                   </Table.Td>
                   <Table.Td>
-                    {item?.replacement_of.length > 0 && (
+                    {item?.replacement_id ? (
                       <Group wrap="nowrap" gap={5}>
                         <ActionIcon
                           color={theme.colors.chocolate[1]}
                           radius="lg"
                           variant="outline"
-                          onClick={() =>
-                            mutate(
-                              item?.replacement_of[0]?.device_replacement_id
-                            )
-                          }
+                          onClick={() => mutate(item?.replacement_id)}
                         >
                           <IconTrash size={18} />
                         </ActionIcon>
@@ -1279,6 +1276,8 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
                           <IconEdit size={18} />
                         </ActionIcon>
                       </Group>
+                    ) : (
+                      <></>
                     )}
                   </Table.Td>
                 </Table.Tr>
