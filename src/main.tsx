@@ -4,6 +4,7 @@ import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/carousel/styles.css";
+import "@mantine/notifications/styles.css";
 import "./assets/styles/index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";

@@ -48,6 +48,7 @@ const AccessoryInfoForm = ({
   const { mutate: updateType } = useUpdateType();
   const { mutate: deleteType } = useDeleteType();
   const [oldAccessory, setOldAccessory] = useState<any[] | null>(null);
+  const usedOldAccessoryIds = new Set<number>();
 
   const handleAccessoryQtyChange = (
     index: number,
@@ -97,16 +98,22 @@ const AccessoryInfoForm = ({
       const newAccessories = selectedTypes
         .filter((typeId) => !existingTypeIds.includes(typeId))
         .map((typeId) => {
-          // Find the old accessory that was replaced (if any)
-          const oldAccessoryId = oldAccessory?.find(
-            (acc) =>
-              acc.type_id !== typeId && !selectedTypes.includes(acc.type_id)
-          );
+          // Find the first unused old accessory not in selectedTypes
+          const oldAccessoryItem = oldAccessory?.find((acc) => {
+            const isNotSelected = !selectedTypes.includes(acc.type_id);
+            const isNotUsed = !usedOldAccessoryIds.has(acc.id);
+            return isNotSelected && isNotUsed;
+          });
+
+          if (oldAccessoryItem) {
+            usedOldAccessoryIds.add(oldAccessoryItem.id);
+          }
+
           return {
             type_id: typeId,
             qty: "",
             is_replacement: true,
-            replaced_id: oldAccessoryId ? oldAccessoryId.id : "", // set replaced_type_id to old type id
+            replaced_id: oldAccessoryItem?.id ?? null,
           };
         });
 
