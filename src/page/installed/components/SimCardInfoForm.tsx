@@ -47,11 +47,9 @@ const SimCardInfoForm = ({
   disableDual = false,
 }: VehicleInfoProps) => {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedSim, setSelectedSim] = useState(
-    form.values.operators.length === 1 ? "SINGLE" : "DUAL"
-  );
+
+  const [selectedSim, setSelectedSim] = useState<string | undefined>();
   const { data: brandData, isLoading: isBrandLoading } =
     useGetBrands("Operator");
   const { mutate: createBrand } = useCreateBrand();
@@ -85,7 +83,14 @@ const SimCardInfoForm = ({
       form.setFieldValue("operators", opt);
     }
   };
-  console.log("clientData", form.values);
+
+  useEffect(() => {
+    if (form.values.operators.length === 1) {
+      setSelectedSim("SINGLE");
+    } else {
+      setSelectedSim("DUAL");
+    }
+  }, [form.values.operators.length]);
 
   const rows = [
     {
