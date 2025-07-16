@@ -67,7 +67,7 @@ const RenewalConfirmModal = ({
   const [modalType, setModalType] = useState("confirm-page");
   const [opened, { open, close }] = useDisclosure(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
-  
+
   const form = useForm({
     initialValues: {
       id: data.server_id,
@@ -76,7 +76,13 @@ const RenewalConfirmModal = ({
       subscriptionPlan: String(data.subscription_plan_id),
       objectBaseFee: data.object_base_fee,
       type: String(data.type_id),
-      domain: [String(data.domain_id), String(data?.extra_server[0]?.domain_id)],
+      domain: [
+        String(data.domain_id),
+        String(data?.extra_server[0]?.domain_id),
+        ...(data?.extra_server[0]?.domain_id
+          ? [String(data?.extra_server[0]?.domain_id)]
+          : []),
+      ],
       invoiceNo: "",
     },
     validate: zodResolver(renewalformSchema),
@@ -96,7 +102,10 @@ const RenewalConfirmModal = ({
   const { mutate: deleteBrand } = useDeleteBrand();
 
   const handleSubmit = (values: any) => {
-    const payloadData = {...values, extra_server_id: data?.extra_server[0]?.id}
+    const payloadData = {
+      ...values,
+      extra_server_id: data?.extra_server[0]?.id,
+    };
     mutate(payloadData, {
       onSuccess: () => {
         onClose();
@@ -119,7 +128,6 @@ const RenewalConfirmModal = ({
   });
 
   console.log("form values", form.values);
-  
 
   return (
     <>
@@ -282,14 +290,13 @@ const RenewalConfirmModal = ({
               comboboxProps={{
                 offset: 0,
               }}
-              maxValues={
-            (() => {
-              const selectedType = typeData?.data.data.find(
-              (serverType: any) => String(serverType.id) === form.values.type
-              );
-              return selectedType?.name.includes("Dual") ? 2 : 1;
-            })()
-            }
+              maxValues={(() => {
+                const selectedType = typeData?.data.data.find(
+                  (serverType: any) =>
+                    String(serverType.id) === form.values.type
+                );
+                return selectedType?.name.includes("Dual") ? 2 : 1;
+              })()}
               data={
                 domainData?.data.data.map((data: any) => ({
                   value: String(data.id),
