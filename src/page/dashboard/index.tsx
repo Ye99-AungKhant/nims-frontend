@@ -184,18 +184,19 @@ export const DashboardPage = () => {
   };
 
   return (
-    <Box p="30px">
+    <Box p={{ base: 8, sm: 16, md: 30 }}>
       <Stack>
-        <Grid>
+        {/* Responsive summary cards */}
+        <Grid gutter={{ base: 8, sm: 12 }}>
           {summaryData.map((item, index) => (
             <Grid.Col
-              span={{ base: 6, md: 3 }}
+              span={{ base: 6, sm: 6, md: 3 }}
               key={index}
               onClick={() => (item.url ? navigate(item.url) : item.onClick?.())}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", minWidth: 0 }}
             >
-              <Card radius="md" shadow="sm">
-                <Group>
+              <Card radius="md" shadow="sm" style={{ minWidth: 0 }}>
+                <Group wrap="nowrap" align="center" gap={8}>
                   <ThemeIcon
                     size="lg"
                     radius="md"
@@ -204,11 +205,11 @@ export const DashboardPage = () => {
                   >
                     <item.icon />
                   </ThemeIcon>
-                  <div>
-                    <Text size="lg" fw={700}>
+                  <div style={{ minWidth: 0 }}>
+                    <Text size="lg" fw={700} truncate>
                       {item.value}
                     </Text>
-                    <Text size="xs" c="dimmed">
+                    <Text size="xs" c="dimmed" truncate>
                       {item.label}
                     </Text>
                   </div>
@@ -217,68 +218,65 @@ export const DashboardPage = () => {
             </Grid.Col>
           ))}
           <Grid.Col
-            span={{ base: 6, md: 3 }}
-            style={{ cursor: "pointer" }}
+            span={{ base: 6, sm: 6, md: 3 }}
+            style={{ cursor: "pointer", minWidth: 0 }}
             onClick={openGPSModal}
           >
-            <Card radius="md" shadow="sm">
-              <Group>
+            <Card radius="md" shadow="sm" style={{ minWidth: 0 }}>
+              <Group wrap="nowrap" align="center" gap={8}>
                 <ThemeIcon size="lg" radius="md" variant="light">
                   <IconRouter />
                 </ThemeIcon>
-
-                <div>
-                  <Text size="lg" fw={700}>
+                <div style={{ minWidth: 0 }}>
+                  <Text size="lg" fw={700} truncate>
                     {DashboardData?.gpsBrandCount}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" truncate>
                     GPS Brand
                   </Text>
                 </div>
-                <div>
-                  <Text size="lg" fw={700}>
+                <div style={{ minWidth: 0 }}>
+                  <Text size="lg" fw={700} truncate>
                     {DashboardData?.gpsModelCount}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" truncate>
                     Model
                   </Text>
                 </div>
               </Group>
             </Card>
           </Grid.Col>
-
           <Grid.Col
-            span={{ base: 6, md: 4 }}
-            style={{ cursor: "pointer" }}
+            span={{ base: 12, xs: 12, sm: 8, md: 4 }}
+            style={{ cursor: "pointer", minWidth: 0 }}
             onClick={openPeripheralModal}
           >
-            <Card radius="md" shadow="sm">
-              <Group>
+            <Card radius="md" shadow="sm" style={{ minWidth: 0 }}>
+              <Group wrap="nowrap" align="center" gap={8}>
                 <ThemeIcon size="lg" radius="md" variant="light">
                   <IconGitCompare />
                 </ThemeIcon>
-
-                <div>
-                  <Text size="lg" fw={700}>
+                <div style={{ minWidth: 0 }}>
+                  <Text size="lg" fw={700} truncate>
                     {DashboardData?.peripheralCount?.type ?? 0}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" truncate>
                     Peripheral Type
                   </Text>
                 </div>
-                <div>
-                  <Text size="lg" fw={700}>
+                <div style={{ minWidth: 0 }}>
+                  <Text size="lg" fw={700} truncate>
                     {DashboardData?.peripheralCount?.brand ?? 0}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" truncate>
                     Brand
                   </Text>
                 </div>
-                <div>
-                  <Text size="lg" fw={700}>
+                <div style={{ minWidth: 0 }}>
+                  <Text size="lg" fw={700} truncate>
                     {DashboardData?.peripheralCount?.model ?? 0}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text size="xs" c="dimmed" truncate>
                     Model
                   </Text>
                 </div>
@@ -374,8 +372,8 @@ export const DashboardPage = () => {
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 12, sm: 8 }}>
-            <Paper withBorder p="md" radius="md">
-              <Group justify="space-between" mb="md">
+            <Paper withBorder radius="md">
+              <Group p="md" justify="space-between" mb="md">
                 <Text size="xl" fw={"bold"}>
                   Monthly Objects Trend
                 </Text>
@@ -398,30 +396,16 @@ export const DashboardPage = () => {
                   }}
                 />
               </Group>
-              {/* <BarChart
-                h={250}
-                data={barChartData}
-                dataKey="month"
-                withLegend
-                legendProps={{ verticalAlign: "bottom" }}
-                barProps={{ radius: [10, 10, 0, 0], barSize: 8 }}
-                series={[
-                  { name: "Installed", color: theme.colors.purple[1] },
-                  { name: "Expired", color: theme.colors.error[6] },
-                  { name: "Renewal", color: theme.colors.success[6] },
-                  { name: "Repair", color: theme.colors.grape[6] },
-                  { name: "Replacement", color: theme.colors.orange[6] },
-                ]}
-                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                  // If your chart library provides a way to get bar data from the event, use it here
-                  // Example: const bar = getBarDataFromEvent(event);
-                  // navigate(`/installed?month=${bar.month}`);
-                }}
-              /> */}
-              <ResponsiveContainer width="100%" height={250}>
+              <ResponsiveContainer height={250}>
                 <BarChart data={barChartData}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis
+                    dataKey="month"
+                    angle={-35}
+                    textAnchor="end"
+                    height={60}
+                    interval={0}
+                  />
                   <YAxis />
                   <Tooltip
                     contentStyle={{

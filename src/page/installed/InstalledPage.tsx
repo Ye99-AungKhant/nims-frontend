@@ -7,6 +7,7 @@ import {
   Menu,
   Paper,
   Select,
+  SimpleGrid,
   Table,
   Text,
   useMantineTheme,
@@ -73,50 +74,75 @@ export const InstalledPage = () => {
 
   return (
     <PermissionGate page={"installed_objects"} scope={"view"}>
-      <Box p="30px">
+      <Box p={{ base: 8, sm: 30 }}>
         <Paper shadow="xs">
           <Box style={{ borderBottom: "1px solid #dddddd" }}>
-            <Flex justify={"space-between"} py="md" px={30}>
-              <Group gap={0}>
-                <IconDownload size={24} />
-                <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+            <Flex
+              direction="row"
+              justify="space-between"
+              align="center"
+              py="md"
+              px={{ base: 8, sm: 30 }}
+              gap={8}
+              wrap="wrap"
+              style={{ flexWrap: "wrap" }}
+            >
+              <Flex align="center" gap={8} style={{ minWidth: 0 }}>
+                <IconDownload size={22} />
+                <Text size={"lg"} fw={600} c={"dark"}>
                   Installed Objects
                 </Text>
-              </Group>
+              </Flex>
               <PermissionGate
                 page={"installed_objects"}
                 scope={"create"}
                 errorProps={{ style: { display: "none" } }}
               >
-                <Group justify="center">
-                  <Button
-                    onClick={() => navigate("create")}
-                    leftSection={<IconPlus size={18} />}
-                    variant="outline"
-                    radius={"lg"}
-                    size="xs"
-                  >
-                    New Installation
-                  </Button>
-                </Group>
+                <Button
+                  onClick={() => navigate("create")}
+                  leftSection={<IconPlus size={16} />}
+                  variant="outline"
+                  radius={"lg"}
+                  size="xs"
+                  style={{
+                    minWidth: 100,
+                    fontSize: 13,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  New Installation
+                </Button>
               </PermissionGate>
             </Flex>
           </Box>
+
           <Flex
             justify="space-between"
-            align="center"
+            align="start"
             mb={0}
-            px="30px"
+            px={{ base: 8, sm: 30 }}
             pt="30px"
+            wrap="wrap"
+            gap="md"
           >
-            <Group gap={"xs"}>
-              <Text color={theme.colors.purple[0]} fz="md">
-                Show
-              </Text>
-              <PageSizeSelect />
-              <Text color={theme.colors.purple[0]} fz="md" mr={"md"}>
-                entries
-              </Text>
+            {/* Left Side: Filters */}
+            <SimpleGrid
+              cols={{ base: 2, sm: 2, md: 6 }}
+              spacing="xs"
+              style={{ flex: 1, minWidth: "300px" }}
+            >
+              <Flex align="center" gap={5}>
+                <Text color={theme.colors.purple[0]} fz="md">
+                  Show
+                </Text>
+                <PageSizeSelect />
+                <Text color={theme.colors.purple[0]} fz="md">
+                  entries
+                </Text>
+              </Flex>
+
               <Select
                 variant="default"
                 size="sm"
@@ -127,12 +153,11 @@ export const InstalledPage = () => {
                   { label: "Expiry Date", value: "expire_date" },
                 ]}
                 onChange={(value) => {
-                  setParams({
-                    filter_by_date: value,
-                  });
+                  setParams({ filter_by_date: value });
                 }}
-                w={170}
+                w="100%"
               />
+
               <DatePickerInput
                 type="range"
                 placeholder="Filter by Date"
@@ -151,11 +176,12 @@ export const InstalledPage = () => {
                 valueFormat="DD-MM-YYYY"
                 clearable
                 allowSingleDateInRange
-                miw={170}
+                w="100%"
                 rightSection={
                   filterDatevalue[0] ? null : <IconChevronDown size={16} />
                 }
               />
+
               <Select
                 variant="default"
                 size="sm"
@@ -167,17 +193,19 @@ export const InstalledPage = () => {
                   { label: "Expired", value: "Expired" },
                 ]}
                 onChange={(value) => {
-                  setParams({
-                    filter_by: value,
-                  });
+                  setParams({ filter_by: value });
                 }}
-                w={170}
+                w="100%"
               />
-            </Group>
+            </SimpleGrid>
 
-            <SearchInput size="sm" leftSection name={"search"} />
+            {/* Right Side: Search */}
+            <Box>
+              <SearchInput size="sm" leftSection name="search" />
+            </Box>
           </Flex>
-          <Box p="30px" pt={"md"}>
+
+          <Box py={"md"} px={{ base: 8, sm: 30 }}>
             <DataTable
               columns={InstalledObjectPageColumns}
               data={data?.items || []}

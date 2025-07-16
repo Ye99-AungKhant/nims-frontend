@@ -26,15 +26,12 @@ export const GlobalSearch = () => {
           label: data.name,
         }));
         setClients(clientData);
-        console.log("res", res?.data.data);
       },
     });
-    console.log("search", value);
   };
 
   const handleItemSubmit = (value: string) => {
     setValue(value);
-    console.log("Selected item:", value);
     navigate("client/detail", {
       state: {
         id: value,
@@ -52,6 +49,7 @@ export const GlobalSearch = () => {
       radius={"xl"}
       size="sm"
       w={250}
+      miw={"auto"}
       clearable
     />
   );

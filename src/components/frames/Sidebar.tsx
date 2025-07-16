@@ -12,13 +12,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MainMenus, MenuItemType } from "../../config/menu-items";
 import { environment } from "../../config/enviroment/environment";
 
-const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
-  title,
-  url,
-  icon,
-  children,
-  isChild = false,
-}) => {
+interface SidebarProps {
+  mobileToggle?: () => void;
+}
+const MenuItem: FC<
+  MenuItemType & { isChild?: boolean; mobileToggle?: () => void }
+> = ({ title, url, icon, children, isChild = false, mobileToggle }) => {
   const { pathname } = useLocation();
   let isActive = pathname === url || pathname.startsWith(url + "/");
 
@@ -27,6 +26,9 @@ const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
     <NavLink
       to={{
         pathname: url,
+      }}
+      onClick={() => {
+        if (mobileToggle && !children?.length) mobileToggle();
       }}
       label={title}
       component={Link}
@@ -47,13 +49,18 @@ const MenuItem: FC<MenuItemType & { isChild?: boolean }> = ({
       }}
     >
       {children?.map((child) => (
-        <MenuItem key={child.id} {...child} isChild={true} />
+        <MenuItem
+          key={child.id}
+          {...child}
+          isChild={true}
+          mobileToggle={mobileToggle}
+        />
       ))}
     </NavLink>
   );
 };
 
-export const Sidebar = () => {
+export const Sidebar = ({ mobileToggle }: SidebarProps) => {
   const navigate = useNavigate();
   return (
     <>
@@ -78,7 +85,7 @@ export const Sidebar = () => {
         }}
       >
         {MainMenus.map((menu) => (
-          <MenuItem key={menu.id} {...menu} />
+          <MenuItem key={menu.id} {...menu} mobileToggle={mobileToggle} />
         ))}
       </Box>
       <Text m={"md"} c={"gray.5"}>
