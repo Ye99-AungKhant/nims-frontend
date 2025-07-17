@@ -1,5 +1,7 @@
 import {
   Box,
+  Center,
+  Flex,
   Grid,
   Group,
   Image,
@@ -26,7 +28,7 @@ const renderPhotoGroup = (title: string, photos: any[]) => {
   if (photos.length === 0) return null;
 
   return (
-    <Box my={"lg"}>
+    <Box>
       <Text fw={"bold"} mb={10}>
         {title}
       </Text>
@@ -57,8 +59,6 @@ const renderPhotoGroup = (title: string, photos: any[]) => {
 };
 
 export const InstallImageGallary = ({ data }: Props) => {
-  console.log(data);
-
   useEffect(() => {
     Fancybox.bind("[data-fancybox]", {
       Toolbar: {
@@ -76,10 +76,11 @@ export const InstallImageGallary = ({ data }: Props) => {
   }, []);
 
   return (
-    <Paper shadow="sm" style={{ flex: 1, width: "70%" }}>
+    <Paper shadow="sm" w={{ base: "100%", md: "69%" }} style={{ flex: 1 }}>
       <Group
-        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="md"
+        style={{ borderBottom: "1px solid #dddddd" }}
+        py={{ base: 15, sm: "md" }}
+        pl={{ base: 15, sm: 30 }}
         gap={0}
       >
         <IconPhoto size={24} />
@@ -88,12 +89,28 @@ export const InstallImageGallary = ({ data }: Props) => {
         </Text>
       </Group>
 
-      <Box px={30} pb={10}>
-        {renderPhotoGroup("Installed Photos", data.installed)}
-        {renderPhotoGroup("Replacement Photos", data.replacement)}
-        {renderPhotoGroup("Repair Photos", data.repair)}
-        {renderPhotoGroup("Vehicle Changed Photos", data.vehicleChange)}
-      </Box>
+      <Flex
+        direction={"row"}
+        gap={{ base: 15, md: 30 }}
+        px={{ base: 15, sm: 30 }}
+        py={{ base: 20, sm: 30 }}
+      >
+        {data.installed.length === 0 &&
+        data.replacement.length === 0 &&
+        data.repair.length === 0 &&
+        data.vehicleChange.length === 0 ? (
+          <Center>
+            <Text>NO DATA FOUND!!!</Text>
+          </Center>
+        ) : (
+          <>
+            {renderPhotoGroup("Installed Photos", data.installed)}
+            {renderPhotoGroup("Replacement Photos", data.replacement)}
+            {renderPhotoGroup("Repair Photos", data.repair)}
+            {renderPhotoGroup("Vehicle Changed Photos", data.vehicleChange)}
+          </>
+        )}
+      </Flex>
     </Paper>
   );
 };

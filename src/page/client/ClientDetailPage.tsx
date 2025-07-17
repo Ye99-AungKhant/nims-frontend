@@ -43,8 +43,9 @@ export function ViewClient({ data }: any) {
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
       <Group
-        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="md"
+        style={{ borderBottom: "1px solid #dddddd" }}
+        py={{ base: 15, sm: "md" }}
+        pl={{ base: 15, sm: 30 }}
         gap={0}
       >
         <IconAddressBook size={24} />
@@ -53,113 +54,115 @@ export function ViewClient({ data }: any) {
         </Text>
       </Group>
 
-      <Box px={30} mt={30} pb={10}>
+      <Box px={{ base: 15, sm: 30 }} py={{ base: 20, sm: 30 }}>
         <Divider />
         {data && (
-          <Table variant="vertical">
-            <Table.Tbody>
-              <Table.Tr h={50}>
-                <Table.Th
-                  w={300}
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Company
-                </Table.Th>
-                <Table.Td
-                  style={{
-                    color: "#707070",
-                  }}
-                >
-                  {data.name}
-                </Table.Td>
-              </Table.Tr>
+          <Table.ScrollContainer minWidth={"auto"}>
+            <Table variant="vertical">
+              <Table.Tbody>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    w={300}
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Company
+                  </Table.Th>
+                  <Table.Td
+                    style={{
+                      color: "#707070",
+                    }}
+                  >
+                    {data.name}
+                  </Table.Td>
+                </Table.Tr>
 
-              <Table.Tr h={50}>
-                <Table.Th
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Primary Contact
-                </Table.Th>
-                <Table.Td style={{ color: "#707070" }}>
-                  {data.contact_person[0]?.name}
-                </Table.Td>
-              </Table.Tr>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Primary Contact
+                  </Table.Th>
+                  <Table.Td style={{ color: "#707070" }}>
+                    {data.contact_person[0]?.name}
+                  </Table.Td>
+                </Table.Tr>
 
-              <Table.Tr h={50}>
-                <Table.Th
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Designation
-                </Table.Th>
-                <Table.Td
-                  style={{
-                    color: "#707070",
-                  }}
-                >
-                  {data.contact_person[0]?.role?.name}
-                </Table.Td>
-              </Table.Tr>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Designation
+                  </Table.Th>
+                  <Table.Td
+                    style={{
+                      color: "#707070",
+                    }}
+                  >
+                    {data.contact_person[0]?.role?.name}
+                  </Table.Td>
+                </Table.Tr>
 
-              <Table.Tr h={50}>
-                <Table.Th
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Email
-                </Table.Th>
-                <Table.Td style={{ color: "#707070" }}>
-                  {data.contact_person[0]?.email}
-                </Table.Td>
-              </Table.Tr>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Email
+                  </Table.Th>
+                  <Table.Td style={{ color: "#707070" }}>
+                    {data.contact_person[0]?.email}
+                  </Table.Td>
+                </Table.Tr>
 
-              <Table.Tr h={50}>
-                <Table.Th
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Phone
-                </Table.Th>
-                <Table.Td
-                  style={{
-                    color: "#707070",
-                  }}
-                >
-                  {data.contact_person[0]?.phone}
-                </Table.Td>
-              </Table.Tr>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Phone
+                  </Table.Th>
+                  <Table.Td
+                    style={{
+                      color: "#707070",
+                    }}
+                  >
+                    {data.contact_person[0]?.phone}
+                  </Table.Td>
+                </Table.Tr>
 
-              <Table.Tr h={50}>
-                <Table.Th
-                  style={{
-                    color: "#684498",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  Address
-                </Table.Th>
-                <Table.Td
-                  style={{
-                    color: "#707070",
-                  }}
-                >
-                  {data.address}
-                </Table.Td>
-              </Table.Tr>
-            </Table.Tbody>
-          </Table>
+                <Table.Tr h={50}>
+                  <Table.Th
+                    style={{
+                      color: "#684498",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Address
+                  </Table.Th>
+                  <Table.Td
+                    style={{
+                      color: "#707070",
+                    }}
+                  >
+                    {data.address}
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
         )}
       </Box>
     </Paper>
@@ -190,8 +193,9 @@ export function ContactPerson({ data }: any) {
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
       <Group
-        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="md"
+        style={{ borderBottom: "1px solid #dddddd" }}
+        py={{ base: 15, sm: "md" }}
+        pl={{ base: 15, sm: 30 }}
         gap={0}
       >
         <IconUsersGroup size={24} />
@@ -199,57 +203,61 @@ export function ContactPerson({ data }: any) {
           Contact Persons
         </Text>
       </Group>
-      <Box px={30} pt={30}>
+      <Box px={{ base: 15, sm: 30 }} py={{ base: 20, sm: 30 }}>
         <Divider />
-        <Table striped highlightOnHover withRowBorders>
-          <Table.Thead h={50}>
-            <Table.Tr>
-              <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
-              <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
-              <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
-              <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {contacts.length ? (
-              contacts.map((person: any) => (
-                <Table.Tr key={person.id}>
-                  <Table.Td style={{ color: "#474747" }}>
-                    {person.name}
-                  </Table.Td>
-                  <Table.Td style={{ color: "#474747" }}>
-                    {person.phone}
-                  </Table.Td>
-                  <Table.Td style={{ color: "#474747" }}>
-                    {person.email}
-                  </Table.Td>
-                  <Table.Td style={{ color: "#474747" }}>
-                    {person?.role?.name}
-                  </Table.Td>
-                  <Table.Td>
-                    <ActionIcon
-                      color="red"
-                      radius="lg"
-                      variant="outline"
-                      onClick={() => deleteClientSelect(person.id)}
-                    >
-                      <IconTrash size={18} />
-                    </ActionIcon>
+        <Table.ScrollContainer minWidth={"auto"}>
+          <Table striped highlightOnHover withRowBorders>
+            <Table.Thead h={50}>
+              <Table.Tr>
+                <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+                  Name
+                </Table.Th>
+                <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
+                <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
+                <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {contacts.length ? (
+                contacts.map((person: any) => (
+                  <Table.Tr key={person.id}>
+                    <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
+                      {person.name}
+                    </Table.Td>
+                    <Table.Td style={{ color: "#474747" }}>
+                      {person.phone}
+                    </Table.Td>
+                    <Table.Td style={{ color: "#474747" }}>
+                      {person.email}
+                    </Table.Td>
+                    <Table.Td style={{ color: "#474747" }}>
+                      {person?.role?.name}
+                    </Table.Td>
+                    <Table.Td>
+                      <ActionIcon
+                        color="red"
+                        radius="lg"
+                        variant="outline"
+                        onClick={() => deleteClientSelect(person.id)}
+                      >
+                        <IconTrash size={18} />
+                      </ActionIcon>
+                    </Table.Td>
+                  </Table.Tr>
+                ))
+              ) : (
+                <Table.Tr>
+                  <Table.Td colSpan={5}>
+                    <Center py={"md"}>
+                      <Text color="dimmed">NO DATA FOUND!!!</Text>
+                    </Center>
                   </Table.Td>
                 </Table.Tr>
-              ))
-            ) : (
-              <Table.Tr>
-                <Table.Td colSpan={5}>
-                  <Center py={"md"}>
-                    <Text color="dimmed">NO DATA FOUND!!!</Text>
-                  </Center>
-                </Table.Td>
-              </Table.Tr>
-            )}
-          </Table.Tbody>
-        </Table>
+              )}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
       </Box>
       <Modal
         opened={opened}
@@ -313,17 +321,18 @@ export function ViewObject({ id, theme }: any) {
   return (
     <Paper shadow="sm" style={{ flex: 1 }}>
       <Group
-        style={{ borderBottom: "1px solid #dddddd", paddingLeft: "25px" }}
-        py="md"
+        style={{ borderBottom: "1px solid #dddddd" }}
+        py={{ base: 15, sm: "md" }}
+        pl={{ base: 15, sm: 30 }}
         gap={0}
       >
         <IconAddressBook size={24} />
         <Text size="lg" fw={700} c={"dark"} ml={"8px"}>
-          View Client Installed Objects
+          View Client's Installed Objects
         </Text>
       </Group>
 
-      <Box px={30} mt={30} pb={10}>
+      <Box px={{ base: 15, sm: 30 }} py={{ base: 20, sm: 30 }}>
         <Grid>
           {summaryData.map((item, index) => (
             <Grid.Col
@@ -379,26 +388,27 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <Box style={{ display: "flex", gap: "30px" }} p="30px">
-      {/* Left Card */}
-
-      {!isLoading && (
-        <Paper shadow="sm" style={{ width: "31%" }}>
+    <Box p={{ base: 8, sm: 30 }}>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: 8, md: 30 }}
+        align="flex-start"
+      >
+        {/* Left Card */}
+        <Paper shadow="sm" w={{ base: "100%", md: "31%" }}>
           <Flex
             p="lg"
             pb={0}
-            justify={"center"}
+            justify="center"
             align="center"
-            direction={"column"}
+            direction="column"
           >
             <Box
               className="cursor-pointer"
               w="64px"
               h="64px"
               bg="indigo"
-              style={{
-                borderRadius: "100%",
-              }}
+              style={{ borderRadius: "100%" }}
             >
               <Flex w="100%" h="100%" align="center" justify="center">
                 <Text p="0" c="white" fw={500} size="20">
@@ -415,10 +425,15 @@ export default function ClientDetailPage() {
               {clientData?.items?.name}
             </Text>
           </Flex>
-          <Box p="30px">
+
+          <Flex
+            p={{ base: 8, sm: 30 }}
+            direction={{ base: "row", md: "column" }}
+            justify={"space-between"}
+          >
             <Group
               onClick={() => handleMenuBtn("client")}
-              p={"xs"}
+              p="xs"
               gap={0}
               className={`menu-item ${menuBtn === "client" ? "active" : ""}`}
               style={{
@@ -427,70 +442,75 @@ export default function ClientDetailPage() {
               }}
             >
               <IconAddressBook size={20} className="textIcon" />
-              <Text className="text">Client</Text>
+              <Text className="text" display={{ base: "none", lg: "block" }}>
+                Client
+              </Text>
             </Group>
+
             <Group
               onClick={() => handleMenuBtn("contactPaerson")}
-              p={"xs"}
+              p="xs"
               gap={0}
               className={`menu-item ${
                 menuBtn === "contactPaerson" ? "active" : ""
               }`}
-              style={{
-                borderBottom: "1px solid #dddddd",
-              }}
+              style={{ borderBottom: "1px solid #dddddd" }}
             >
               <IconUsersGroup size={20} className="textIcon" />
-              <Text className="text">Contact Persons</Text>
+              <Text className="text" display={{ base: "none", lg: "block" }}>
+                Contact Persons
+              </Text>
             </Group>
 
             <Group
               onClick={() => handleMenuBtn("installedObject")}
-              p={"xs"}
+              p="xs"
               gap={0}
               className={`menu-item ${
                 menuBtn === "installedObject" ? "active" : ""
               }`}
-              style={{
-                borderBottom: "1px solid #dddddd",
-              }}
+              style={{ borderBottom: "1px solid #dddddd" }}
             >
-              <IconUsersGroup size={20} className="textIcon" />
-              <Text className="text">Installed Objects</Text>
+              <IconDownload size={20} className="textIcon" />
+              <Text className="text" display={{ base: "none", lg: "block" }}>
+                Installed Objects
+              </Text>
             </Group>
 
             <PermissionGate
-              page={"clients"}
-              scope={"update"}
+              page="clients"
+              scope="update"
               errorProps={{ style: { display: "none" } }}
             >
               <Group
                 onClick={() =>
                   navigate("/client/create", { state: { id: param.state.id } })
                 }
-                p={"xs"}
+                p="xs"
                 gap={0}
                 className={`menu-item ${menuBtn === "edit" ? "active" : ""}`}
-                style={{
-                  borderBottom: "1px solid #dddddd",
-                }}
+                style={{ borderBottom: "1px solid #dddddd" }}
               >
                 <IconEdit size={20} className="textIcon" />
-                <Text className="text">Edit</Text>
+                <Text className="text" display={{ base: "none", lg: "block" }}>
+                  Edit
+                </Text>
               </Group>
             </PermissionGate>
-          </Box>
+          </Flex>
         </Paper>
-      )}
 
-      {/* Right Card */}
-      {!isLoading && menuBtn == "client" ? (
-        <ViewClient data={clientData?.items} />
-      ) : menuBtn == "contactPaerson" ? (
-        <ContactPerson data={clientData?.items.contact_person} />
-      ) : (
-        <ViewObject id={param.state.id} theme={theme} />
-      )}
+        {/* Right Card */}
+        <Box w={{ base: "100%", md: "69%" }}>
+          {menuBtn === "client" ? (
+            <ViewClient data={clientData?.items} />
+          ) : menuBtn === "contactPaerson" ? (
+            <ContactPerson data={clientData?.items.contact_person} />
+          ) : (
+            <ViewObject id={param.state.id} theme={theme} />
+          )}
+        </Box>
+      </Flex>
     </Box>
   );
 }

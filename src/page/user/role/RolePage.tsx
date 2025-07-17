@@ -6,6 +6,7 @@ import {
   Group,
   Modal,
   Paper,
+  SimpleGrid,
   Text,
   TextInput,
   useMantineTheme,
@@ -50,16 +51,25 @@ const RolePage = () => {
   };
   return (
     <PermissionGate page={"roles"} scope={"view"}>
-      <Box p="30px">
-        <Paper shadow="md">
+      <Box p={{ base: 8, sm: 30 }}>
+        <Paper shadow="xs">
           <Box style={{ borderBottom: "1px solid #dddddd" }}>
-            <Flex justify={"space-between"} py="md" px={30}>
-              <Group gap={0}>
+            <Flex
+              direction="row"
+              justify="space-between"
+              align="center"
+              py="md"
+              px={{ base: 8, sm: 30 }}
+              gap={8}
+              wrap="wrap"
+              style={{ flexWrap: "wrap" }}
+            >
+              <Flex align="center" gap={8} style={{ minWidth: 0 }}>
                 <IconUserShield size={24} />
-                <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
+                <Text size="lg" fw={600} c={"dark"}>
                   Roles
                 </Text>
-              </Group>
+              </Flex>
               <Group justify="center">
                 <PermissionGate
                   page={"roles"}
@@ -81,24 +91,32 @@ const RolePage = () => {
           </Box>
           <Flex
             justify="space-between"
-            align="center"
+            align="start"
             mb={0}
-            px="30px"
-            pt="30px"
+            px={{ base: 8, sm: 30 }}
+            pt={{ base: 8, sm: 30 }}
+            wrap="wrap"
+            gap={"xs"}
           >
-            <Group gap={"xs"}>
-              <Text color={theme.colors.purple[0]} fz="md">
-                Show
-              </Text>
-              <PageSizeSelect />
-              <Text color={theme.colors.purple[0]} fz="md">
-                entries
-              </Text>
-            </Group>
+            <SimpleGrid
+              cols={{ base: 2, sm: 2, md: 6 }}
+              spacing="lg"
+              style={{ flex: 1, minWidth: "300px" }}
+            >
+              <Flex align="center" gap={5}>
+                <Text color={theme.colors.purple[0]} fz="md">
+                  Show
+                </Text>
+                <PageSizeSelect />
+                <Text color={theme.colors.purple[0]} fz="md">
+                  entries
+                </Text>
+              </Flex>
+            </SimpleGrid>
             <SearchInput size="sm" leftSection name={"search"} />
           </Flex>
 
-          <Box p="30px" pt={"md"}>
+          <Box py={"md"} px={{ base: 8, sm: 30 }}>
             <DataTable
               columns={rolePageColumns}
               data={data?.items || []}

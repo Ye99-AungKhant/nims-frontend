@@ -123,9 +123,9 @@ export const InstalledPage = () => {
             align="start"
             mb={0}
             px={{ base: 8, sm: 30 }}
-            pt="30px"
+            pt={{ base: 8, sm: 30 }}
             wrap="wrap"
-            gap="md"
+            gap="xs"
           >
             {/* Left Side: Filters */}
             <SimpleGrid

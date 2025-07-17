@@ -50,38 +50,44 @@ export const clientData = (data: any) => [
 
 export const ContactPersonData = ({ data }: any) => {
   return (
-    <Table striped highlightOnHover withRowBorders>
-      <Table.Thead h={50}>
-        <Table.Tr>
-          <Table.Th style={{ color: "#474747" }}>Name</Table.Th>
-          <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
-          <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
-          <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {data.length ? (
-          data.map((item: any) => (
-            <Table.Tr key={item.id}>
-              <Table.Td style={{ color: "#474747" }}>{item.name}</Table.Td>
-              <Table.Td style={{ color: "#474747" }}>
-                {item.role?.name}
-              </Table.Td>
-              <Table.Td style={{ color: "#474747" }}>{item.email}</Table.Td>
-              <Table.Td style={{ color: "#474747" }}>{item.phone}</Table.Td>
-            </Table.Tr>
-          ))
-        ) : (
+    <Table.ScrollContainer minWidth={"auto"}>
+      <Table striped highlightOnHover withRowBorders>
+        <Table.Thead h={50}>
           <Table.Tr>
-            <Table.Td colSpan={4}>
-              <Center py={"md"}>
-                <Text color="dimmed">NO DATA FOUND!!!</Text>
-              </Center>
-            </Table.Td>
+            <Table.Th style={{ color: "#474747", textWrap: "nowrap" }}>
+              Name
+            </Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Phone</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Email</Table.Th>
+            <Table.Th style={{ color: "#474747" }}>Designation</Table.Th>
           </Table.Tr>
-        )}
-      </Table.Tbody>
-    </Table>
+        </Table.Thead>
+        <Table.Tbody>
+          {data.length ? (
+            data.map((item: any) => (
+              <Table.Tr key={item.id}>
+                <Table.Td style={{ color: "#474747", textWrap: "nowrap" }}>
+                  {item.name}
+                </Table.Td>
+                <Table.Td style={{ color: "#474747" }}>
+                  {item.role?.name}
+                </Table.Td>
+                <Table.Td style={{ color: "#474747" }}>{item.email}</Table.Td>
+                <Table.Td style={{ color: "#474747" }}>{item.phone}</Table.Td>
+              </Table.Tr>
+            ))
+          ) : (
+            <Table.Tr>
+              <Table.Td colSpan={4}>
+                <Center py={"md"}>
+                  <Text color="dimmed">NO DATA FOUND!!!</Text>
+                </Center>
+              </Table.Td>
+            </Table.Tr>
+          )}
+        </Table.Tbody>
+      </Table>
+    </Table.ScrollContainer>
   );
 };
 
