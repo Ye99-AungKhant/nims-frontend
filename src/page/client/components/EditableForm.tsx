@@ -56,89 +56,95 @@ const EditableForm = ({
             Contact person have at least one. Please add a contact person!
           </Text>
         )}
-        <Table withTableBorder withColumnBorders>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Mobile Number</Table.Th>
-              <Table.Th>Email Address</Table.Th>
-              <Table.Th>Designation</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {contactFormData &&
-              contactFormData.map((person, index) => (
-                <Table.Tr key={index}>
-                  <Table.Td>
-                    <Input
-                      variant="filled"
-                      value={person.contactName}
-                      onChange={(e) =>
-                        handleContactChange(
-                          index,
-                          "contactName",
-                          e.target.value
-                        )
-                      }
-                      error={error?.[index]?.[0]}
-                    />
-                  </Table.Td>
-                  <Table.Td>
-                    <Input
-                      type="number"
-                      variant="filled"
-                      value={person.phone}
-                      onChange={(e) =>
-                        handleContactChange(index, "phone", e.target.value)
-                      }
-                      error={error?.[index]?.[1]}
-                    />
-                  </Table.Td>
-                  <Table.Td>
-                    <Input
-                      variant="filled"
-                      value={person.email}
-                      onChange={(e) =>
-                        handleContactChange(index, "email", e.target.value)
-                      }
-                      error={error?.[index]?.[2]}
-                    />
-                  </Table.Td>
-                  <Table.Td>
-                    <Select
-                      searchable
-                      comboboxProps={{
-                        offset: 0,
-                      }}
-                      data={
-                        role
-                          .map((data: any) => ({
-                            value: String(data.id),
-                            label: data.name,
-                          }))
-                          .filter((role: any) => role.label !== "Admin") || []
-                      }
-                      value={String(person.role_id)}
-                      leftSection={<IconUser size={16} />}
-                      onChange={(value) =>
-                        handleContactChange(index, "role_id", Number(value))
-                      }
-                    />
-                  </Table.Td>
-                  <Table.Td align="center">
-                    <ActionIcon
-                      size={30}
-                      variant="subtle"
-                      onClick={() => handleDeletePerson(index)}
-                    >
-                      <IconTrash size={18} />
-                    </ActionIcon>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-          </Table.Tbody>
-        </Table>
+        <Table.ScrollContainer minWidth={"auto"}>
+          <Table withTableBorder withColumnBorders width={"100%"}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Mobile Number</Table.Th>
+                <Table.Th>Email Address</Table.Th>
+                <Table.Th>Designation</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {contactFormData &&
+                contactFormData.map((person, index) => (
+                  <Table.Tr key={index}>
+                    <Table.Td>
+                      <Input
+                        variant="filled"
+                        miw={150}
+                        value={person.contactName}
+                        onChange={(e) =>
+                          handleContactChange(
+                            index,
+                            "contactName",
+                            e.target.value
+                          )
+                        }
+                        error={error?.[index]?.[0]}
+                      />
+                    </Table.Td>
+                    <Table.Td>
+                      <Input
+                        type="number"
+                        variant="filled"
+                        miw={150}
+                        value={person.phone}
+                        onChange={(e) =>
+                          handleContactChange(index, "phone", e.target.value)
+                        }
+                        error={error?.[index]?.[1]}
+                      />
+                    </Table.Td>
+                    <Table.Td>
+                      <Input
+                        variant="filled"
+                        miw={150}
+                        value={person.email}
+                        onChange={(e) =>
+                          handleContactChange(index, "email", e.target.value)
+                        }
+                        error={error?.[index]?.[2]}
+                      />
+                    </Table.Td>
+                    <Table.Td>
+                      <Select
+                        searchable
+                        miw={150}
+                        comboboxProps={{
+                          offset: 0,
+                        }}
+                        data={
+                          role
+                            .map((data: any) => ({
+                              value: String(data.id),
+                              label: data.name,
+                            }))
+                            .filter((role: any) => role.label !== "Admin") || []
+                        }
+                        value={String(person.role_id)}
+                        leftSection={<IconUser size={16} />}
+                        onChange={(value) =>
+                          handleContactChange(index, "role_id", Number(value))
+                        }
+                      />
+                    </Table.Td>
+                    <Table.Td>
+                      <ActionIcon
+                        size={30}
+                        variant="subtle"
+                        onClick={() => handleDeletePerson(index)}
+                      >
+                        <IconTrash size={18} />
+                      </ActionIcon>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
       </Stack>
 
       <Button

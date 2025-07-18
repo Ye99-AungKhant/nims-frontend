@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Group,
   Paper,
   Tabs,
@@ -285,17 +286,28 @@ const InstallationCreatePage = () => {
   }, [id, isEditMode, isLoading]);
 
   return (
-    <Box p={30}>
-      <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} py="md" px={30}>
-          <Group gap={0} h={36}>
-            <IconDownload size={24} />
-            <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
-              {isEditMode ? "Edit" : "New"} Installation
-            </Text>
-          </Group>
+    <Box p={{ base: 8, sm: 30 }}>
+      <Paper shadow="xs">
+        <Box style={{ borderBottom: "1px solid #dddddd" }}>
+          <Flex
+            direction="row"
+            justify="space-between"
+            align="center"
+            py="md"
+            px={{ base: 8, sm: 30 }}
+            gap={8}
+            wrap="wrap"
+            style={{ flexWrap: "wrap" }}
+          >
+            <Flex align="center" gap={8} style={{ minWidth: 0 }}>
+              <IconDownload size={22} />
+              <Text size="lg" fw={600} c={"dark"}>
+                {isEditMode ? "Edit" : "New"} Installation
+              </Text>
+            </Flex>
+          </Flex>
         </Box>
-        <Box px={"30px"} pt={"30px"}>
+        <Box p={{ base: 15, sm: 30 }}>
           <Tabs
             value={activeTab}
             onChange={(value) => {

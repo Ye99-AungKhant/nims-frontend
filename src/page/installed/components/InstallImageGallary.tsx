@@ -99,9 +99,9 @@ export const InstallImageGallary = ({ data }: Props) => {
         data.replacement.length === 0 &&
         data.repair.length === 0 &&
         data.vehicleChange.length === 0 ? (
-          <Center>
+          <Flex justify={"center"} w={"100%"}>
             <Text>NO DATA FOUND!!!</Text>
-          </Center>
+          </Flex>
         ) : (
           <>
             {renderPhotoGroup("Installed Photos", data.installed)}

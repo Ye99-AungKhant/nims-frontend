@@ -52,9 +52,10 @@ const FormTable = ({ rows, mt = 40, mb = 10, isRowtable = false }: Props) => {
                 <Table.Td
                   style={{
                     border: "none",
-                    width: 250,
+                    // width: 250,
                     paddingBottom: "30px",
                   }}
+                  w={{ base: 120, md: 250 }}
                 >
                   {row.label}
                 </Table.Td>

@@ -423,9 +423,13 @@ const ClientCreatePage = () => {
   ];
 
   return (
-    <Box p="30px">
+    <Box p={{ base: 8, sm: 30 }}>
       <Paper shadow="sm" radius="md">
-        <Box style={{ borderBottom: "1px solid #dddddd" }} py="md" px={30}>
+        <Box
+          style={{ borderBottom: "1px solid #dddddd" }}
+          py="md"
+          px={{ base: 15, sm: 30 }}
+        >
           <Group gap={0} h={36}>
             <IconAddressBook size={24} />
             <Text size="lg" fw={600} c={"dark"} ml={"8px"}>
@@ -434,7 +438,7 @@ const ClientCreatePage = () => {
           </Group>
         </Box>
 
-        <Box px={"30px"} pt={"30px"}>
+        <Box mb={0} px={{ base: 15, sm: 30 }} pt={{ base: 8, sm: 30 }}>
           <Tabs value={activeTab} onChange={handleTabChange}>
             <TabsList mb={20}>
               <Tabs.Tab
@@ -445,6 +449,7 @@ const ClientCreatePage = () => {
                     ? { color: theme.colors.purple[0] }
                     : { color: "" }
                 }
+                w={{ base: 100, md: 150 }}
               >
                 Basic Info
               </Tabs.Tab>
@@ -479,7 +484,7 @@ const ClientCreatePage = () => {
               <FormTable rows={addressRows} />
             </TabsPanel>
 
-            <TabsPanel value="contactPersons">
+            <TabsPanel value="contactPersons" maw={{ base: 400, md: "100%" }}>
               {!isRoleLoading && (
                 <EditableForm
                   handleSubmit={handleSubmit}

@@ -61,7 +61,7 @@ export const ClientPage = () => {
               justify="space-between"
               align="center"
               py="md"
-              px={{ base: 8, sm: 30 }}
+              px={{ base: 15, sm: 30 }}
               gap={8}
               wrap="wrap"
               style={{ flexWrap: "wrap" }}
@@ -105,7 +105,7 @@ export const ClientPage = () => {
             justify="space-between"
             align="start"
             mb={0}
-            px={{ base: 8, sm: 30 }}
+            px={{ base: 15, sm: 30 }}
             pt={{ base: 8, sm: 30 }}
             wrap="wrap"
             gap={"xs"}

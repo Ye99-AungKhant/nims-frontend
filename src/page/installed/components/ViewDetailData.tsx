@@ -114,7 +114,7 @@ export const VehicleData = ({ vehicleId }: any) => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {!isLoading ? (
+            {!isLoading && vehicleActivity?.data?.length > 0 ? (
               vehicleActivity?.data?.map((item: any, index: number) => (
                 <Table.Tr key={index}>
                   <Table.Td style={{ color: "#474747" }}>
@@ -295,39 +295,6 @@ export const GPSDeviceData = ({ data }: any) => {
                     </span>
                   </Table.Td>
                 </Table.Tr>
-                {gspList.extra_gps_device.length > 0 &&
-                  gspList.extra_gps_device.map((extraGps: any) => (
-                    <Table.Tr>
-                      <Table.Td style={{ color: "#474747" }}>
-                        {extraGps.brand.name}
-                      </Table.Td>
-                      <Table.Td style={{ color: "#474747" }}>
-                        {extraGps.model.name}
-                      </Table.Td>
-                      <Table.Td style={{ color: "#474747" }}>
-                        {extraGps.imei}
-                      </Table.Td>
-                      <Table.Td style={{ color: "#474747" }}>
-                        {extraGps.serial_no}
-                      </Table.Td>
-                      <Table.Td style={{ color: "#474747" }}>
-                        {extraGps.warranty_plan.name}
-                      </Table.Td>
-                      <Table.Td>
-                        <span
-                          style={{
-                            backgroundColor: "#474747",
-                            color: "white",
-                            padding: "3px 5px",
-                            borderRadius: 20,
-                          }}
-                        >
-                          Extra
-                        </span>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))}
-
                 {gspList.replacements.length != 0 &&
                   gspList.replacements.map(
                     (replacedList: any) =>
@@ -524,7 +491,7 @@ export const SimCardData = ({ gpsDeviceId }: any) => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {!isLoading ? (
+            {!isLoading && singleSIMCardReplacementHistory.length > 0 ? (
               singleSIMCardReplacementHistory?.map((simData: any) => (
                 <Table.Tr key={simData.id}>
                   <Table.Td style={{ color: "#474747" }}>
@@ -595,7 +562,7 @@ export const SimCardData = ({ gpsDeviceId }: any) => {
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={3}>
+                <Table.Td colSpan={6}>
                   <Center py={"md"}>
                     <Text color="dimmed">NO DATA FOUND!!!</Text>
                   </Center>
@@ -734,7 +701,7 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {!isLoading ? (
+            {!isLoading && peripheralReplacementHistoryData.length > 0 ? (
               peripheralReplacementHistoryData.map((item: any) => (
                 <Table.Tr key={item.id}>
                   <Table.Td style={{ color: "#474747" }}>
@@ -846,7 +813,7 @@ export const PeripheralData = ({ gpsDeviceId }: any) => {
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={10}>
+                <Table.Td colSpan={11}>
                   <Center py={"md"}>
                     <Text color="dimmed">NO DATA FOUND!!!</Text>
                   </Center>
@@ -1212,7 +1179,7 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {!isLoading ? (
+            {!isLoading && accessoryReplacementHistoryData?.length > 0 ? (
               accessoryReplacementHistoryData?.map((item: any) => (
                 <Table.Tr key={item?.id}>
                   <Table.Td style={{ color: "#474747" }}>
@@ -1290,7 +1257,7 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={6}>
+                <Table.Td colSpan={7}>
                   <Center py={"md"}>
                     <Text color="dimmed">NO DATA FOUND!!!</Text>
                   </Center>
@@ -1339,7 +1306,15 @@ export const AccessoryData = ({ gpsDeviceId }: any) => {
 };
 
 export const HistoryData = ({ gpsDeviceId }: any) => {
-  const { data: fullHistoryData, isLoading } = useGetFulltHistory(gpsDeviceId);
+  const { data: fullHistoryDataRaw, isLoading } =
+    useGetFulltHistory(gpsDeviceId);
+
+  // Provide a default value and type to avoid 'never'
+  const fullHistoryData: {
+    replacements: any[];
+    vehicleChange: any[];
+  } = fullHistoryDataRaw ?? { replacements: [], vehicleChange: [] };
+
   return (
     <Table.ScrollContainer minWidth={500}>
       <Table striped highlightOnHover withRowBorders mb={"md"}>
@@ -1363,7 +1338,9 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {!isLoading ? (
+          {!isLoading &&
+          (fullHistoryData?.replacements?.length > 0 ||
+            fullHistoryData?.vehicleChange?.length > 0) ? (
             <>
               {fullHistoryData.replacements.map((item: any) => (
                 <Table.Tr key={item.id}>
@@ -1449,7 +1426,7 @@ export const HistoryData = ({ gpsDeviceId }: any) => {
             </>
           ) : (
             <Table.Tr>
-              <Table.Td colSpan={2}>
+              <Table.Td colSpan={7}>
                 <Center py={"md"}>
                   <Text color="dimmed">NO DATA FOUND!!!</Text>
                 </Center>
