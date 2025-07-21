@@ -1,6 +1,11 @@
 import {
+  IconAntennaBars5,
+  IconDeviceSim,
   IconDownload,
+  IconGitCompare,
   IconHome,
+  IconPaperclip,
+  IconReport,
   IconUsers,
   IconUsersGroup,
   IconUserShield,
@@ -28,6 +33,20 @@ export const Routes = {
   USER: {
     PATH: "user",
     FULL_PATH: "/user",
+  },
+  ROLE: {
+    PATH: "role",
+    FULL_PATH: "/role",
+  },
+  REPORT: {
+    PATH: "report",
+    SIM_PATH: "/report/simcard",
+    PERIPHERALS_PATH: "/report/peripherals",
+    ACCESSORIES_PATH: "/report/accessories",
+  },
+  LOG: {
+    PATH: "log",
+    FULL_PATH: "/log",
   },
 } as const;
 
@@ -72,73 +91,47 @@ export const MainMenus: MenuItemType[] = [
     children: [
       {
         id: "4.1",
-        title: "List All Users",
+        title: "Users",
         url: Routes.USER.FULL_PATH,
         icon: <IconUsers />,
       },
       {
         id: "4.2",
-        title: "List All Roles",
-        url: "/role",
+        title: "Roles",
+        url: Routes.ROLE.FULL_PATH,
         icon: <IconUserShield />,
       },
     ],
   },
-  // {
-  //   id: "2",
-  //   title: "Vehicle",
-  //   icon: <IconBackhoe />,
-  //   children: [
-  //     {
-  //       id: "2.1",
-  //       title: "List All Vehicles",
-  //       url: "/vehicle",
-  //       icon: <IconBackhoe />,
-  //     },
-  //     {
-  //       id: "2.2",
-  //       title: "Create New Vehicles",
-  //       url: "/vehicle/create",
-  //       icon: <IconBackhoe />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: "3",
-  //   title: "Device",
-  //   icon: <IconRouter />,
-  //   children: [
-  //     {
-  //       id: "3.1",
-  //       title: "List All Devices",
-  //       url: "/device",
-  //       icon: <IconRouter />,
-  //     },
-  //     {
-  //       id: "3.2",
-  //       title: "Create New Devices",
-  //       url: "/device/create",
-  //       icon: <IconRouter />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: "4",
-  //   title: "Server",
-  //   icon: <IconServer2 />,
-  //   children: [
-  //     {
-  //       id: "4.1",
-  //       title: "List All Servers",
-  //       url: "/server",
-  //       icon: <IconServer2 />,
-  //     },
-  //     {
-  //       id: "4.2",
-  //       title: "Create New Servers",
-  //       url: "/server/create",
-  //       icon: <IconServer2 />,
-  //     },
-  //   ],
-  // },
+  {
+    id: "5",
+    title: "Reports",
+    icon: <IconAntennaBars5 />,
+    children: [
+      {
+        id: "5.1",
+        title: "SIM Cards Report",
+        url: Routes.REPORT.SIM_PATH,
+        icon: <IconDeviceSim />,
+      },
+      {
+        id: "5.2",
+        title: "Peripherals Report",
+        url: Routes.REPORT.PERIPHERALS_PATH,
+        icon: <IconGitCompare />,
+      },
+      {
+        id: "5.3",
+        title: "Accessories Report",
+        url: Routes.REPORT.ACCESSORIES_PATH,
+        icon: <IconPaperclip />,
+      },
+    ],
+  },
+  {
+    id: "6",
+    title: "Logs",
+    url: Routes.LOG.FULL_PATH,
+    icon: <IconReport />,
+  },
 ] as const;

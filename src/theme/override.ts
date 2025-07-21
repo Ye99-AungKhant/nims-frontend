@@ -5,7 +5,7 @@ import headings from "./headings";
 
 export const theme: MantineThemeOverride = {
   primaryColor: "primary",
-  fontFamily: "Segoe UI",
+  fontFamily: "Poppins, sans-serif",
   colors,
   headings,
   components,

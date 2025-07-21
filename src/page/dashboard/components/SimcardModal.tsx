@@ -1,5 +1,6 @@
 import { Box, Grid, Group, Modal, Text } from "@mantine/core";
 import { useGetOperatorUsage } from "../hooks/useGetOperatorUsage";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   opened: boolean;
@@ -7,6 +8,7 @@ interface Props {
 }
 const SimcardModal = ({ opened, onClose }: Props) => {
   const { data, isLoading } = useGetOperatorUsage();
+  const navigate = useNavigate();
   return (
     <Modal
       opened={opened}
@@ -28,8 +30,19 @@ const SimcardModal = ({ opened, onClose }: Props) => {
           </Grid.Col>
           {!isLoading &&
             data?.map((operator: any) => (
-              <Grid.Col span={12} key={operator.brandId}>
-                <Group justify="space-between">
+              <Grid.Col
+                span={12}
+                key={operator.brandId}
+                onClick={() =>
+                  navigate(`/report/simcard?operator=${operator.brandName}`)
+                }
+              >
+                <Group
+                  justify="space-between"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <Text size="md" c={"dark"}>
                     {operator.brandName}
                   </Text>

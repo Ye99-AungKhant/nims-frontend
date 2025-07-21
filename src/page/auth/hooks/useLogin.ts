@@ -15,10 +15,11 @@ export const useLogin = () => {
       console.log(result);
 
       if (result) {
-        const { id, name } = result.data;
-        const data = { id, name };
-        setUser(result.data);
-        // localStorage.setItem("authUser", JSON.stringify(data));
+        setUser({
+          ...result.data.user,
+          token: result.data.token,
+          refreshToken: result.data.refreshToken,
+        });
         navigate("/");
       }
     },

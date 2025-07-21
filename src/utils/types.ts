@@ -124,4 +124,6 @@ export interface UserType {
   email: string;
   phone: string;
   role: RoleType;
+  token: string;
+  refreshToken: string;
 }

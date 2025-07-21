@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
 
 export function useAuthedRoute() {
   // const navigate = useNavigate();
@@ -13,7 +14,8 @@ export function useAuthedRoute() {
 
 export function useAuthRoute() {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("authUser") || null;
+  const { user } = useUserStore.getState();
+  const accessToken = user?.token;
 
   useEffect(() => {
     if (accessToken) {

@@ -52,8 +52,6 @@ import PeripheralModal from "./components/PeripheralModal";
 import { getMonthRange } from "../../utils/helper";
 
 export const DashboardPage = () => {
-  // const { data } = useGetInstalled(true);
-  const { user } = useUserStore();
   const theme = useMantineTheme();
   const { setParams, getParam } = useParamsHelper();
   const { data: DashboardData, isLoading } = useGetDashboardData();

@@ -334,7 +334,7 @@ const InstallationDetailPage = () => {
         ) : menuBtn == "accessoryInfo" ? (
           <ViewDetail
             isList={true}
-            title={"View Accessory Information"}
+            title={"View Accessories Information"}
             Icon={IconPaperclip}
           >
             <AccessoryData gpsDeviceId={installedObject?.items.device[0].id} />

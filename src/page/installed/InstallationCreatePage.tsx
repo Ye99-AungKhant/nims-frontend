@@ -392,7 +392,7 @@ const InstallationCreatePage = () => {
                     : { color: "" }
                 }
               >
-                Install Images
+                Photos
               </Tabs.Tab>
             </TabsList>
 

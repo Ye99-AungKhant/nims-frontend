@@ -35,7 +35,7 @@ const LoginPage = () => {
   const handleLogin = (values: any) => {
     mutate(values, {
       onError: (error) => {
-        setError(error?.data?.message);
+        setError(error.response.data.message);
       },
     });
   };

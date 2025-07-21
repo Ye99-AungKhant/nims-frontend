@@ -12,7 +12,7 @@ const PeripheralModal = ({ opened, onClose }: Props) => {
     <Modal
       opened={opened}
       onClose={onClose}
-      title="GPS Usage"
+      title="Peripheral Usage"
       centered={false}
       size={"lg"}
     >

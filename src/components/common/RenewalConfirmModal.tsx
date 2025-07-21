@@ -78,7 +78,6 @@ const RenewalConfirmModal = ({
       type: String(data.type_id),
       domain: [
         String(data.domain_id),
-        String(data?.extra_server[0]?.domain_id),
         ...(data?.extra_server[0]?.domain_id
           ? [String(data?.extra_server[0]?.domain_id)]
           : []),

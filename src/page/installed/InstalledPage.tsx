@@ -129,7 +129,7 @@ export const InstalledPage = () => {
           >
             {/* Left Side: Filters */}
             <SimpleGrid
-              cols={{ base: 2, sm: 2, md: 6 }}
+              cols={{ base: 2, md: 5 }}
               spacing="xs"
               style={{ flex: 1, minWidth: "300px" }}
             >

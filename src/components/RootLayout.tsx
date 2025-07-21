@@ -25,15 +25,13 @@ const RootLayout = () => {
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const authUserRaw = localStorage.getItem("authUser");
-  const authUser = authUserRaw ? JSON.parse(authUserRaw) : null;
 
-  const { user } = useUserStore();
+  const { user, clearUser } = useUserStore.getState();
 
   const username = user ? user.name : "a";
 
   const handleLogout = () => {
-    localStorage.removeItem("authUser");
+    clearUser();
     navigate("/login");
   };
 

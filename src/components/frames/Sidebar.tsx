@@ -71,7 +71,7 @@ export const Sidebar = ({ mobileToggle }: SidebarProps) => {
         style={{ cursor: "pointer" }}
       >
         <Center>
-          <Image w={"100%"} h={50} src="/wimslogo.png" alt="profile-icon" />
+          <Image w={"90%"} h={45} src="/wimslogo.png" alt="profile-icon" />
         </Center>
       </Box>
       <Box
