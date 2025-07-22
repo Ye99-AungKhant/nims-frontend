@@ -14,6 +14,7 @@ import UserCreatePage from "../page/user/UserCreatePage";
 import RolePage from "../page/user/role/RolePage";
 import RoleDetailPage from "../page/user/role/RoleDetailPage";
 import { SimCardReport } from "../page/reports/SimCardReport";
+import { ClientReport } from "../page/reports/ClientReport";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/user/create", element: <UserCreatePage /> },
       { path: "/role", element: <RolePage /> },
       { path: "/role/detail", element: <RoleDetailPage /> },
+      { path: "/report/clients", element: <ClientReport /> },
       { path: "/report/simcard", element: <SimCardReport /> },
     ],
   },

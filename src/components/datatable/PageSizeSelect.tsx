@@ -8,6 +8,9 @@ const pageSize = [
   { label: "30", value: "30" },
   { label: "40", value: "40" },
   { label: "50", value: "50" },
+  { label: "100", value: "100" },
+  { label: "500", value: "500" },
+  { label: "1000", value: "1000" },
 ];
 
 export function PageSizeSelect(props: Omit<SelectProps, "data">) {

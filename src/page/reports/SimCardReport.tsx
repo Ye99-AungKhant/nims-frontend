@@ -73,45 +73,6 @@ export const SimCardReport = () => {
                 </Text>
               </Flex>
 
-              {/* <Select
-                variant="default"
-                size="sm"
-                clearable
-                placeholder="Filter by Date Type"
-                data={[
-                  { label: "Installed Date", value: "installed_date" },
-                  { label: "Expiry Date", value: "expire_date" },
-                ]}
-                onChange={(value) => {
-                  setParams({ filter_by_date: value });
-                }}
-                w="100%"
-              /> */}
-
-              {/* <DatePickerInput
-                type="range"
-                placeholder="Filter by Date"
-                value={filterDatevalue}
-                onChange={(value: any) => {
-                  const [fromDate, toDate] = value;
-                  setParams({
-                    fromDate: fromDate
-                      ? dayjs(fromDate).format("YYYY-MM-DD")
-                      : null,
-                    toDate: toDate ? dayjs(toDate).format("YYYY-MM-DD") : null,
-                  });
-                  setFilterDatevalue(value);
-                }}
-                size="sm"
-                valueFormat="DD-MM-YYYY"
-                clearable
-                allowSingleDateInRange
-                w="100%"
-                rightSection={
-                  filterDatevalue[0] ? null : <IconChevronDown size={16} />
-                }
-              /> */}
-
               <Select
                 variant="default"
                 size="sm"

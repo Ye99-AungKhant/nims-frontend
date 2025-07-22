@@ -9,6 +9,7 @@ import {
   IconUsers,
   IconUsersGroup,
   IconUserShield,
+  IconRouter,
 } from "@tabler/icons-react";
 import { ReactElement } from "react";
 
@@ -40,6 +41,8 @@ export const Routes = {
   },
   REPORT: {
     PATH: "report",
+    CLIENT_PATH: "/report/clients",
+    GPS_PATH: "/report/gps",
     SIM_PATH: "/report/simcard",
     PERIPHERALS_PATH: "/report/peripherals",
     ACCESSORIES_PATH: "/report/accessories",
@@ -110,18 +113,30 @@ export const MainMenus: MenuItemType[] = [
     children: [
       {
         id: "5.1",
+        title: "Clients Report",
+        url: Routes.REPORT.CLIENT_PATH,
+        icon: <IconUsersGroup />,
+      },
+      {
+        id: "5.2",
+        title: "GPS Devices Report",
+        url: Routes.REPORT.GPS_PATH,
+        icon: <IconRouter />,
+      },
+      {
+        id: "5.3",
         title: "SIM Cards Report",
         url: Routes.REPORT.SIM_PATH,
         icon: <IconDeviceSim />,
       },
       {
-        id: "5.2",
+        id: "5.4",
         title: "Peripherals Report",
         url: Routes.REPORT.PERIPHERALS_PATH,
         icon: <IconGitCompare />,
       },
       {
-        id: "5.3",
+        id: "5.5",
         title: "Accessories Report",
         url: Routes.REPORT.ACCESSORIES_PATH,
         icon: <IconPaperclip />,
