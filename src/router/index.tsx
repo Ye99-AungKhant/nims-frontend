@@ -15,6 +15,9 @@ import RolePage from "../page/user/role/RolePage";
 import RoleDetailPage from "../page/user/role/RoleDetailPage";
 import { SimCardReport } from "../page/reports/SimCardReport";
 import { ClientReport } from "../page/reports/ClientReport";
+import { AccessoryReport } from "../page/reports/accessoryReport";
+import { GPSReport } from "../page/reports/GPSReport";
+import { PeripheralReport } from "../page/reports/PeripheralReport";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +38,9 @@ const router = createBrowserRouter([
       { path: "/role/detail", element: <RoleDetailPage /> },
       { path: "/report/clients", element: <ClientReport /> },
       { path: "/report/simcard", element: <SimCardReport /> },
+      { path: "/report/accessories", element: <AccessoryReport /> },
+      { path: "/report/gps", element: <GPSReport /> },
+      { path: "/report/peripherals", element: <PeripheralReport /> },
     ],
   },
   {

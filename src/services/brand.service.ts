@@ -9,6 +9,14 @@ export const getBrand = async (type_group: string, type_id?: any) => {
   });
 };
 
+export const getAllBrand = async (type_group: string) => {
+  return await apiClient.get("/brand/all", {
+    params: {
+      type_group,
+    },
+  });
+};
+
 export const createBrand = async (params: any) => {
   return await apiClient.post("/brand", params);
 };

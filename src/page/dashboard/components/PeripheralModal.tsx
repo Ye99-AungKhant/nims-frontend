@@ -1,6 +1,7 @@
 import { Box, Divider, Grid, Group, Modal, Text } from "@mantine/core";
 import { useGetPeripheralUsage } from "../hooks/useGetPeripheralUsage";
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   opened: boolean;
@@ -8,6 +9,7 @@ interface Props {
 }
 const PeripheralModal = ({ opened, onClose }: Props) => {
   const { data, isLoading } = useGetPeripheralUsage();
+  const navigate = useNavigate();
   return (
     <Modal
       opened={opened}
@@ -20,7 +22,18 @@ const PeripheralModal = ({ opened, onClose }: Props) => {
         {!isLoading &&
           data?.map((gpsType: any) => (
             <Box key={gpsType.typeId}>
-              <Text size="md" fw={500} c="dark" mb="xs">
+              <Text
+                size="md"
+                fw={500}
+                c="dark"
+                mb="xs"
+                onClick={() =>
+                  navigate(
+                    `/report/peripherals?filterType=type&filterId=${gpsType.typeId}`
+                  )
+                }
+                style={{ cursor: "pointer" }}
+              >
                 {gpsType.typeName} - {gpsType.typeUsedCount}
               </Text>
 
@@ -29,7 +42,16 @@ const PeripheralModal = ({ opened, onClose }: Props) => {
                   <Text fw={500} size="sm" mt="xs" mb="xs" c="dark">
                     Brands
                   </Text>
-                  <Group gap="sm" mb="xs">
+                  <Group
+                    gap="sm"
+                    mb="xs"
+                    onClick={() =>
+                      navigate(
+                        `/report/peripherals?filterType=brand&filterId=${brand.brandId}`
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
                     <Text size="sm" fw={500} pl="md">
                       {brand.brandName}
                     </Text>
@@ -45,7 +67,15 @@ const PeripheralModal = ({ opened, onClose }: Props) => {
                       <Grid pl="md">
                         {brand.models.map((model: any) => (
                           <Grid.Col key={`model-${model.modelId}`} span={6}>
-                            <Group gap="sm">
+                            <Group
+                              gap="sm"
+                              onClick={() =>
+                                navigate(
+                                  `/report/peripherals?filterType=model&filterId=${model.modelId}`
+                                )
+                              }
+                              style={{ cursor: "pointer" }}
+                            >
                               <Text size="sm">{model.modelName}</Text>
                               <Text size="sm">-</Text>
                               <Text size="sm">{model.modelUsedCount}</Text>

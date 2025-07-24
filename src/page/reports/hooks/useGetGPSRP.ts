@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useGetRouteParams } from "../../../hooks/useGetRouteParams";
-import { getAccessoryRP } from "../../../services/report.service";
-import { mapAccessoryRPListToEntity } from "../../../utils/mappers/accessoryRPObject";
+import { getGPSRP } from "../../../services/report.service";
+import { mapGPSRPListToEntity } from "../../../utils/mappers/gpsRPObject";
 
-export const useGetAccessoryRP = () => {
+export const useGetGPSRP = () => {
   const {
-    type_id,
+    filterType,
+    filterId,
     pageIndex,
     pageSize,
     search,
@@ -23,8 +24,9 @@ export const useGetAccessoryRP = () => {
 
   return useQuery({
     queryKey: [
-      "getAccessoryRP",
-      type_id,
+      "getGPSRP",
+      filterType,
+      filterId,
       pageIndex,
       pageSize,
       search,
@@ -33,8 +35,9 @@ export const useGetAccessoryRP = () => {
       client_id,
     ],
     queryFn: async () => {
-      return await getAccessoryRP({
-        type_id,
+      return await getGPSRP({
+        filterType,
+        filterId,
         pageIndex,
         pageSize,
         search,
@@ -48,7 +51,7 @@ export const useGetAccessoryRP = () => {
     select: (res) => ({
       totalCount: res?.data?.data.totalCount || 0,
       totalPage: res?.data?.data.totalPages || 0,
-      items: res?.data?.data?.data.map(mapAccessoryRPListToEntity),
+      items: res?.data?.data?.data.map(mapGPSRPListToEntity),
     }),
   });
 };

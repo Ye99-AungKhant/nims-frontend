@@ -1,5 +1,6 @@
 import { Box, Divider, Grid, Group, Modal, Text } from "@mantine/core";
 import { useGetGPSUsage } from "../hooks/useGetGPSUsage";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   opened: boolean;
@@ -7,6 +8,7 @@ interface Props {
 }
 const GPSModal = ({ opened, onClose }: Props) => {
   const { data, isLoading } = useGetGPSUsage();
+  const navigate = useNavigate();
   return (
     <Modal
       opened={opened}
@@ -21,7 +23,15 @@ const GPSModal = ({ opened, onClose }: Props) => {
             <Box key={gpsBrand.brandId}>
               <Grid my="md">
                 <Grid.Col span={12}>
-                  <Group gap={"sm"}>
+                  <Group
+                    gap={"sm"}
+                    onClick={() =>
+                      navigate(
+                        `/report/gps?filterType=brand&filterId=${gpsBrand.brandId}`
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
                     <Text size="md" fw={500} c="dark">
                       {gpsBrand.brandName}
                     </Text>
@@ -40,7 +50,15 @@ const GPSModal = ({ opened, onClose }: Props) => {
 
                 {gpsBrand.models.map((model: any) => (
                   <Grid.Col key={`model-${model.modelId}`} span={4} pl={"md"}>
-                    <Group gap={"sm"}>
+                    <Group
+                      gap={"sm"}
+                      onClick={() =>
+                        navigate(
+                          `/report/gps?filterType=model&filterId=${model.modelId}`
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
                       <Text size="sm">{model.modelName}</Text>
                       <Text size="sm">-</Text>
                       <Text size="sm">{model.modelUsedCount}</Text>

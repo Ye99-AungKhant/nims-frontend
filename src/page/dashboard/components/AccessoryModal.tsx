@@ -1,5 +1,6 @@
 import { Box, Grid, Group, Modal, Text } from "@mantine/core";
 import { useGetAccessoryUsage } from "../hooks/useGetAccessoryUsage";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   opened: boolean;
@@ -7,6 +8,7 @@ interface Props {
 }
 const AccessoryModal = ({ opened, onClose }: Props) => {
   const { data, isLoading } = useGetAccessoryUsage();
+  const navigate = useNavigate();
   return (
     <Modal
       opened={opened}
@@ -29,7 +31,15 @@ const AccessoryModal = ({ opened, onClose }: Props) => {
           {!isLoading &&
             data?.map((accessory: any) => (
               <Grid.Col span={12} key={accessory.typeId}>
-                <Group justify="space-between">
+                <Group
+                  justify="space-between"
+                  onClick={() =>
+                    navigate(`/report/accessories?type_id=${accessory.typeId}`)
+                  }
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <Text size="md" c={"dark"}>
                     {accessory.typeName}
                   </Text>

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useGetRouteParams } from "../../../hooks/useGetRouteParams";
-import { getAccessoryRP } from "../../../services/report.service";
-import { mapAccessoryRPListToEntity } from "../../../utils/mappers/accessoryRPObject";
+import { getPeripheralRP } from "../../../services/report.service";
+import { mapPeripheralRPListToEntity } from "../../../utils/mappers/peripheralRPObject";
 
-export const useGetAccessoryRP = () => {
+export const useGetPeripheralRP = () => {
   const {
-    type_id,
+    filterType,
+    filterId,
     pageIndex,
     pageSize,
     search,
@@ -23,8 +24,9 @@ export const useGetAccessoryRP = () => {
 
   return useQuery({
     queryKey: [
-      "getAccessoryRP",
-      type_id,
+      "getPeripheralRP",
+      filterType,
+      filterId,
       pageIndex,
       pageSize,
       search,
@@ -33,8 +35,9 @@ export const useGetAccessoryRP = () => {
       client_id,
     ],
     queryFn: async () => {
-      return await getAccessoryRP({
-        type_id,
+      return await getPeripheralRP({
+        filterType,
+        filterId,
         pageIndex,
         pageSize,
         search,
@@ -48,7 +51,7 @@ export const useGetAccessoryRP = () => {
     select: (res) => ({
       totalCount: res?.data?.data.totalCount || 0,
       totalPage: res?.data?.data.totalPages || 0,
-      items: res?.data?.data?.data.map(mapAccessoryRPListToEntity),
+      items: res?.data?.data?.data.map(mapPeripheralRPListToEntity),
     }),
   });
 };
