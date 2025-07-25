@@ -30,7 +30,7 @@ export const ClientReport = () => {
   const { data: clients } = useGetClients();
   const { mutate, isPending } = useExportClientInstalledObj();
   const theme = useMantineTheme();
-  const { setParams } = useParamsHelper();
+  const { getParam, setParams } = useParamsHelper();
 
   return (
     <PermissionGate page={"installed_objects"} scope={"view"}>
@@ -96,6 +96,7 @@ export const ClientReport = () => {
                   size="sm"
                   clearable
                   placeholder="Filter by Client"
+                  value={getParam("client_id")}
                   data={
                     clients?.data.data.map((client: any) => ({
                       label: client.name,
@@ -135,7 +136,7 @@ export const ClientReport = () => {
                 size="sm"
                 leftSection
                 name="search"
-                title="Search client, plate no., imei or phone no"
+                title="Search Plate No., IMEI or Phone No."
               />
             </Box>
           </Flex>

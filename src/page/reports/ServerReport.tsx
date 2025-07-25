@@ -17,20 +17,17 @@ import { SearchInput } from "../../components/common/SearchInput";
 import { DataTable } from "../../components/datatable/DataTable";
 import { useGetClients } from "../../hooks/useGetClients";
 import { useExportClientInstalledObj } from "../../hooks/dataExport/useExportClientInstalledObj";
-import { useGetPeripheralRP } from "./hooks/useGetPeripheralRP";
-import { peripheralPageColumns } from "./components/peripheralPageColumns";
 import { useGetTypes } from "../../hooks/useGetTypes";
-import { useGetAllModels } from "../../hooks/useGetAllModels";
 import { useGetAllBrands } from "../../hooks/useGetAllBrands";
+import { useGetServerRP } from "./hooks/useGetServerRP";
+import { serverRPPageColumns } from "./components/serverRPPageColumns";
 
-export const PeripheralReport = () => {
-  const { data, isLoading } = useGetPeripheralRP();
+export const ServerReport = () => {
+  const { data, isLoading } = useGetServerRP();
   const { data: clients } = useGetClients();
-  const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Sensor");
+  const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Server");
   const { data: brandData, isLoading: isBrandLoading } =
-    useGetAllBrands("Sensor");
-  const { data: modelData, isLoading: isModelLoading } =
-    useGetAllModels("Sensor");
+    useGetAllBrands("Server");
   const { mutate, isPending } = useExportClientInstalledObj();
   const theme = useMantineTheme();
   const { getParam, setParams } = useParamsHelper();
@@ -55,7 +52,7 @@ export const PeripheralReport = () => {
               <Flex align="center" gap={8} style={{ minWidth: 0 }}>
                 <IconAddressBook size={24} />
                 <Text size={"lg"} fw={600} c={"dark"}>
-                  Peripherals Report
+                  Servers Report
                 </Text>
               </Flex>
               <Button
@@ -145,9 +142,9 @@ export const PeripheralReport = () => {
                   variant="default"
                   size="sm"
                   clearable
-                  placeholder="Filter by Brand"
+                  placeholder="Filter by Domain"
                   value={
-                    getParam("filterType") === "brand"
+                    getParam("filterType") === "domain"
                       ? getParam("filterId")
                       : ""
                   }
@@ -158,30 +155,26 @@ export const PeripheralReport = () => {
                     })) || []
                   }
                   onChange={(value) => {
-                    setParams({ filterType: "brand", filterId: value });
+                    setParams({ filterType: "domain", filterId: value });
                   }}
                   w="100%"
                 />
               </Grid.Col>
+
               <Grid.Col span="auto">
                 <Select
                   variant="default"
                   size="sm"
                   clearable
-                  placeholder="Filter by Model"
-                  value={
-                    getParam("filterType") === "model"
-                      ? getParam("filterId")
-                      : ""
-                  }
-                  data={
-                    modelData?.data?.data.map((model: any) => ({
-                      label: model.name,
-                      value: String(model.id),
-                    })) || []
-                  }
+                  placeholder="Filter by Status"
+                  value={getParam("filter_by")}
+                  data={[
+                    { label: "Active", value: "Active" },
+                    { label: "Expire Soon", value: "ExpireSoon" },
+                    { label: "Expired", value: "Expired" },
+                  ]}
                   onChange={(value) => {
-                    setParams({ filterType: "model", filterId: value });
+                    setParams({ filter_by: value });
                   }}
                   w="100%"
                 />
@@ -194,14 +187,14 @@ export const PeripheralReport = () => {
                 size="sm"
                 leftSection
                 name="search"
-                title="Search Plate No., IMEI or Serial No."
+                title="Search Plate No., Invoice or IMEI"
               />
             </Box>
           </Flex>
 
           <Box py={"md"} px={{ base: 8, sm: 30 }}>
             <DataTable
-              columns={peripheralPageColumns}
+              columns={serverRPPageColumns}
               data={data?.items || []}
               totalPage={data?.totalPage}
               totalCount={data?.totalCount}

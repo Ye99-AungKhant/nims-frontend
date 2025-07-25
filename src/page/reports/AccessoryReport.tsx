@@ -12,22 +12,18 @@ import { IconDeviceSim } from "@tabler/icons-react";
 import { PageSizeSelect } from "../../components/datatable/PageSizeSelect";
 import { SearchInput } from "../../components/common/SearchInput";
 import { DataTable } from "../../components/datatable/DataTable";
-import { SimCardRPPageColumns } from "./components/SimCardRPPageColumns";
-import { useGetSimRP } from "./hooks/useGetSimRP";
 import { useParamsHelper } from "../../hooks/useParamsHelper";
-import { useGetBrands } from "../../hooks/useGetBrands";
 import { useGetAccessoryRP } from "./hooks/useGetAccessoryRP";
 import { useGetTypes } from "../../hooks/useGetTypes";
 import { accessoryRPPageColumns } from "./components/accessoryRPPageColumns";
+import { useGetClients } from "../../hooks/useGetClients";
 
 export const AccessoryReport = () => {
   const { data, isLoading } = useGetAccessoryRP();
+  const { data: clients } = useGetClients();
   const { data: typeData, isLoading: isTypeLoading } = useGetTypes("Accessory");
-
   const theme = useMantineTheme();
   const { setParams, getParam } = useParamsHelper();
-
-  console.log("Accessory Report Data:", data);
 
   return (
     <PermissionGate page={"installed_objects"} scope={"view"}>
@@ -79,6 +75,26 @@ export const AccessoryReport = () => {
 
               <Select
                 variant="default"
+                searchable
+                size="sm"
+                clearable
+                placeholder="Filter by Client"
+                value={getParam("client_id")}
+                data={
+                  clients?.data.data.map((client: any) => ({
+                    label: client.name,
+                    value: String(client.id),
+                  })) || []
+                }
+                onChange={(value) => {
+                  setParams({ client_id: value });
+                }}
+                nothingFoundMessage="No clients found"
+                w="100%"
+              />
+
+              <Select
+                variant="default"
                 size="sm"
                 clearable
                 placeholder="Filter by Type"
@@ -102,7 +118,7 @@ export const AccessoryReport = () => {
                 size="sm"
                 leftSection
                 name="search"
-                title="Search Type, IMEI, Plate No. or Company"
+                title="Search IMEI or Plate No."
               />
             </Box>
           </Flex>

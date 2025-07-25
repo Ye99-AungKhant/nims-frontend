@@ -16,9 +16,11 @@ import { SimCardRPPageColumns } from "./components/SimCardRPPageColumns";
 import { useGetSimRP } from "./hooks/useGetSimRP";
 import { useParamsHelper } from "../../hooks/useParamsHelper";
 import { useGetBrands } from "../../hooks/useGetBrands";
+import { useGetClients } from "../../hooks/useGetClients";
 
 export const SimCardReport = () => {
   const { data, isLoading } = useGetSimRP();
+  const { data: clients } = useGetClients();
   const { data: brandData, isLoading: isBrandLoading } =
     useGetBrands("Operator");
 
@@ -75,6 +77,26 @@ export const SimCardReport = () => {
 
               <Select
                 variant="default"
+                searchable
+                size="sm"
+                clearable
+                placeholder="Filter by Client"
+                value={getParam("client_id")}
+                data={
+                  clients?.data.data.map((client: any) => ({
+                    label: client.name,
+                    value: String(client.id),
+                  })) || []
+                }
+                onChange={(value) => {
+                  setParams({ client_id: value });
+                }}
+                nothingFoundMessage="No clients found"
+                w="100%"
+              />
+
+              <Select
+                variant="default"
                 size="sm"
                 clearable
                 placeholder="Filter by Operator"
@@ -98,7 +120,7 @@ export const SimCardReport = () => {
                 size="sm"
                 leftSection
                 name="search"
-                title="Search Ph No., IMEI, Plate No. or Company"
+                title="Search Ph No., IMEI or Plate No."
               />
             </Box>
           </Flex>

@@ -15,9 +15,10 @@ import RolePage from "../page/user/role/RolePage";
 import RoleDetailPage from "../page/user/role/RoleDetailPage";
 import { SimCardReport } from "../page/reports/SimCardReport";
 import { ClientReport } from "../page/reports/ClientReport";
-import { AccessoryReport } from "../page/reports/accessoryReport";
 import { GPSReport } from "../page/reports/GPSReport";
 import { PeripheralReport } from "../page/reports/PeripheralReport";
+import { AccessoryReport } from "../page/reports/AccessoryReport";
+import { ServerReport } from "../page/reports/ServerReport";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/report/accessories", element: <AccessoryReport /> },
       { path: "/report/gps", element: <GPSReport /> },
       { path: "/report/peripherals", element: <PeripheralReport /> },
+      { path: "/report/servers", element: <ServerReport /> },
     ],
   },
   {

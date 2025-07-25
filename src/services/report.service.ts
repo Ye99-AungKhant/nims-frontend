@@ -71,3 +71,21 @@ export const getPeripheralRP = async (params: any) => {
     },
   });
 };
+
+export const getServerRP = async (params: any) => {
+  return await apiClient.get("/report/server", {
+    params: {
+      filterType: params.filterType,
+      filterId: params.filterId,
+      pageIndex: params.pageIndex,
+      pageSize: params.pageSize,
+      search: params.search,
+      filter_by_date: params.filter_by_date,
+      filter_by: params.filter_by,
+      fromDate: params.fromDate,
+      toDate: params.toDate,
+      id: params.id,
+      client_id: params.client_id,
+    },
+  });
+};
